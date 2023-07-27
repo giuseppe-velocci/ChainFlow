@@ -28,4 +28,13 @@
     <ProjectReference Include="..\ChainFlow\ChainFlow.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="Microsoft.Extensions.Logging.Abstractions">
+      <HintPath>..\..\..\..\..\..\nuget\microsoft.extensions.logging.abstractions\7.0.0\lib\net6.0\Microsoft.Extensions.Logging.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="TestableIO.System.IO.Abstractions">
+      <HintPath>..\..\..\..\..\..\nuget\testableio.system.io.abstractions\19.2.29\lib\net6.0\TestableIO.System.IO.Abstractions.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>
