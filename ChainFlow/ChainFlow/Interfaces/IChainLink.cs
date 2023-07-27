@@ -1,8 +1,10 @@
-﻿namespace ChainFlow.Interfaces
+﻿using ChainFlow.Models;
+
+namespace ChainFlow.Interfaces
 {
     public interface IChainLink
     {
-        Task<ProcessingMessage> ProcessAsync(ProcessingMessage message);
+        Task<ProcessingRequest> ProcessAsync(ProcessingRequest message);
         void SetNext(IChainLink next);
         string Describe();
     }

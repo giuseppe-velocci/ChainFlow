@@ -1,8 +1,7 @@
-using ChainFlow;
+using ChainFlow.ChainBuilder;
 using ChainFlow.Interfaces;
 using ChainFlow.Models;
 using FluentAssertions;
-using System.ComponentModel;
 
 namespace ChainFlowUnitTest
 {
@@ -60,7 +59,7 @@ namespace ChainFlowUnitTest
             throw new NotImplementedException();
         }
 
-        public Task<ProcessingMessage> ProcessAsync(ProcessingMessage message)
+        public Task<ProcessingRequest> ProcessAsync(ProcessingRequest message)
         {
             throw new NotImplementedException();
         }

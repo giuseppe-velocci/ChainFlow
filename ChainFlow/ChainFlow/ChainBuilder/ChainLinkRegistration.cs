@@ -1,6 +1,6 @@
 ﻿using ChainFlow.Interfaces;
 
-namespace ChainFlow.Models
+namespace ChainFlow.ChainBuilder
 {
     internal record class ChainLinkRegistration
     {

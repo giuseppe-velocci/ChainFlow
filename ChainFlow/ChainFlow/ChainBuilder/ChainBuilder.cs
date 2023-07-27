@@ -1,9 +1,8 @@
 ﻿using ChainFlow.Interfaces;
-using ChainFlow.Models;
 using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("ChainFlowUnitTest")]
-namespace ChainFlow
+namespace ChainFlow.ChainBuilder
 {
     internal sealed class ChainBuilder : IChainBuilder
     {
