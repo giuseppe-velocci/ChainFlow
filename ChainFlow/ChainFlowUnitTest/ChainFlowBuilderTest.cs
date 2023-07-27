@@ -1,6 +1,7 @@
 using ChainFlow.ChainBuilder;
 using ChainFlow.Interfaces;
 using ChainFlow.Models;
+using ChainFlowUnitTest.Helper;
 using FluentAssertions;
 
 namespace ChainFlowUnitTest
@@ -54,24 +55,4 @@ namespace ChainFlowUnitTest
             chain.Should().BeOfType<FakeChainLink2>();
         }
     }
-
-    class FakeChainLink : IChainFlow
-    {
-        public string Describe()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<ProcessingRequestWithOutcome> ProcessAsync(ProcessingRequest message, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void SetNext(IChainFlow next)
-        {
-            return;
-        }
-    }
-
-    class FakeChainLink2 : FakeChainLink { }
 }

@@ -1,4 +1,4 @@
-﻿namespace ChainFlow.Models
+﻿namespace ChainFlow.Enums
 {
     public enum FlowOutcome
     {

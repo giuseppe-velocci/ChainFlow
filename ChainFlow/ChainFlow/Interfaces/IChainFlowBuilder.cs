@@ -1,4 +1,6 @@
-﻿namespace ChainFlow.Interfaces
+﻿using ChainFlow.Enums;
+
+namespace ChainFlow.Interfaces
 {
     public interface IChainFlowBuilder
     {

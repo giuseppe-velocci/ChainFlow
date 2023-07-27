@@ -1,4 +1,6 @@
-﻿namespace ChainFlow.Models
+﻿using ChainFlow.Enums;
+
+namespace ChainFlow.Models
 {
     public sealed record class ProcessingRequestWithOutcome : ProcessingRequest
     {

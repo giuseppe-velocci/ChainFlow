@@ -1,6 +1,6 @@
 ﻿namespace ChainFlow.Interfaces
 {
-    public interface IDocumentableFlow
+    public interface IDocumentableWorkflow
     {
         string Describe();
     }
