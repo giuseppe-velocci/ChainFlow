@@ -1,7 +1,7 @@
 ﻿using ChainFlow.Interfaces;
 using ChainFlow.Models;
 
-namespace ChainFlow.ChainLinks
+namespace ChainFlow.ChainFlows
 {
     public abstract class AbstractChainFlow : IChainFlow
     {

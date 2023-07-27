@@ -4,13 +4,13 @@ using System.Runtime.CompilerServices;
 [assembly: InternalsVisibleTo("ChainFlowUnitTest")]
 namespace ChainFlow.ChainBuilder
 {
-    internal sealed class ChainBuilder : IChainFlowBuilder
+    internal sealed class ChainFlowBuilder : IChainFlowBuilder
     {
-        private readonly IEnumerable<ChainLinkRegistration> _links;
+        private readonly IEnumerable<ChainFlowRegistration> _links;
         private IChainFlow _firstLink = null!;
         private IChainFlow _currentLink = null!;
 
-        public ChainBuilder(IEnumerable<ChainLinkRegistration> links)
+        public ChainFlowBuilder(IEnumerable<ChainFlowRegistration> links)
         {
             if (links is null || !links.Any())
             {

@@ -2,9 +2,9 @@
 
 namespace ChainFlow.ChainBuilder
 {
-    internal record class ChainLinkRegistration
+    internal record class ChainFlowRegistration
     {
-        public ChainLinkRegistration(Type type, Func<IChainFlow> chainLinkFactory)
+        public ChainFlowRegistration(Type type, Func<IChainFlow> chainLinkFactory)
         {
             LinkType = type.FullName!;
             ChainLinkFactory = chainLinkFactory;
@@ -12,7 +12,5 @@ namespace ChainFlow.ChainBuilder
 
         public string LinkType { get; }
         public Func<IChainFlow> ChainLinkFactory { get; }
-
-
     }
 }

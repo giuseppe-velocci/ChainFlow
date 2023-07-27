@@ -8,19 +8,19 @@ namespace ChainFlowUnitTest
 {
     public class AbstractChainFlowProcessorTest
     {
-        private readonly Mock<AbstractChainFlowProcessor<bool>> Sut;
-        private readonly Mock<IChainFlowBuilder> MockChainBuilder;
+        private readonly Mock<AbstractChainFlowProcessor<bool>> _sut;
+        private readonly Mock<IChainFlowBuilder> _mockChainBuilder;
 
         public AbstractChainFlowProcessorTest()
         {
-            MockChainBuilder = new ();
-            Sut = new(MockChainBuilder.Object);
+            _mockChainBuilder = new ();
+            _sut = new(_mockChainBuilder.Object);
         }
 
         [Fact]
         public void Describe_WhenInvoked_ReturnsNull()
         {
-            Sut.Object.Describe().Should().BeNull();
+            _sut.Object.Describe().Should().BeNull();
         }
 
         [Fact]
@@ -29,11 +29,11 @@ namespace ChainFlowUnitTest
             object message = new();
             var request = new ProcessingRequest(message);
 
-            MockChainBuilder
+            _mockChainBuilder
                 .Setup(x => x.Build())
                 .Returns((IChainFlow)null!);
 
-            var act = () => Sut.Object.ProcessAsync(request, CancellationToken.None);
+            var act = () => _sut.Object.ProcessAsync(request, CancellationToken.None);
             await act.Should().ThrowAsync<NullReferenceException>();
         }
 
@@ -48,15 +48,15 @@ namespace ChainFlowUnitTest
             mockFlow.Setup(x => x.ProcessAsync(It.IsAny<ProcessingRequest>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(response);
 
-            MockChainBuilder
+            _mockChainBuilder
                 .Setup(x => x.Build())
                 .Returns(mockFlow.Object);
 
-            Sut
+            _sut
                 .Setup(x => x.Outcome2T(response))
                 .Returns(true);
 
-            var result = await Sut.Object.ProcessAsync(request, CancellationToken.None);
+            var result = await _sut.Object.ProcessAsync(request, CancellationToken.None);
             result.Should().BeTrue();
         }
     }

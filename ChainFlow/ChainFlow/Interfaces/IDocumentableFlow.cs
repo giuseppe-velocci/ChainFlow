@@ -1,4 +1,4 @@
-﻿namespace ChainFlow.Documentables
+﻿namespace ChainFlow.Interfaces
 {
     public interface IDocumentableFlow
     {
