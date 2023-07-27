@@ -4,5 +4,6 @@
     {
         Success,
         Failure,
+        TransientFailure
     }
 }

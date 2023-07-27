@@ -4,14 +4,14 @@ namespace ChainFlow.ChainBuilder
 {
     internal record class ChainLinkRegistration
     {
-        public ChainLinkRegistration(Type type, Func<IChainLink> chainLinkFactory)
+        public ChainLinkRegistration(Type type, Func<IChainFlow> chainLinkFactory)
         {
             LinkType = type.FullName!;
             ChainLinkFactory = chainLinkFactory;
         }
 
         public string LinkType { get; }
-        public Func<IChainLink> ChainLinkFactory { get; }
+        public Func<IChainFlow> ChainLinkFactory { get; }
 
 
     }

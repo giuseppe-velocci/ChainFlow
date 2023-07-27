@@ -2,13 +2,11 @@
 {
     public record class ProcessingRequest
     {
-        public ProcessingRequest(object request, ProcessingOutcome result)
+        public object Request { get; }
+
+        public ProcessingRequest(object request)
         {
             Request = request;
-            Result = result;
         }
-
-        public object Request { get; }
-        public ProcessingOutcome Result { get; }
     }
 }

@@ -4,11 +4,11 @@ using System.Runtime.CompilerServices;
 [assembly: InternalsVisibleTo("ChainFlowUnitTest")]
 namespace ChainFlow.ChainBuilder
 {
-    internal sealed class ChainBuilder : IChainBuilder
+    internal sealed class ChainBuilder : IChainFlowBuilder
     {
         private readonly IEnumerable<ChainLinkRegistration> _links;
-        private IChainLink _firstLink = null!;
-        private IChainLink _currentLink = null!;
+        private IChainFlow _firstLink = null!;
+        private IChainFlow _currentLink = null!;
 
         public ChainBuilder(IEnumerable<ChainLinkRegistration> links)
         {
@@ -20,7 +20,7 @@ namespace ChainFlow.ChainBuilder
             _links = links;
         }
 
-        public IChainLink Build()
+        public IChainFlow Build()
         {
             if (_currentLink is null)
             {
@@ -30,7 +30,7 @@ namespace ChainFlow.ChainBuilder
             return _firstLink;
         }
 
-        public IChainBuilder With<T>() where T : IChainLink
+        public IChainFlowBuilder With<T>() where T : IChainFlow
         {
             var resolvedLink = _links.First(x => x.LinkType == typeof(T).FullName).ChainLinkFactory();
 
