@@ -130,6 +130,12 @@ namespace ChainFlow.Documentables
                 }
             }
 
+            foreach (var current in _currentRegistration)
+            {
+                string connection = $"{current.GetDocumentFlowId()} --> {registration.GetDocumentFlowId()}";
+                _connections.Add(connection);
+            }
+
             string rightConnection = $"{registration.GetDocumentFlowId()} --True--> {rightBuilder._firstRegistration.GetDocumentFlowId()}";
             _connections.Add(rightConnection);
             string leftConnection = $"{registration.GetDocumentFlowId()} --False--> {leftBuilder._firstRegistration.GetDocumentFlowId()}";

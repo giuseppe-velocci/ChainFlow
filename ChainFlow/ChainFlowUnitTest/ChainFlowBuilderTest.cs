@@ -15,11 +15,11 @@ namespace ChainFlowUnitTest
         public ChainFlowBuilderTest()
         {
             _sut = new ChainFlowBuilder(new ChainFlowRegistration[] {
-                new ChainFlowRegistration(typeof(FakeChainLink), () => new FakeChainLink()),
+                new ChainFlowRegistration(typeof(FakeChainLink0), () => new FakeChainLink0()),
+                new ChainFlowRegistration(typeof(FakeChainLink1), () => new FakeChainLink1()),
                 new ChainFlowRegistration(typeof(FakeChainLink2), () => new FakeChainLink2()),
                 new ChainFlowRegistration(typeof(FakeChainLink3), () => new FakeChainLink3()),
                 new ChainFlowRegistration(typeof(FakeChainLink4), () => new FakeChainLink4()),
-                new ChainFlowRegistration(typeof(FakeChainLink5), () => new FakeChainLink5()),
                 new ChainFlowRegistration(typeof(BooleanRouterFlow<IRouterLogic<bool>>), () => new BooleanRouterFlow<IRouterLogic<bool>>(new Mock<IRouterLogic<bool>>().Object)),
             });
         }
@@ -48,15 +48,15 @@ namespace ChainFlowUnitTest
         [Fact]
         public void With_WhenRegisteredLinkIsPassed_Succeed()
         {
-            _sut.With<FakeChainLink>().Should().BeOfType<ChainFlowBuilder>();
+            _sut.With<FakeChainLink0>().Should().BeOfType<ChainFlowBuilder>();
         }
 
         [Fact]
         public void WithBooleanRouter_WhenRegisteredLinksArePassed_Succeed()
         {
             _sut.WithBooleanRouter<IRouterLogic<bool>>(
-                (x) => x.With<FakeChainLink3>().Build(),
-                (x) => x.With<FakeChainLink4>().Build()
+                (x) => x.With<FakeChainLink2>().Build(),
+                (x) => x.With<FakeChainLink3>().Build()
             ).Should().BeOfType<ChainFlowBuilder>();
         }
 
@@ -65,7 +65,7 @@ namespace ChainFlowUnitTest
         {
             var act = () => _sut.WithBooleanRouter<IRouterLogic<bool>>(
                 (x) => x.With<IChainFlow>().Build(),
-                (x) => x.With<FakeChainLink4>().Build()
+                (x) => x.With<FakeChainLink3>().Build()
             );
             act.Should().Throw<InvalidOperationException>();
         }
@@ -74,7 +74,7 @@ namespace ChainFlowUnitTest
         public void WithBooleanRouter_WhenUnregisteredLinkIsPassedAsLeft_ThrowsException()
         {
             var act = () => _sut.WithBooleanRouter<IRouterLogic<bool>>(
-                (x) => x.With<FakeChainLink4>().Build(),
+                (x) => x.With<FakeChainLink3>().Build(),
                 (x) => x.With<IChainFlow>().Build()
             );
             act.Should().Throw<InvalidOperationException>();
@@ -84,43 +84,43 @@ namespace ChainFlowUnitTest
         public void Build_WhenDeclarationIsValid_ReturnsFirstLink()
         {
             var chain = _sut
-                .With<FakeChainLink2>()
-                .With<FakeChainLink>()
+                .With<FakeChainLink1>()
+                .With<FakeChainLink0>()
                 .Build();
-            chain.Should().BeOfType<FakeChainLink2>();
+            chain.Should().BeOfType<FakeChainLink1>();
         }
 
         [Fact]
         public void Build_WhenDeclarationIsValidAlsoWithBooleanRouter_ReturnsFirstLink()
         {
             var chain = _sut
-                .With<FakeChainLink2>()
-                .With<FakeChainLink>()
+                .With<FakeChainLink1>()
+                .With<FakeChainLink0>()
                 .WithBooleanRouter<IRouterLogic<bool>>(
-                    (x) => x.With<FakeChainLink3>().Build(),
-                    (x) => x.With<FakeChainLink4>().Build()
+                    (x) => x.With<FakeChainLink2>().Build(),
+                    (x) => x.With<FakeChainLink3>().Build()
                 )
                 .Build();
-            chain.Should().BeOfType<FakeChainLink2>();
+            chain.Should().BeOfType<FakeChainLink1>();
         }
 
         [Fact]
         public void Build_WhenDeclarationIsValidAlsoWithNestedBooleanRouter_ReturnsFirstLink()
         {
             var chain = _sut
-                .With<FakeChainLink2>()
-                .With<FakeChainLink>()
+                .With<FakeChainLink1>()
+                .With<FakeChainLink0>()
                 .WithBooleanRouter<IRouterLogic<bool>>(
                     (x) => x
-                        .With<FakeChainLink3>()
+                        .With<FakeChainLink2>()
                         .WithBooleanRouter<IRouterLogic<bool>>(
-                            y => y.With<FakeChainLink5>().Build(),
-                            y => y.With<FakeChainLink4>().Build())
+                            y => y.With<FakeChainLink4>().Build(),
+                            y => y.With<FakeChainLink3>().Build())
                         .Build(),
-                    (x) => x.With<FakeChainLink4>().Build()
+                    (x) => x.With<FakeChainLink3>().Build()
                 )
                 .Build();
-            chain.Should().BeOfType<FakeChainLink2>();
+            chain.Should().BeOfType<FakeChainLink1>();
         }
     }
 }
