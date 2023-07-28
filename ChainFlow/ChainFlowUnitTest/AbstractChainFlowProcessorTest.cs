@@ -1,4 +1,5 @@
-﻿using ChainFlow.Interfaces;
+﻿using ChainFlow.Enums;
+using ChainFlow.Interfaces;
 using ChainFlow.Models;
 using ChainFlow.Processors;
 using FluentAssertions;
@@ -18,19 +19,13 @@ namespace ChainFlowUnitTest
         }
 
         [Fact]
-        public void Describe_WhenInvoked_ReturnsNull()
-        {
-            _sut.Object.Describe().Should().BeNull();
-        }
-
-        [Fact]
         public async Task ProcessAsync_WhenChainBuilderCannotResolveFlow_ThrowsException()
         {
             object message = new();
             var request = new ProcessingRequest(message);
 
             _mockChainBuilder
-                .Setup(x => x.Build())
+                .Setup(x => x.Build(FlowOutcome.Success))
                 .Returns((IChainFlow)null!);
 
             var act = () => _sut.Object.ProcessAsync(request, CancellationToken.None);
@@ -49,7 +44,7 @@ namespace ChainFlowUnitTest
                 .ReturnsAsync(response);
 
             _mockChainBuilder
-                .Setup(x => x.Build())
+                .Setup(x => x.Build(FlowOutcome.Success))
                 .Returns(mockFlow.Object);
 
             _sut

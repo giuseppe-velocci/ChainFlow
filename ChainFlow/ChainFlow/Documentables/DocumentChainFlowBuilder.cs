@@ -1,4 +1,5 @@
 ﻿using ChainFlow.ChainFlows;
+using ChainFlow.Enums;
 using ChainFlow.Interfaces;
 using ChainFlow.Models;
 using System.Text;
@@ -13,6 +14,7 @@ namespace ChainFlow.Documentables
 
         private ChainFlowRegistration _firstRegistration = null!;
         private IList<ChainFlowRegistration> _currentRegistration = new List<ChainFlowRegistration>();
+        private bool _isMainBuilder = true;
 
         public DocumentChainFlowBuilder(IEnumerable<ChainFlowRegistration> links)
         {
@@ -21,9 +23,36 @@ namespace ChainFlow.Documentables
             _connections = new List<string>();
         }
 
-        public IChainFlow Build()
+        private DocumentChainFlowBuilder(IEnumerable<ChainFlowRegistration> links, bool isMainBuilder)
         {
+            _links = links;
+            _tags = new List<string>();
+            _connections = new List<string>();
+            _isMainBuilder = isMainBuilder;
+        }
+
+        public IChainFlow Build(FlowOutcome outcome)
+        {
+            if (!_tags.Any(x => x == GetOutcomeTagString(outcome)))
+            {
+                _tags.Add(GetOutcomeTagString(outcome));
+            }
+
+            foreach (ChainFlowRegistration current in _currentRegistration)
+            {
+                var flowId = current.GetDocumentFlowId();
+                if (!_connections.Any(x => x.StartsWith(flowId)) && (_isMainBuilder || outcome != FlowOutcome.Success))
+                {
+                    _connections.Add($"{flowId} --> {outcome}");
+                }
+            }
+
             return _firstRegistration?.ChainLinkFactory()!;
+        }
+
+        private static string GetOutcomeTagString(FlowOutcome outcome)
+        {
+            return $"{outcome}(Workflow is completed with {(outcome == FlowOutcome.TransientFailure ? "transient failure" : outcome.ToString().ToLower())})";
         }
 
         public IChainFlowBuilder With<T>() where T : IChainFlow
@@ -60,7 +89,6 @@ namespace ChainFlow.Documentables
             {
                 stringBuilder.AppendLine(tag.ToString());
             }
-            stringBuilder.AppendLine("Success(Workflow is completed with success)");
 
             stringBuilder.AppendLine(string.Empty);
 
@@ -68,10 +96,7 @@ namespace ChainFlow.Documentables
             {
                 stringBuilder.AppendLine(connection.ToString());
             }
-            foreach (var current in _currentRegistration)
-            {
-                stringBuilder.AppendLine($"{current.GetDocumentFlowId()} --> Success");
-            }
+            
             stringBuilder.Append(":::");
 
             return stringBuilder.ToString();
@@ -85,18 +110,24 @@ namespace ChainFlow.Documentables
             string tag = $"{registration.GetDocumentFlowId()}{{{registration.ChainLinkFactory().Describe()}}}";
             _tags.Add(tag);
 
-            var rightBuilder = new DocumentChainFlowBuilder(_links);
+            var rightBuilder = new DocumentChainFlowBuilder(_links, false);
             rightFlowFactory(rightBuilder);
             foreach (var t in rightBuilder._tags)
             {
-                _tags.Add(t);
+                if (!_tags.Contains(t))
+                {
+                    _tags.Add(t);
+                }
             }
             
-            var leftBuilder = new DocumentChainFlowBuilder(_links);
+            var leftBuilder = new DocumentChainFlowBuilder(_links, false);
             leftFlowFactory(leftBuilder);
             foreach (var t in leftBuilder._tags)
             {
-                _tags.Add(t);
+                if (!_tags.Contains(t))
+                {
+                    _tags.Add(t);
+                }
             }
 
             string rightConnection = $"{registration.GetDocumentFlowId()} --True--> {rightBuilder._firstRegistration.GetDocumentFlowId()}";
@@ -106,11 +137,17 @@ namespace ChainFlow.Documentables
 
             foreach (var rightConn in rightBuilder._connections)
             {
-                _connections.Add(rightConn);
+                if (!_connections.Contains(rightConn))
+                {
+                    _connections.Add(rightConn);
+                }
             }
             foreach (var leftConn in leftBuilder._connections)
             {
-                _connections.Add(leftConn);
+                if (!_connections.Contains(leftConn))
+                {
+                    _connections.Add(leftConn);
+                }
             }
 
             _currentRegistration.Clear();

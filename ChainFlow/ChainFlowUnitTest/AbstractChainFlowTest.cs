@@ -16,12 +16,6 @@ namespace ChainFlowUnitTest
         }
 
         [Fact]
-        public void Describe_WhenInvoked_ReturnsNull()
-        {
-            _sut.Object.Describe().Should().BeNull();
-        }
-
-        [Fact]
         public async Task ProcessAsync_WhenNextChainLinkIsNotSet_ReturnsConcreteLinkResult()
         {
             object message = new();

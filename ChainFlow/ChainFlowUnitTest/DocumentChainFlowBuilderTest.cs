@@ -1,5 +1,6 @@
 ﻿using ChainFlow.ChainFlows;
 using ChainFlow.Documentables;
+using ChainFlow.Enums;
 using ChainFlow.Interfaces;
 using ChainFlow.Models;
 using ChainFlowUnitTest.Helper;
@@ -29,7 +30,7 @@ namespace ChainFlowUnitTest
         [Fact]
         public void ToString_WhenNoFlowsAreResolved_ReturnsEmptyString()
         {
-            var _ = _sut.Build();
+            var _ = _sut.Build(FlowOutcome.Success);
             _sut.ToString().Should().BeEmpty();
         }
 
@@ -60,9 +61,9 @@ graph TD;
 {_registrations.ElementAt(1).GetDocumentFlowId()}({_registrations.ElementAt(1).ChainLinkFactory().Describe()})
 {_registrations.ElementAt(5).GetDocumentFlowId()}{{{_registrations.ElementAt(5).ChainLinkFactory().Describe()}}}
 {_registrations.ElementAt(2).GetDocumentFlowId()}({_registrations.ElementAt(2).ChainLinkFactory().Describe()})
+Success(Workflow is completed with success)
 {_registrations.ElementAt(3).GetDocumentFlowId()}({_registrations.ElementAt(3).ChainLinkFactory().Describe()})
 {_registrations.ElementAt(4).GetDocumentFlowId()}({_registrations.ElementAt(4).ChainLinkFactory().Describe()})
-Success(Workflow is completed with success)
 
 {_registrations.First().GetDocumentFlowId()} --> {_registrations.ElementAt(1).GetDocumentFlowId()}
 {_registrations.ElementAt(5).GetDocumentFlowId()} --True--> {_registrations.ElementAt(2).GetDocumentFlowId()}
@@ -98,7 +99,38 @@ Success(Workflow is completed with success)
 :::";
             var _ = _sut
                 .With<FakeChainLink>()
+                .With <FakeChainLink2>()
+                .Build();
+            _sut.ToString().Should().Be(expected);
+        }
+
+        [Fact]
+        public void ToString_WhenFlowsWithBooleanRouterAreResolvedWithDifferentOutcomes_ReturnsFlowString()
+        {
+            string expected =
+$@"::: mermaid
+graph TD;
+{_registrations.First().GetDocumentFlowId()}({_registrations.First().ChainLinkFactory().Describe()})
+{_registrations.ElementAt(1).GetDocumentFlowId()}({_registrations.ElementAt(1).ChainLinkFactory().Describe()})
+{_registrations.ElementAt(5).GetDocumentFlowId()}{{{_registrations.ElementAt(5).ChainLinkFactory().Describe()}}}
+{_registrations.ElementAt(2).GetDocumentFlowId()}({_registrations.ElementAt(2).ChainLinkFactory().Describe()})
+Success(Workflow is completed with success)
+{_registrations.ElementAt(3).GetDocumentFlowId()}({_registrations.ElementAt(3).ChainLinkFactory().Describe()})
+Failure(Workflow is completed with failure)
+
+{_registrations.First().GetDocumentFlowId()} --> {_registrations.ElementAt(1).GetDocumentFlowId()}
+{_registrations.ElementAt(5).GetDocumentFlowId()} --True--> {_registrations.ElementAt(2).GetDocumentFlowId()}
+{_registrations.ElementAt(5).GetDocumentFlowId()} --False--> {_registrations.ElementAt(3).GetDocumentFlowId()}
+{_registrations.ElementAt(3).GetDocumentFlowId()} --> Failure
+{_registrations.ElementAt(2).GetDocumentFlowId()} --> Success
+:::";
+            var _ = _sut
+                .With<FakeChainLink>()
                 .With<FakeChainLink2>()
+                .WithBooleanRouter<IRouterLogic<bool>>(
+                    x => x.With<FakeChainLink3>().Build(FlowOutcome.Success),
+                    x => x.With<FakeChainLink4>().Build(FlowOutcome.Failure)
+                )
                 .Build();
             _sut.ToString().Should().Be(expected);
         }

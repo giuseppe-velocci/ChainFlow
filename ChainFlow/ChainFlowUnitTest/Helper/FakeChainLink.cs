@@ -5,7 +5,7 @@ namespace ChainFlowUnitTest.Helper
 {
     class FakeChainLink : IChainFlow
     {
-        public string Describe()
+        public virtual string Describe()
         {
             return "Do something";
         }
@@ -23,7 +23,7 @@ namespace ChainFlowUnitTest.Helper
 
     class FakeChainLink2 : FakeChainLink 
     {
-        public new string Describe()
+        public override string Describe()
         {
             return "Then do something else";
         }
@@ -31,7 +31,7 @@ namespace ChainFlowUnitTest.Helper
 
     class FakeChainLink3 : FakeChainLink 
     {
-        public new string Describe()
+        public override string Describe()
         {
             return "Then check something";
         }
@@ -39,7 +39,7 @@ namespace ChainFlowUnitTest.Helper
 
     class FakeChainLink4 : FakeChainLink 
     {
-        public new string Describe()
+        public override string Describe()
         {
             return "Then check something else";
         }
@@ -47,7 +47,7 @@ namespace ChainFlowUnitTest.Helper
 
     class FakeChainLink5 : FakeChainLink 
     {
-        public new string Describe()
+        public override string Describe()
         {
             return "Then again look for something else";
         }

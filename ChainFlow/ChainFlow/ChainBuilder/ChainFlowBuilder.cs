@@ -24,7 +24,7 @@ namespace ChainFlow.ChainBuilder
             _links = links;
         }
 
-        public IChainFlow Build()
+        public IChainFlow Build(FlowOutcome outcome)
         {
             if (_currentLink is null)
             {

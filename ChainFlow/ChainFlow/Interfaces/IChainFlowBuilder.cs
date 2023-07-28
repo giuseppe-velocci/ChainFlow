@@ -1,4 +1,6 @@
-﻿namespace ChainFlow.Interfaces
+﻿using ChainFlow.Enums;
+
+namespace ChainFlow.Interfaces
 {
     public interface IChainFlowBuilder
     {
@@ -6,6 +8,6 @@
         IChainFlowBuilder WithBooleanRouter<TRouter>(
             Func<IChainFlowBuilder, IChainFlow> rightFlowFactory,
             Func<IChainFlowBuilder, IChainFlow> leftFlowFactory) where TRouter : IRouterLogic<bool>;
-        IChainFlow Build();
+        IChainFlow Build(FlowOutcome outcome = FlowOutcome.Success);
     }
 }
