@@ -41,13 +41,18 @@ namespace ChainFlow.Documentables
             foreach (ChainFlowRegistration current in _currentRegistration)
             {
                 var flowId = current.GetDocumentFlowId();
-                if (!_connections.Any(x => x.StartsWith(flowId)) && (_isMainBuilder || outcome != FlowOutcome.Success))
+                if (IsOutcomeToBeAdded(outcome, flowId))
                 {
                     _connections.Add($"{flowId} --> {outcome}");
                 }
             }
 
             return _firstRegistration?.ChainLinkFactory()!;
+        }
+
+        private bool IsOutcomeToBeAdded(FlowOutcome outcome, string flowId)
+        {
+            return !_connections.Any(x => x.StartsWith(flowId)) && (_isMainBuilder || outcome != FlowOutcome.Success);
         }
 
         private static string GetOutcomeTagString(FlowOutcome outcome)
@@ -63,11 +68,7 @@ namespace ChainFlow.Documentables
             string tag = $"{registration.GetDocumentFlowId()}({registration.ChainLinkFactory().Describe()})";
             _tags.Add(tag);
 
-            foreach (var current in _currentRegistration)
-            {
-                string connection = $"{current.GetDocumentFlowId()} --> {registration.GetDocumentFlowId()}";
-                _connections.Add(connection);
-            }
+            AddCurrentConnections(registration);
 
             _currentRegistration.Clear();
             _currentRegistration.Add(registration);
@@ -85,6 +86,7 @@ namespace ChainFlow.Documentables
 
             stringBuilder.AppendLine("::: mermaid");
             stringBuilder.AppendLine("graph TD;");
+            
             foreach (var tag in _tags)
             {
                 stringBuilder.AppendLine(tag.ToString());
@@ -109,58 +111,60 @@ namespace ChainFlow.Documentables
 
             string tag = $"{registration.GetDocumentFlowId()}{{{registration.ChainLinkFactory().Describe()}}}";
             _tags.Add(tag);
+            DocumentChainFlowBuilder rightBuilder = GetEnrichedBuilder(rightFlowFactory);
+            AddTagsDistinct(rightBuilder);
 
-            var rightBuilder = new DocumentChainFlowBuilder(_links, false);
-            rightFlowFactory(rightBuilder);
-            foreach (var t in rightBuilder._tags)
-            {
-                if (!_tags.Contains(t))
-                {
-                    _tags.Add(t);
-                }
-            }
-            
-            var leftBuilder = new DocumentChainFlowBuilder(_links, false);
-            leftFlowFactory(leftBuilder);
-            foreach (var t in leftBuilder._tags)
-            {
-                if (!_tags.Contains(t))
-                {
-                    _tags.Add(t);
-                }
-            }
+            DocumentChainFlowBuilder leftBuilder = GetEnrichedBuilder(leftFlowFactory);
+            AddTagsDistinct(leftBuilder);
 
-            foreach (var current in _currentRegistration)
-            {
-                string connection = $"{current.GetDocumentFlowId()} --> {registration.GetDocumentFlowId()}";
-                _connections.Add(connection);
-            }
+            AddCurrentConnections(registration);
 
             string rightConnection = $"{registration.GetDocumentFlowId()} --True--> {rightBuilder._firstRegistration.GetDocumentFlowId()}";
             _connections.Add(rightConnection);
             string leftConnection = $"{registration.GetDocumentFlowId()} --False--> {leftBuilder._firstRegistration.GetDocumentFlowId()}";
             _connections.Add(leftConnection);
 
-            foreach (var rightConn in rightBuilder._connections)
-            {
-                if (!_connections.Contains(rightConn))
-                {
-                    _connections.Add(rightConn);
-                }
-            }
-            foreach (var leftConn in leftBuilder._connections)
-            {
-                if (!_connections.Contains(leftConn))
-                {
-                    _connections.Add(leftConn);
-                }
-            }
+            AddConnectionsForBuilder(rightBuilder);
+
+            AddConnectionsForBuilder(leftBuilder);
 
             _currentRegistration.Clear();
             _currentRegistration.Add(rightBuilder._currentRegistration.First());
             _currentRegistration.Add(leftBuilder._currentRegistration.First());
 
             return this;
+        }
+
+        private void AddConnectionsForBuilder(DocumentChainFlowBuilder builder)
+        {
+            foreach (var conn in builder._connections.Where(conn => !_connections.Contains(conn)))
+            {
+                _connections.Add(conn);
+            }
+        }
+
+        private void AddTagsDistinct(DocumentChainFlowBuilder rightBuilder)
+        {
+            foreach (var t in rightBuilder._tags.Where(t => !_tags.Contains(t)))
+            {
+                _tags.Add(t);
+            }
+        }
+
+        private DocumentChainFlowBuilder GetEnrichedBuilder(Func<IChainFlowBuilder, IChainFlow> rightFlowFactory)
+        {
+            var rightBuilder = new DocumentChainFlowBuilder(_links, false);
+            rightFlowFactory(rightBuilder);
+            return rightBuilder;
+        }
+
+        private void AddCurrentConnections(ChainFlowRegistration registration)
+        {
+            foreach (var current in _currentRegistration)
+            {
+                string connection = $"{current.GetDocumentFlowId()} --> {registration.GetDocumentFlowId()}";
+                _connections.Add(connection);
+            }
         }
     }
 }
