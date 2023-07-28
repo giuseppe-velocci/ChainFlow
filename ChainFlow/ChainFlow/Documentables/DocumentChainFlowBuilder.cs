@@ -14,8 +14,8 @@ namespace ChainFlow.Documentables
         private readonly IList<string> _connections;
 
         private ChainFlowRegistration _firstRegistration = null!;
-        private IList<ChainFlowRegistration> _currentRegistration = new List<ChainFlowRegistration>();
-        private bool _isMainBuilder = true;
+        private readonly IList<ChainFlowRegistration> _currentRegistration = new List<ChainFlowRegistration>();
+        private readonly bool _isMainBuilder = true;
 
         public DocumentChainFlowBuilder(IEnumerable<ChainFlowRegistration> links)
         {
