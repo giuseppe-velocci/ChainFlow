@@ -1,7 +1,7 @@
 ﻿using ChainFlow.Interfaces;
 using ChainFlow.Models;
 
-namespace ChainFlowUnitTest.Helper
+namespace ChainFlowUnitTest.Helpers
 {
     class FakeChainLink0 : IChainFlow
     {
@@ -21,7 +21,7 @@ namespace ChainFlowUnitTest.Helper
         }
     }
 
-    class FakeChainLink1 : FakeChainLink0 
+    class FakeChainLink1 : FakeChainLink0
     {
         public override string Describe()
         {
@@ -29,7 +29,7 @@ namespace ChainFlowUnitTest.Helper
         }
     }
 
-    class FakeChainLink2 : FakeChainLink0 
+    class FakeChainLink2 : FakeChainLink0
     {
         public override string Describe()
         {
@@ -37,7 +37,7 @@ namespace ChainFlowUnitTest.Helper
         }
     }
 
-    class FakeChainLink3 : FakeChainLink0 
+    class FakeChainLink3 : FakeChainLink0
     {
         public override string Describe()
         {
@@ -45,7 +45,7 @@ namespace ChainFlowUnitTest.Helper
         }
     }
 
-    class FakeChainLink4 : FakeChainLink0 
+    class FakeChainLink4 : FakeChainLink0
     {
         public override string Describe()
         {

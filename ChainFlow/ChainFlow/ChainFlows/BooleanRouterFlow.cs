@@ -3,7 +3,7 @@ using ChainFlow.Models;
 
 namespace ChainFlow.ChainFlows
 {
-    internal sealed class BooleanRouterFlow<TRouterLogix> : AbstractChainFlow where TRouterLogix : IRouterLogic<bool> 
+    internal class BooleanRouterFlow<TRouterLogix> : AbstractChainFlow where TRouterLogix : IRouterLogic<bool> 
     {
         private IChainFlow _rightFlow = null!;
         private IChainFlow _leftFlow = null!;

@@ -1,5 +1,6 @@
 ﻿using ChainFlow.ChainFlows;
 using ChainFlow.Enums;
+using ChainFlow.Helpers;
 using ChainFlow.Interfaces;
 using ChainFlow.Models;
 using System.Text;
@@ -62,7 +63,7 @@ namespace ChainFlow.Documentables
 
         public IChainFlowBuilder With<T>() where T : IChainFlow
         {
-            var registration = _links.FirstOrDefault(x => x.LinkType == typeof(T).FullName)
+            var registration = _links.FirstOrDefault(x => x.LinkType == typeof(T).GetFullName())
                 ?? new ChainFlowRegistration(type: typeof(T), () => new TodoChainFlow(typeof(T)));
             _firstRegistration ??= registration;
 
@@ -107,7 +108,8 @@ namespace ChainFlow.Documentables
 
         public IChainFlowBuilder WithBooleanRouter<TRouter>(Func<IChainFlowBuilder, IChainFlow> rightFlowFactory, Func<IChainFlowBuilder, IChainFlow> leftFlowFactory) where TRouter : IRouterLogic<bool>
         {
-            var registration = _links.First(x => x.LinkType == typeof(BooleanRouterFlow<TRouter>).FullName);
+            var registration = _links.FirstOrDefault(x => x.LinkType == typeof(BooleanRouterFlow<TRouter>).GetFullName())
+                ?? new ChainFlowRegistration(typeof(TRouter), () => new TodoBooleanRouterChainFlow<TRouter>(default!));
             _firstRegistration ??= registration;
 
             string tag = $"{registration.GetDocumentFlowId()}{{{registration.ChainLinkFactory().Describe()}}}";
@@ -174,19 +176,25 @@ namespace ChainFlow.Documentables
         private readonly string _description;
         public TodoChainFlow(Type type) 
         { 
-            _description = $"TODO {type.Name}";
+            _description = $"TODO {type.GetFullName()}";
         }
 
         public string Describe() => _description;
 
         public Task<ProcessingRequestWithOutcome> ProcessAsync(ProcessingRequest message, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
+            => Task.FromResult((ProcessingRequestWithOutcome)null!);
+
+        public void SetNext(IChainFlow next) { }
+    }
+
+    class TodoBooleanRouterChainFlow<T> : BooleanRouterFlow<T>, IChainFlow where T : IRouterLogic<bool>
+    {
+        private readonly string _description;
+        public TodoBooleanRouterChainFlow(T routerLogic) : base(routerLogic)
+        { 
+            _description = $"TODO RouterFlow {typeof(T).GetFullName()}";
         }
 
-        public void SetNext(IChainFlow next)
-        {
-            throw new NotImplementedException();
-        }
+        public override string Describe() => _description;
     }
 }

@@ -1,4 +1,5 @@
-﻿using ChainFlow.Interfaces;
+﻿using ChainFlow.Helpers;
+using ChainFlow.Interfaces;
 
 namespace ChainFlow.Models
 {
@@ -6,7 +7,7 @@ namespace ChainFlow.Models
     {
         public ChainFlowRegistration(Type type, Func<IChainFlow> chainLinkFactory)
         {
-            LinkType = type.FullName!;
+            LinkType = type.GetFullName();
             ChainLinkFactory = chainLinkFactory;
         }
 

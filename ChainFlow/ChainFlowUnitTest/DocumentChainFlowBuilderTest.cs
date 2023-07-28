@@ -3,7 +3,7 @@ using ChainFlow.Documentables;
 using ChainFlow.Enums;
 using ChainFlow.Interfaces;
 using ChainFlow.Models;
-using ChainFlowUnitTest.Helper;
+using ChainFlowUnitTest.Helpers;
 using FluentAssertions;
 using Moq;
 
@@ -52,6 +52,36 @@ _\W?\d+ --> Success
 
             _sut.ToString().Should().MatchRegex(expected);
         }
+        
+        [Fact]
+        public void ToString_WhenUnregisteredBooleanRouterFlowIsPassed_RetrunsFlowString()
+        {
+            var expected =
+$@"::: mermaid
+graph TD;
+{_registrations.ElementAt(0).GetDocumentFlowId()}\({_registrations.ElementAt(0).ChainLinkFactory().Describe()}\)
+_\W?\d+\{{TODO RouterFlow IRouterLogic\<Boolean\>\}}
+{_registrations.ElementAt(1).GetDocumentFlowId()}\({_registrations.ElementAt(1).ChainLinkFactory().Describe()}\)
+Success\(Workflow is completed with success\)
+_\W?\d+\(TODO IChainFlow\)
+Failure\(Workflow is completed with failure\)
+
+{_registrations.ElementAt(0).GetDocumentFlowId()} --> _\W?\d+\
+_\W?\d+\ --True--> {_registrations.ElementAt(1).GetDocumentFlowId()}
+_\W?\d+\ --False--> _\W?\d+\
+_\W?\d+ --> Failure
+{_registrations.ElementAt(1).GetDocumentFlowId()} --> Success
+:::";
+            var _ = _sut
+                .With<FakeChainLink0>()
+                .WithBooleanRouter<IRouterLogic<bool>>(
+                    (x) => x.With<FakeChainLink1>().Build(FlowOutcome.Success),
+                    (x) => x.With<IChainFlow>().Build(FlowOutcome.Failure)
+                )
+                .Build();
+
+            _sut.ToString().Should().MatchRegex(expected);
+        }
 
         [Fact]
         public void ToString_WhenSingleFlowIsResolved_ReturnsFlowString()
@@ -59,7 +89,7 @@ _\W?\d+ --> Success
             string expected =
 $@"::: mermaid
 graph TD;
-{_registrations.ElementAt(0).GetDocumentFlowId()}({_registrations.First().ChainLinkFactory().Describe()})
+{_registrations.ElementAt(0).GetDocumentFlowId()}({_registrations.ElementAt(0).ChainLinkFactory().Describe()})
 Success(Workflow is completed with success)
 
 {_registrations.ElementAt(0).GetDocumentFlowId()} --> Success
@@ -77,7 +107,7 @@ Success(Workflow is completed with success)
             string expected =
 $@"::: mermaid
 graph TD;
-{_registrations.ElementAt(0).GetDocumentFlowId()}({_registrations.First().ChainLinkFactory().Describe()})
+{_registrations.ElementAt(0).GetDocumentFlowId()}({_registrations.ElementAt(0).ChainLinkFactory().Describe()})
 {_registrations.ElementAt(1).GetDocumentFlowId()}({_registrations.ElementAt(1).ChainLinkFactory().Describe()})
 {_registrations.ElementAt(5).GetDocumentFlowId()}{{{_registrations.ElementAt(5).ChainLinkFactory().Describe()}}}
 {_registrations.ElementAt(2).GetDocumentFlowId()}({_registrations.ElementAt(2).ChainLinkFactory().Describe()})
@@ -112,7 +142,7 @@ Success(Workflow is completed with success)
             string expected =
     $@"::: mermaid
 graph TD;
-{_registrations.ElementAt(0).GetDocumentFlowId()}({_registrations.First().ChainLinkFactory().Describe()})
+{_registrations.ElementAt(0).GetDocumentFlowId()}({_registrations.ElementAt(0).ChainLinkFactory().Describe()})
 {_registrations.ElementAt(5).GetDocumentFlowId()}{{{_registrations.ElementAt(5).ChainLinkFactory().Describe()}}}
 {_registrations.ElementAt(1).GetDocumentFlowId()}({_registrations.ElementAt(1).ChainLinkFactory().Describe()})
 {_registrations.ElementAt(2).GetDocumentFlowId()}({_registrations.ElementAt(2).ChainLinkFactory().Describe()})
@@ -160,7 +190,7 @@ TransientFailure(Workflow is completed with transient failure)
             string expected =
 $@"::: mermaid
 graph TD;
-{_registrations.ElementAt(0).GetDocumentFlowId()}({_registrations.First().ChainLinkFactory().Describe()})
+{_registrations.ElementAt(0).GetDocumentFlowId()}({_registrations.ElementAt(0).ChainLinkFactory().Describe()})
 {_registrations.ElementAt(1).GetDocumentFlowId()}({_registrations.ElementAt(1).ChainLinkFactory().Describe()})
 {_registrations.ElementAt(5).GetDocumentFlowId()}{{{_registrations.ElementAt(5).ChainLinkFactory().Describe()}}}
 {_registrations.ElementAt(2).GetDocumentFlowId()}({_registrations.ElementAt(2).ChainLinkFactory().Describe()})

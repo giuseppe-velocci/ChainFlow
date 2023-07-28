@@ -1,5 +1,6 @@
 ﻿using ChainFlow.ChainFlows;
 using ChainFlow.Enums;
+using ChainFlow.Helpers;
 using ChainFlow.Interfaces;
 using ChainFlow.Models;
 using System.Runtime.CompilerServices;
@@ -41,7 +42,7 @@ namespace ChainFlow.ChainBuilder
             var rightFlow = rightFlowFactory(new ChainFlowBuilder(_links));
             var leftFlow = leftFlowFactory(new ChainFlowBuilder(_links));
             var resolvedLink = ((BooleanRouterFlow<TRouter>)_links
-                .First(x => x.LinkType == typeof(BooleanRouterFlow<TRouter>).FullName)
+                .First(x => x.LinkType == typeof(BooleanRouterFlow<TRouter>).GetFullName())
                 .ChainLinkFactory())
                 .WithRightFlow(rightFlow)
                 .WithLeftFlow(leftFlow);
@@ -50,7 +51,7 @@ namespace ChainFlow.ChainBuilder
 
         public IChainFlowBuilder With<T>() where T : IChainFlow
         {
-            var resolvedLink = _links.First(x => x.LinkType == typeof(T).FullName).ChainLinkFactory();
+            var resolvedLink = _links.First(x => x.LinkType == typeof(T).GetFullName()).ChainLinkFactory();
             return ReturnUdpatedBuilder(resolvedLink);
         }
 
