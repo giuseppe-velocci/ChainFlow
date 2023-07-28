@@ -10,10 +10,7 @@ namespace ChainFlow.ChainFlows
 
         public abstract Task<ProcessingRequestWithOutcome> ProcessRequestAsync(ProcessingRequest message, CancellationToken cancellationToken);
 
-        public virtual string Describe()
-        {
-            return null!;
-        }
+        public abstract string Describe();
 
         public async Task<ProcessingRequestWithOutcome> ProcessAsync(ProcessingRequest message, CancellationToken cancellationToken)
         {

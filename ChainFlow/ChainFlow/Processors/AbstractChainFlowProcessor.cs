@@ -15,10 +15,7 @@ namespace ChainFlow.Processors
 
         public abstract T Outcome2T(ProcessingRequestWithOutcome outcome);
 
-        public virtual string Describe()
-        {
-            return null!;
-        }
+        public abstract string Describe();
 
         public async Task<T> ProcessAsync(ProcessingRequest message, CancellationToken cancellationToken)
         {

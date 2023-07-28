@@ -1,4 +1,5 @@
-﻿using ChainFlow.Enums;
+﻿using ChainFlow.ChainFlows;
+using ChainFlow.Enums;
 using ChainFlow.Interfaces;
 using ChainFlow.Models;
 using System.Runtime.CompilerServices;
@@ -9,6 +10,7 @@ namespace ChainFlow.ChainBuilder
     internal sealed class ChainFlowBuilder : IChainFlowBuilder
     {
         private readonly IEnumerable<ChainFlowRegistration> _links;
+
         private IChainFlow _firstLink = null!;
         private IChainFlow _currentLink = null!;
 
@@ -32,10 +34,28 @@ namespace ChainFlow.ChainBuilder
             return _firstLink;
         }
 
+        public IChainFlowBuilder WithBooleanRouter<TRouter>(
+            Func<IChainFlowBuilder, IChainFlow> rightFlowFactory, 
+            Func<IChainFlowBuilder, IChainFlow> leftFlowFactory) where TRouter : IRouterLogic<bool>
+        {
+            var rightFlow = rightFlowFactory(new ChainFlowBuilder(_links));
+            var leftFlow = leftFlowFactory(new ChainFlowBuilder(_links));
+            var resolvedLink = ((BooleanRouterFlow<TRouter>)_links
+                .First(x => x.LinkType == typeof(BooleanRouterFlow<TRouter>).FullName)
+                .ChainLinkFactory())
+                .WithRightFlow(rightFlow)
+                .WithLeftFlow(leftFlow);
+            return ReturnUdpatedBuilder(resolvedLink);
+        }
+
         public IChainFlowBuilder With<T>() where T : IChainFlow
         {
             var resolvedLink = _links.First(x => x.LinkType == typeof(T).FullName).ChainLinkFactory();
+            return ReturnUdpatedBuilder(resolvedLink);
+        }
 
+        private IChainFlowBuilder ReturnUdpatedBuilder(IChainFlow resolvedLink)
+        {
             if (_firstLink is null)
             {
                 _firstLink = resolvedLink;

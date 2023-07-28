@@ -28,4 +28,28 @@ namespace ChainFlowUnitTest.Helper
             return "Then do something else";
         }
     }
+
+    class FakeChainLink3 : FakeChainLink 
+    {
+        public new string Describe()
+        {
+            return "Then check something";
+        }
+    }
+
+    class FakeChainLink4 : FakeChainLink 
+    {
+        public new string Describe()
+        {
+            return "Then check something else";
+        }
+    }
+
+    class FakeChainLink5 : FakeChainLink 
+    {
+        public new string Describe()
+        {
+            return "Then again look for something else";
+        }
+    }
 }
