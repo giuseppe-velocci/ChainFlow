@@ -62,7 +62,8 @@ namespace ChainFlow.Documentables
 
         public IChainFlowBuilder With<T>() where T : IChainFlow
         {
-            var registration = _links.First(x => x.LinkType == typeof(T).FullName);
+            var registration = _links.FirstOrDefault(x => x.LinkType == typeof(T).FullName)
+                ?? new ChainFlowRegistration(type: typeof(T), () => new TodoChainFlow(typeof(T)));
             _firstRegistration ??= registration;
 
             string tag = $"{registration.GetDocumentFlowId()}({registration.ChainLinkFactory().Describe()})";
@@ -165,6 +166,27 @@ namespace ChainFlow.Documentables
                 string connection = $"{current.GetDocumentFlowId()} --> {registration.GetDocumentFlowId()}";
                 _connections.Add(connection);
             }
+        }
+    }
+
+    class TodoChainFlow : IChainFlow
+    {
+        private readonly string _description;
+        public TodoChainFlow(Type type) 
+        { 
+            _description = $"TODO {type.Name}";
+        }
+
+        public string Describe() => _description;
+
+        public Task<ProcessingRequestWithOutcome> ProcessAsync(ProcessingRequest message, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SetNext(IChainFlow next)
+        {
+            throw new NotImplementedException();
         }
     }
 }

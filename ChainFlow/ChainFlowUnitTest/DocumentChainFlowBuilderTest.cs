@@ -36,6 +36,24 @@ namespace ChainFlowUnitTest
         }
 
         [Fact]
+        public void ToString_WhenUnregisteredFlowIsPassed_RetrunsFlowString()
+        {
+            var expected =
+$@"::: mermaid
+graph TD;
+_\W?\d+\(TODO IChainFlow\)
+Success\(Workflow is completed with success\)
+
+_\W?\d+ --> Success
+:::";
+            var _ = _sut
+                .With<IChainFlow>()
+                .Build();
+
+            _sut.ToString().Should().MatchRegex(expected);
+        }
+
+        [Fact]
         public void ToString_WhenSingleFlowIsResolved_ReturnsFlowString()
         {
             string expected =
@@ -49,6 +67,7 @@ Success(Workflow is completed with success)
             var _ = _sut
                 .With<FakeChainLink0>()
                 .Build();
+
             _sut.ToString().Should().Be(expected);
         }
 
@@ -83,6 +102,7 @@ Success(Workflow is completed with success)
                 )
                 .With<FakeChainLink4>()
                 .Build();
+
             _sut.ToString().Should().Be(expected);
         }
 
@@ -130,6 +150,7 @@ TransientFailure(Workflow is completed with transient failure)
                     .Build()
                 )
                 .Build();
+
             _sut.ToString().Should().Be(expected);
         }
 
@@ -162,6 +183,7 @@ Failure(Workflow is completed with failure)
                     x => x.With<FakeChainLink3>().Build(FlowOutcome.Failure)
                 )
                 .Build();
+
             _sut.ToString().Should().Be(expected);
         }
     }
