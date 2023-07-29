@@ -1,5 +1,5 @@
 ﻿using ChainFlow.Helpers;
-using ChainFlow.Models;
+using ChainFlow.Internals;
 using ChainFlowUnitTest.TestHelpers;
 using FluentAssertions;
 

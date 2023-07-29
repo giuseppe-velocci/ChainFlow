@@ -1,7 +1,7 @@
 ﻿using ChainFlow.Helpers;
 using ChainFlow.Interfaces;
 
-namespace ChainFlow.Models
+namespace ChainFlow.Internals
 {
     internal record class ChainFlowRegistration
     {

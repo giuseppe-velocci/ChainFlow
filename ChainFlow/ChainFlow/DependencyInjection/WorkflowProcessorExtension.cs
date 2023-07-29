@@ -5,23 +5,31 @@ namespace ChainFlow.DependencyInjection
 {
     public static class WorkflowProcessorExtension
     {
-        public static IServiceCollection AddWorkflow<TProcessor, TInput>(
+        /// <summary>
+        /// Add a workflow runner with the specified lifetime
+        /// </summary>
+        /// <typeparam name="TWorkflow">Type of the workflow runner. Must implement IWorkflow<TInput></typeparam>
+        /// <typeparam name="TInput">Type of input, must match the one implemented with IWorkflow<TInput></typeparam>
+        /// <param name="services">Current IServiceCollection</param>
+        /// <param name="serviceLifetime">Lifetime for the registered IChainFlow</param>
+        /// <returns>Current IServiceCollection</returns>
+        public static IServiceCollection AddWorkflow<TWorkflow, TInput>(
             this IServiceCollection services,
             ServiceLifetime serviceLifetime = ServiceLifetime.Transient)
-            where TProcessor : class, IWorkflow<TInput> 
+            where TWorkflow : class, IWorkflow<TInput> 
             where TInput : notnull
         {
             if (serviceLifetime == ServiceLifetime.Transient)
             {
-                services.AddTransient<IWorkflow<TInput>, TProcessor>();
+                services.AddTransient<IWorkflow<TInput>, TWorkflow>();
             }
             else if (serviceLifetime == ServiceLifetime.Scoped)
             {
-                services.AddScoped<IWorkflow<TInput>, TProcessor>();
+                services.AddScoped<IWorkflow<TInput>, TWorkflow>();
             }
             else
             {
-                services.AddSingleton<IWorkflow<TInput>, TProcessor>();
+                services.AddSingleton<IWorkflow<TInput>, TWorkflow>();
             }
             return services;
         }

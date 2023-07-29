@@ -4,7 +4,7 @@ namespace ChainFlow.Helpers
 {
     internal static class FilenameSanitizer
     {
-        private static char[] _whitelist = {
+        private static readonly char[] _whitelist = {
             '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
 
             'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
@@ -18,10 +18,10 @@ namespace ChainFlow.Helpers
             '-', '_'
         };
 
-        private static int _maxLen = 64;
-        private static char altChar = '_';
-        private static string altString = altChar.ToString();
-        private static Regex replaceRegex = new("_{2,}");
+        private static readonly int _maxLen = 64;
+        private static readonly char altChar = '_';
+        private static readonly string altString = altChar.ToString();
+        private static readonly Regex replaceRegex = new("_{2,}");
 
         public static string Sanitize(string filename) 
         {
@@ -37,7 +37,7 @@ namespace ChainFlow.Helpers
             if (output?.Any() is true)
             {
                 return output.Length > _maxLen ?
-                    output.Substring(0, _maxLen) : 
+                    output[.._maxLen] : 
                     output;
             }
             else

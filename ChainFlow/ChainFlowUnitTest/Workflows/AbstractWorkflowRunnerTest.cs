@@ -7,12 +7,12 @@ using Moq;
 
 namespace ChainFlowUnitTest.Workflows
 {
-    public class AbstractWorkflowTest
+    public class AbstractWorkflowRunnerTest
     {
-        private readonly Mock<AbstractWorkflow<bool>> _sut;
+        private readonly Mock<AbstractWorkflowRunner<bool>> _sut;
         private readonly Mock<IChainFlowBuilder> _mockChainBuilder;
 
-        public AbstractWorkflowTest()
+        public AbstractWorkflowRunnerTest()
         {
             _mockChainBuilder = new();
             _sut = new(_mockChainBuilder.Object);

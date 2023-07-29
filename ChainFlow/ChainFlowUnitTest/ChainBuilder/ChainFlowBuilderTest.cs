@@ -1,7 +1,7 @@
 using ChainFlow.ChainBuilder;
 using ChainFlow.ChainFlows;
 using ChainFlow.Interfaces;
-using ChainFlow.Models;
+using ChainFlow.Internals;
 using ChainFlowUnitTest.TestHelpers;
 using FluentAssertions;
 using Moq;

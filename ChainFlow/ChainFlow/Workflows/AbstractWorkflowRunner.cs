@@ -3,12 +3,12 @@ using ChainFlow.Models;
 
 namespace ChainFlow.Workflows
 {
-    public abstract class AbstractWorkflow<T> : IWorkflow<T> where T : notnull
+    public abstract class AbstractWorkflowRunner<T> : IWorkflow<T> where T : notnull
     {
         private readonly IChainFlowBuilder _chainBuilder = null!;
         private IChainFlow chain = null!;
 
-        public AbstractWorkflow(IChainFlowBuilder chainBuilder)
+        public AbstractWorkflowRunner(IChainFlowBuilder chainBuilder)
         {
             _chainBuilder = chainBuilder;
         }

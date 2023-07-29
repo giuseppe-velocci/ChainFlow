@@ -1,4 +1,4 @@
-﻿using ChainFlow.Interfaces;
+﻿using ChainFlow.Internals;
 
 namespace ChainFlow.Helpers
 {

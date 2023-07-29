@@ -2,7 +2,7 @@
 using ChainFlow.Enums;
 using ChainFlow.Helpers;
 using ChainFlow.Interfaces;
-using ChainFlow.Models;
+using ChainFlow.Internals;
 using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("ChainFlowUnitTest")]

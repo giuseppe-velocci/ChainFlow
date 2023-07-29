@@ -1,12 +1,24 @@
 ﻿using ChainFlow.ChainBuilder;
+using ChainFlow.Documentables;
+using ChainFlow.Helpers;
 using ChainFlow.Interfaces;
+using ChainFlow.Internals;
 using ChainFlow.Models;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using System.Collections.Generic;
 
 namespace ChainFlow.DependencyInjection
 {
     public static class ChainBuilderExtension
     {
+        /// <summary>
+        /// Add a single IChainFlow registration
+        /// </summary>
+        /// <typeparam name="T">Type T must implement IChainFlow</typeparam>
+        /// <param name="services">Current IServiceCollection</param>
+        /// <param name="serviceLifetime">Lifetime for the registered IChainFlow</param>
+        /// <returns>Current IServiceCollection</returns>
         public static IServiceCollection AddChainFlow<T>(
             this IServiceCollection services,
             ServiceLifetime serviceLifetime = ServiceLifetime.Transient) where T : class, IChainFlow
@@ -26,12 +38,6 @@ namespace ChainFlow.DependencyInjection
 
             services.AddSingleton(sp => new ChainFlowRegistration(typeof(T), () => sp.GetRequiredService<T>()));
 
-            return services;
-        }
-
-        public static IServiceCollection AddChainFlowBuilder(this IServiceCollection services)
-        {
-            services.AddSingleton<IChainFlowBuilder, ChainFlowBuilder>();
             return services;
         }
     }

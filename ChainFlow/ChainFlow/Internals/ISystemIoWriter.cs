@@ -1,7 +1,7 @@
 ﻿using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
-namespace ChainFlow.Interfaces
+namespace ChainFlow.Internals
 {
     internal interface ISystemIoWriter
     {

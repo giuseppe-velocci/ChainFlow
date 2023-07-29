@@ -1,5 +1,6 @@
 ﻿using ChainFlow.Helpers;
 using ChainFlow.Interfaces;
+using ChainFlow.Internals;
 using System.Text;
 
 namespace ChainFlow.Documentables
@@ -15,9 +16,9 @@ namespace ChainFlow.Documentables
             _fileSystem = fileSystem;
         }
 
-        public Task RunAsync(string[] args)
+        public Task RunAsync()
         {
-            StringBuilder stringBuilder = new StringBuilder();
+            StringBuilder stringBuilder = new ();
 
             foreach (var workflow in _workflows)
             {
@@ -29,7 +30,7 @@ namespace ChainFlow.Documentables
                 // flowchart
                 stringBuilder.AppendLine("::: mermaid");
                 stringBuilder.AppendLine("graph TD;");
-                stringBuilder.AppendLine(workflow.DescribeWorkflowEntryPoint());
+                stringBuilder.AppendLine($"_start({workflow.DescribeWorkflowEntryPoint()}) -->");
                 stringBuilder.AppendLine(workflow.GetFlow());
                 stringBuilder.AppendLine(":::");
                 stringBuilder.AppendLine(string.Empty);

@@ -1,5 +1,6 @@
 ﻿using ChainFlow.Documentables;
 using ChainFlow.Interfaces;
+using ChainFlow.Internals;
 using FluentAssertions;
 using Moq;
 
@@ -17,7 +18,9 @@ namespace ChainFlowUnitTest.Documentables
             _mockWorkflow0 = new();
             _mockWorkflow1 = new();
             _mockFilesystem = new();
-            _sut = new(new IDocumentableWorkflow[] { _mockWorkflow0.Object, _mockWorkflow1.Object }, _mockFilesystem.Object);
+            _sut = new(
+                new IDocumentableWorkflow[] { _mockWorkflow0.Object, _mockWorkflow1.Object },
+                _mockFilesystem.Object);
         }
 
         [Fact]
@@ -29,7 +32,7 @@ describe 0
 
 ::: mermaid
 graph TD;
-work 0
+_start(work 0) -->
 flow 0
 :::
 
@@ -38,14 +41,14 @@ describe 1
 
 ::: mermaid
 graph TD;
-work 1
+_start(work 1) -->
 flow 1
 :::";
 
             SetupDocumentableWorkflow(_mockWorkflow0, "0");
             SetupDocumentableWorkflow(_mockWorkflow1, "1");
 
-            await _sut.RunAsync(Array.Empty<string>());
+            await _sut.RunAsync();
 
             _mockFilesystem.Verify(x => x.WriteFile(It.IsAny<string>(), expected), Times.Once);
         }
@@ -59,14 +62,14 @@ describe 0
 
 ::: mermaid
 graph TD;
-work 0
+_start(work 0) -->
 flow 0
 :::";
             SetupDocumentableWorkflow(_mockWorkflow0, "0");
 
             DocumentableProgram sut = new(new IDocumentableWorkflow[] { _mockWorkflow0.Object }, _mockFilesystem.Object);
 
-            await sut.RunAsync(Array.Empty<string>());
+            await sut.RunAsync();
 
             _mockFilesystem.Verify(x => x.WriteFile("name_0.md", expected), Times.Once);
         }
@@ -76,7 +79,7 @@ flow 0
         {
             DocumentableProgram sut = new(Array.Empty<IDocumentableWorkflow>(), null!);
 
-            var act = () => sut.RunAsync(Array.Empty<string>());
+            var act = () => sut.RunAsync();
             await act.Should().ThrowAsync<NullReferenceException>();
         }
 
@@ -85,7 +88,7 @@ flow 0
         {
             DocumentableProgram sut = new(null!, _mockFilesystem.Object);
 
-            var act = () => sut.RunAsync(Array.Empty<string>());
+            var act = () => sut.RunAsync();
             await act.Should().ThrowAsync<NullReferenceException>();
         }
 
@@ -95,12 +98,12 @@ flow 0
             DocumentableProgram sut = new(Array.Empty<IDocumentableWorkflow>(), _mockFilesystem.Object);
             string expected = string.Empty;
 
-            await sut.RunAsync(Array.Empty<string>());
+            await sut.RunAsync();
 
             _mockFilesystem.Verify(x => x.WriteFile(It.IsAny<string>(), expected), Times.Once);
         }
 
-        private void SetupDocumentableWorkflow(Mock<IDocumentableWorkflow> mock, string id)
+        private static void SetupDocumentableWorkflow(Mock<IDocumentableWorkflow> mock, string id)
         {
             string name0 = "name " + id;
             mock

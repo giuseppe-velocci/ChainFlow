@@ -2,6 +2,7 @@
 using ChainFlow.Documentables;
 using ChainFlow.Enums;
 using ChainFlow.Interfaces;
+using ChainFlow.Internals;
 using ChainFlow.Models;
 using ChainFlowUnitTest.TestHelpers;
 using FluentAssertions;

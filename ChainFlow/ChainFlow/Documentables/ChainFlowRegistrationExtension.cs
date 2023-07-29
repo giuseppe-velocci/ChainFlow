@@ -1,4 +1,4 @@
-﻿using ChainFlow.Models;
+﻿using ChainFlow.Internals;
 
 namespace ChainFlow.Documentables
 {
