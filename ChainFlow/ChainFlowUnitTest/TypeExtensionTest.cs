@@ -1,6 +1,6 @@
 ﻿using ChainFlow.Helpers;
 using ChainFlow.Interfaces;
-using ChainFlowUnitTest.Helpers;
+using ChainFlowUnitTest.TestHelpers;
 using System.Runtime.Serialization;
 
 namespace ChainFlowUnitTest
@@ -18,8 +18,8 @@ namespace ChainFlowUnitTest
         [Fact]
         public void GetFullName_WhenTypeIsGeneric_ReturnsNameWithGenericTypes()
         {
-            var type = typeof(IRouterLogic<string>);
-            var expected = "IRouterLogic<String>";
+            var type = typeof(IRouterDispatcher<string>);
+            var expected = "IRouterDispatcher<String>";
             Assert.Equal(expected, type.GetFullName());
         }
 

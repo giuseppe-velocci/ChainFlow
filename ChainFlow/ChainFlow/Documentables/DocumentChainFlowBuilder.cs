@@ -101,7 +101,7 @@ namespace ChainFlow.Documentables
             return stringBuilder.ToString().Trim();
         }
 
-        public IChainFlowBuilder WithBooleanRouter<TRouter>(Func<IChainFlowBuilder, IChainFlow> rightFlowFactory, Func<IChainFlowBuilder, IChainFlow> leftFlowFactory) where TRouter : IRouterLogic<bool>
+        public IChainFlowBuilder WithBooleanRouter<TRouter>(Func<IChainFlowBuilder, IChainFlow> rightFlowFactory, Func<IChainFlowBuilder, IChainFlow> leftFlowFactory) where TRouter : IRouterDispatcher<bool>
         {
             var registration = _links.FirstOrDefault(x => x.LinkType == typeof(BooleanRouterFlow<TRouter>).GetFullName())
                 ?? new ChainFlowRegistration(typeof(TRouter), () => new TodoBooleanRouterChainFlow<TRouter>(default!));
@@ -182,7 +182,7 @@ namespace ChainFlow.Documentables
         public void SetNext(IChainFlow next) { }
     }
 
-    class TodoBooleanRouterChainFlow<T> : BooleanRouterFlow<T>, IChainFlow where T : IRouterLogic<bool>
+    class TodoBooleanRouterChainFlow<T> : BooleanRouterFlow<T>, IChainFlow where T : IRouterDispatcher<bool>
     {
         private readonly string _description;
         public TodoBooleanRouterChainFlow(T routerLogic) : base(routerLogic)

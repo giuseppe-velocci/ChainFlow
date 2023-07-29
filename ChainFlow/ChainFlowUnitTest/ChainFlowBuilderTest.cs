@@ -2,7 +2,7 @@ using ChainFlow.ChainBuilder;
 using ChainFlow.ChainFlows;
 using ChainFlow.Interfaces;
 using ChainFlow.Models;
-using ChainFlowUnitTest.Helpers;
+using ChainFlowUnitTest.TestHelpers;
 using FluentAssertions;
 using Moq;
 
@@ -20,7 +20,7 @@ namespace ChainFlowUnitTest
                 new ChainFlowRegistration(typeof(FakeChainLink2), () => new FakeChainLink2()),
                 new ChainFlowRegistration(typeof(FakeChainLink3), () => new FakeChainLink3()),
                 new ChainFlowRegistration(typeof(FakeChainLink4), () => new FakeChainLink4()),
-                new ChainFlowRegistration(typeof(BooleanRouterFlow<IRouterLogic<bool>>), () => new BooleanRouterFlow<IRouterLogic<bool>>(new Mock<IRouterLogic<bool>>().Object)),
+                new ChainFlowRegistration(typeof(BooleanRouterFlow<IRouterDispatcher<bool>>), () => new BooleanRouterFlow<IRouterDispatcher<bool>>(new Mock<IRouterDispatcher<bool>>().Object)),
             });
         }
 
@@ -54,7 +54,7 @@ namespace ChainFlowUnitTest
         [Fact]
         public void WithBooleanRouter_WhenRegisteredLinksArePassed_Succeed()
         {
-            _sut.WithBooleanRouter<IRouterLogic<bool>>(
+            _sut.WithBooleanRouter<IRouterDispatcher<bool>>(
                 (x) => x.With<FakeChainLink2>().Build(),
                 (x) => x.With<FakeChainLink3>().Build()
             ).Should().BeOfType<ChainFlowBuilder>();
@@ -63,7 +63,7 @@ namespace ChainFlowUnitTest
         [Fact]
         public void WithBooleanRouter_WhenUnregisteredLinkIsPassedAsRight_ThrowsException()
         {
-            var act = () => _sut.WithBooleanRouter<IRouterLogic<bool>>(
+            var act = () => _sut.WithBooleanRouter<IRouterDispatcher<bool>>(
                 (x) => x.With<IChainFlow>().Build(),
                 (x) => x.With<FakeChainLink3>().Build()
             );
@@ -73,7 +73,7 @@ namespace ChainFlowUnitTest
         [Fact]
         public void WithBooleanRouter_WhenUnregisteredLinkIsPassedAsLeft_ThrowsException()
         {
-            var act = () => _sut.WithBooleanRouter<IRouterLogic<bool>>(
+            var act = () => _sut.WithBooleanRouter<IRouterDispatcher<bool>>(
                 (x) => x.With<FakeChainLink3>().Build(),
                 (x) => x.With<IChainFlow>().Build()
             );
@@ -96,7 +96,7 @@ namespace ChainFlowUnitTest
             var chain = _sut
                 .With<FakeChainLink1>()
                 .With<FakeChainLink0>()
-                .WithBooleanRouter<IRouterLogic<bool>>(
+                .WithBooleanRouter<IRouterDispatcher<bool>>(
                     (x) => x.With<FakeChainLink2>().Build(),
                     (x) => x.With<FakeChainLink3>().Build()
                 )
@@ -110,10 +110,10 @@ namespace ChainFlowUnitTest
             var chain = _sut
                 .With<FakeChainLink1>()
                 .With<FakeChainLink0>()
-                .WithBooleanRouter<IRouterLogic<bool>>(
+                .WithBooleanRouter<IRouterDispatcher<bool>>(
                     (x) => x
                         .With<FakeChainLink2>()
-                        .WithBooleanRouter<IRouterLogic<bool>>(
+                        .WithBooleanRouter<IRouterDispatcher<bool>>(
                             y => y.With<FakeChainLink4>().Build(),
                             y => y.With<FakeChainLink3>().Build())
                         .Build(),

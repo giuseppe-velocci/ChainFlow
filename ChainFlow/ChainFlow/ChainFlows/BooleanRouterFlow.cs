@@ -3,11 +3,11 @@ using ChainFlow.Models;
 
 namespace ChainFlow.ChainFlows
 {
-    internal class BooleanRouterFlow<TRouterLogix> : AbstractChainFlow where TRouterLogix : IRouterLogic<bool> 
+    internal class BooleanRouterFlow<TRouterLogix> : AbstractChainFlow where TRouterLogix : IRouterDispatcher<bool> 
     {
         private IChainFlow _rightFlow = null!;
         private IChainFlow _leftFlow = null!;
-        private readonly IRouterLogic<bool> _routerLogic;
+        private readonly IRouterDispatcher<bool> _routerLogic;
 
         public BooleanRouterFlow(TRouterLogix routerLogic)
         {
@@ -28,7 +28,7 @@ namespace ChainFlow.ChainFlows
 
         public override async Task<ProcessingRequestWithOutcome> ProcessRequestAsync(ProcessingRequest message, CancellationToken cancellationToken)
         {
-            bool routerLogicOutcome = await _routerLogic.ExcecuteAsync(message, cancellationToken);
+            bool routerLogicOutcome = await _routerLogic.ProcessAsync(message, cancellationToken);
             return routerLogicOutcome ?
                 await _rightFlow.ProcessAsync(message, cancellationToken) : 
                 await _leftFlow.ProcessAsync(message, cancellationToken);

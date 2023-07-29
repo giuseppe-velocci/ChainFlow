@@ -1,6 +1,6 @@
 ﻿using ChainFlow.Helpers;
 using ChainFlow.Models;
-using ChainFlowUnitTest.Helpers;
+using ChainFlowUnitTest.TestHelpers;
 using FluentAssertions;
 
 namespace ChainFlowUnitTest

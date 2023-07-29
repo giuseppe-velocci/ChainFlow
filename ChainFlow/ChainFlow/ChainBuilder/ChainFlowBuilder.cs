@@ -37,7 +37,7 @@ namespace ChainFlow.ChainBuilder
 
         public IChainFlowBuilder WithBooleanRouter<TRouter>(
             Func<IChainFlowBuilder, IChainFlow> rightFlowFactory, 
-            Func<IChainFlowBuilder, IChainFlow> leftFlowFactory) where TRouter : IRouterLogic<bool>
+            Func<IChainFlowBuilder, IChainFlow> leftFlowFactory) where TRouter : IRouterDispatcher<bool>
         {
             var rightFlow = rightFlowFactory(new ChainFlowBuilder(_links));
             var leftFlow = leftFlowFactory(new ChainFlowBuilder(_links));

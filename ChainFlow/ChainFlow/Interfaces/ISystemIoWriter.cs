@@ -1,6 +1,9 @@
-﻿namespace ChainFlow.Interfaces
+﻿using System.Runtime.CompilerServices;
+
+[assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
+namespace ChainFlow.Interfaces
 {
-    public interface ISystemIoWriter
+    internal interface ISystemIoWriter
     {
         public Task WriteFile(string filepath, string content);
     }

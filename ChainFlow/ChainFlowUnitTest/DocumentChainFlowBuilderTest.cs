@@ -3,7 +3,7 @@ using ChainFlow.Documentables;
 using ChainFlow.Enums;
 using ChainFlow.Interfaces;
 using ChainFlow.Models;
-using ChainFlowUnitTest.Helpers;
+using ChainFlowUnitTest.TestHelpers;
 using FluentAssertions;
 using Moq;
 
@@ -55,7 +55,7 @@ _\W?\d+ --> Success";
         {
             var expected =
 $@"{_registrations.ElementAt(0).GetDocumentFlowId()}\({_registrations.ElementAt(0).ChainLinkFactory().Describe()}\)
-_\W?\d+\{{TODO RouterFlow IRouterLogic\<Boolean\>\}}
+_\W?\d+\{{TODO RouterFlow IRouterDispatcher\<Boolean\>\}}
 {_registrations.ElementAt(1).GetDocumentFlowId()}\({_registrations.ElementAt(1).ChainLinkFactory().Describe()}\)
 Success\(Workflow is completed with success\)
 _\W?\d+\(TODO IChainFlow\)
@@ -68,7 +68,7 @@ _\W?\d+ --> Failure
 {_registrations.ElementAt(1).GetDocumentFlowId()} --> Success";
             var _ = _sut
                 .With<FakeChainLink0>()
-                .WithBooleanRouter<IRouterLogic<bool>>(
+                .WithBooleanRouter<IRouterDispatcher<bool>>(
                     (x) => x.With<FakeChainLink1>().Build(FlowOutcome.Success),
                     (x) => x.With<IChainFlow>().Build(FlowOutcome.Failure)
                 )
@@ -200,11 +200,11 @@ Failure(Workflow is completed with failure)
         }
     }
 
-    class RouterLogic : IRouterLogic<bool>
+    class RouterLogic : IRouterDispatcher<bool>
     {
         public virtual string Describe() => "Is main logic valid @5?";
 
-        public Task<bool> ExcecuteAsync(ProcessingRequest message, CancellationToken cancellationToken) =>
+        public Task<bool> ProcessAsync(ProcessingRequest message, CancellationToken cancellationToken) =>
             Task.FromResult(true);
     }
 

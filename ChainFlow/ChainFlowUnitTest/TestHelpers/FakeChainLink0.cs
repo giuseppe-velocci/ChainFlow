@@ -1,7 +1,7 @@
 ﻿using ChainFlow.Interfaces;
 using ChainFlow.Models;
 
-namespace ChainFlowUnitTest.Helpers
+namespace ChainFlowUnitTest.TestHelpers
 {
     class FakeChainLink0 : IChainFlow
     {
