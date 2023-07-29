@@ -3,7 +3,7 @@ using ChainFlow.Interfaces;
 using ChainFlowUnitTest.TestHelpers;
 using System.Runtime.Serialization;
 
-namespace ChainFlowUnitTest
+namespace ChainFlowUnitTest.Helpers
 {
     public class TypeExtensionTest
     {
@@ -14,7 +14,7 @@ namespace ChainFlowUnitTest
             var expected = type.Name;
             Assert.Equal(expected, type.GetFullName());
         }
-        
+
         [Fact]
         public void GetFullName_WhenTypeIsGeneric_ReturnsNameWithGenericTypes()
         {

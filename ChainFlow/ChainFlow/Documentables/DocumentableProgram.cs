@@ -1,4 +1,5 @@
-﻿using ChainFlow.Interfaces;
+﻿using ChainFlow.Helpers;
+using ChainFlow.Interfaces;
 using System.Text;
 
 namespace ChainFlow.Documentables
@@ -18,7 +19,7 @@ namespace ChainFlow.Documentables
         {
             StringBuilder stringBuilder = new StringBuilder();
 
-            foreach (var  workflow in _workflows)
+            foreach (var workflow in _workflows)
             {
                 // worflow name and description
                 stringBuilder.AppendLine("##" + workflow.GetWorkflowName());
@@ -34,7 +35,8 @@ namespace ChainFlow.Documentables
                 stringBuilder.AppendLine(string.Empty);
             }
 
-            return _fileSystem.WriteFile("graph.md", stringBuilder.ToString().Trim());
+            string filename = $"{FilenameSanitizer.Sanitize(_workflows?.FirstOrDefault()?.GetWorkflowName() ?? string.Empty)}.md";
+            return _fileSystem.WriteFile(filename, stringBuilder.ToString().Trim());
         }
     }
 }

@@ -1,10 +1,9 @@
-﻿using Castle.DynamicProxy.Generators;
-using ChainFlow.Documentables;
+﻿using ChainFlow.Documentables;
 using ChainFlow.Interfaces;
 using FluentAssertions;
 using Moq;
 
-namespace ChainFlowUnitTest
+namespace ChainFlowUnitTest.Documentables
 {
     public class DocumentableProgramTest
     {
@@ -15,14 +14,14 @@ namespace ChainFlowUnitTest
 
         public DocumentableProgramTest()
         {
-            _mockWorkflow0 = new ();
-            _mockWorkflow1 = new ();
-            _mockFilesystem = new ();
+            _mockWorkflow0 = new();
+            _mockWorkflow1 = new();
+            _mockFilesystem = new();
             _sut = new(new IDocumentableWorkflow[] { _mockWorkflow0.Object, _mockWorkflow1.Object }, _mockFilesystem.Object);
         }
 
         [Fact]
-        public async Task RunAsync_WhenWorkflowsAreRegistred_CreatesDocument()
+        public async Task RunAsync_WhenMultipleWorkflowsAreRegistred_CreatesDocument()
         {
             string expected =
 @"##name 0
@@ -42,13 +41,34 @@ graph TD;
 work 1
 flow 1
 :::";
-           
+
             SetupDocumentableWorkflow(_mockWorkflow0, "0");
             SetupDocumentableWorkflow(_mockWorkflow1, "1");
 
             await _sut.RunAsync(Array.Empty<string>());
 
             _mockFilesystem.Verify(x => x.WriteFile(It.IsAny<string>(), expected), Times.Once);
+        }
+
+        [Fact]
+        public async Task RunAsync_WhenSingleWorkflowIsRegistered_CreatesDocument()
+        {
+            string expected =
+@"##name 0
+describe 0
+
+::: mermaid
+graph TD;
+work 0
+flow 0
+:::";
+            SetupDocumentableWorkflow(_mockWorkflow0, "0");
+
+            DocumentableProgram sut = new(new IDocumentableWorkflow[] { _mockWorkflow0.Object }, _mockFilesystem.Object);
+
+            await sut.RunAsync(Array.Empty<string>());
+
+            _mockFilesystem.Verify(x => x.WriteFile("name_0.md", expected), Times.Once);
         }
 
         [Fact]
@@ -68,7 +88,7 @@ flow 1
             var act = () => sut.RunAsync(Array.Empty<string>());
             await act.Should().ThrowAsync<NullReferenceException>();
         }
-        
+
         [Fact]
         public async Task RunAsync_WhenEmptyWorkflows_returnsEmptyString()
         {

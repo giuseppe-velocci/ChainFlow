@@ -1,11 +1,11 @@
 ﻿using ChainFlow.Enums;
 using ChainFlow.Interfaces;
 using ChainFlow.Models;
-using ChainFlow.Processors;
+using ChainFlow.Workflows;
 using FluentAssertions;
 using Moq;
 
-namespace ChainFlowUnitTest
+namespace ChainFlowUnitTest.Workflows
 {
     public class AbstractWorkflowTest
     {
@@ -14,7 +14,7 @@ namespace ChainFlowUnitTest
 
         public AbstractWorkflowTest()
         {
-            _mockChainBuilder = new ();
+            _mockChainBuilder = new();
             _sut = new(_mockChainBuilder.Object);
         }
 

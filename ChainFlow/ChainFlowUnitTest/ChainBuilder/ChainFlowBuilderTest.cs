@@ -6,7 +6,7 @@ using ChainFlowUnitTest.TestHelpers;
 using FluentAssertions;
 using Moq;
 
-namespace ChainFlowUnitTest
+namespace ChainFlowUnitTest.ChainBuilder
 {
     public class ChainFlowBuilderTest
     {

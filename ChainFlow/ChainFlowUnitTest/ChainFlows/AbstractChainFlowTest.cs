@@ -4,7 +4,7 @@ using ChainFlow.Models;
 using FluentAssertions;
 using Moq;
 
-namespace ChainFlowUnitTest
+namespace ChainFlowUnitTest.ChainFlows
 {
     public class AbstractChainFlowTest
     {

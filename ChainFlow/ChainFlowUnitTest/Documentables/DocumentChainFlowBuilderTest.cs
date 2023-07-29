@@ -7,7 +7,7 @@ using ChainFlowUnitTest.TestHelpers;
 using FluentAssertions;
 using Moq;
 
-namespace ChainFlowUnitTest
+namespace ChainFlowUnitTest.Documentables
 {
     public class DocumentChainFlowBuilderTest
     {
@@ -49,7 +49,7 @@ _\W?\d+ --> Success";
 
             _sut.ToString().Should().MatchRegex(expected);
         }
-        
+
         [Fact]
         public void ToString_WhenUnregisteredBooleanRouterFlowIsPassed_RetrunsFlowString()
         {

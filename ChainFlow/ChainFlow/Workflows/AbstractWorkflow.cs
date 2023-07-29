@@ -1,7 +1,7 @@
 ﻿using ChainFlow.Interfaces;
 using ChainFlow.Models;
 
-namespace ChainFlow.Processors
+namespace ChainFlow.Workflows
 {
     public abstract class AbstractWorkflow<T> : IWorkflow<T> where T : notnull
     {
