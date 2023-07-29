@@ -44,10 +44,8 @@ namespace ChainFlow.DependencyInjection
 
         private static void RegisterAllIDocumentableWorkflows(IServiceCollection services)
         {
-            // Get all loaded assemblies
             var assemblies = AppDomain.CurrentDomain.GetAssemblies();
 
-            // Find all classes that implement IMyInterface
             var implementations = assemblies
                 .SelectMany(a => a.GetTypes())
                 .Where(t => typeof(IDocumentableWorkflow).IsAssignableFrom(t) && !t.IsInterface && !t.IsAbstract)

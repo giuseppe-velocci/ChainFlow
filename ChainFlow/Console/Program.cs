@@ -18,4 +18,4 @@ static IHostBuilder CreateHostBuilder(string[] args)
 }
 
 var host = CreateHostBuilder(args).Build();
-host.Run();
+await host.RunAsync();

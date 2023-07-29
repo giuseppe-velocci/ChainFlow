@@ -21,16 +21,17 @@ namespace ChainFlow.Internals
             _host?.Dispose();
         }
 
-        public Task StartAsync(CancellationToken cancellationToken = default)
+        public async Task StartAsync(CancellationToken cancellationToken = default)
         {
             if (_runMode is RunMode.Documentation)
             {
                 DocumentableProgram program = (DocumentableProgram)_host.Services.GetService(typeof(DocumentableProgram))!;
-                return program.RunAsync();
+                await program.RunAsync();
+                await _host.StopAsync();
             }
             else
             {
-                return _host.StartAsync(cancellationToken);
+                await _host.StartAsync(cancellationToken);
             }
         }
 
