@@ -58,8 +58,8 @@ _\W?\d+ --> Success";
 $@"{_registrations.ElementAt(0).GetDocumentFlowId()}\({_registrations.ElementAt(0).ChainLinkFactory().Describe()}\)
 _\W?\d+\{{TODO RouterFlow IRouterDispatcher\<Boolean\>\}}
 {_registrations.ElementAt(1).GetDocumentFlowId()}\({_registrations.ElementAt(1).ChainLinkFactory().Describe()}\)
-Success\(Workflow is completed with success\)
 _\W?\d+\(TODO IChainFlow\)
+Success\(Workflow is completed with success\)
 Failure\(Workflow is completed with failure\)
 
 {_registrations.ElementAt(0).GetDocumentFlowId()} --> _\W?\d+\
@@ -101,9 +101,9 @@ $@"{_registrations.ElementAt(0).GetDocumentFlowId()}({_registrations.ElementAt(0
 {_registrations.ElementAt(1).GetDocumentFlowId()}({_registrations.ElementAt(1).ChainLinkFactory().Describe()})
 {_registrations.ElementAt(5).GetDocumentFlowId()}{{{_registrations.ElementAt(5).ChainLinkFactory().Describe()}}}
 {_registrations.ElementAt(2).GetDocumentFlowId()}({_registrations.ElementAt(2).ChainLinkFactory().Describe()})
-Success(Workflow is completed with success)
 {_registrations.ElementAt(3).GetDocumentFlowId()}({_registrations.ElementAt(3).ChainLinkFactory().Describe()})
 {_registrations.ElementAt(4).GetDocumentFlowId()}({_registrations.ElementAt(4).ChainLinkFactory().Describe()})
+Success(Workflow is completed with success)
 
 {_registrations.ElementAt(0).GetDocumentFlowId()} --> {_registrations.ElementAt(1).GetDocumentFlowId()}
 {_registrations.ElementAt(1).GetDocumentFlowId()} --> {_registrations.ElementAt(5).GetDocumentFlowId()}
@@ -133,10 +133,10 @@ $@"{_registrations.ElementAt(0).GetDocumentFlowId()}({_registrations.ElementAt(0
 {_registrations.ElementAt(5).GetDocumentFlowId()}{{{_registrations.ElementAt(5).ChainLinkFactory().Describe()}}}
 {_registrations.ElementAt(1).GetDocumentFlowId()}({_registrations.ElementAt(1).ChainLinkFactory().Describe()})
 {_registrations.ElementAt(2).GetDocumentFlowId()}({_registrations.ElementAt(2).ChainLinkFactory().Describe()})
-Success(Workflow is completed with success)
 {_registrations.ElementAt(6).GetDocumentFlowId()}{{{_registrations.ElementAt(6).ChainLinkFactory().Describe()}}}
 {_registrations.ElementAt(3).GetDocumentFlowId()}({_registrations.ElementAt(3).ChainLinkFactory().Describe()})
 {_registrations.ElementAt(4).GetDocumentFlowId()}({_registrations.ElementAt(4).ChainLinkFactory().Describe()})
+Success(Workflow is completed with success)
 TransientFailure(Workflow is completed with transient failure)
 
 {_registrations.ElementAt(0).GetDocumentFlowId()} --> {_registrations.ElementAt(5).GetDocumentFlowId()}
@@ -178,8 +178,8 @@ $@"{_registrations.ElementAt(0).GetDocumentFlowId()}({_registrations.ElementAt(0
 {_registrations.ElementAt(1).GetDocumentFlowId()}({_registrations.ElementAt(1).ChainLinkFactory().Describe()})
 {_registrations.ElementAt(5).GetDocumentFlowId()}{{{_registrations.ElementAt(5).ChainLinkFactory().Describe()}}}
 {_registrations.ElementAt(2).GetDocumentFlowId()}({_registrations.ElementAt(2).ChainLinkFactory().Describe()})
-Success(Workflow is completed with success)
 {_registrations.ElementAt(3).GetDocumentFlowId()}({_registrations.ElementAt(3).ChainLinkFactory().Describe()})
+Success(Workflow is completed with success)
 Failure(Workflow is completed with failure)
 
 {_registrations.ElementAt(0).GetDocumentFlowId()} --> {_registrations.ElementAt(1).GetDocumentFlowId()}

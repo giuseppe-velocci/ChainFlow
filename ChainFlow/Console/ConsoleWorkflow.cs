@@ -7,7 +7,11 @@ namespace Console
     internal class ConsoleWorkflow : AbstractWorkflowRunner<string>
     {
         public ConsoleWorkflow(IChainFlowBuilder chainBuilder) : base(chainBuilder)
-        { }
+        {
+            chainBuilder
+                .With<ValidateInputFlow>()
+                .Build();
+        }
 
         public override string Describe() => "A sample console app with ChainFlow";
 
@@ -17,7 +21,9 @@ namespace Console
 
         public override string Outcome2T(ProcessingRequestWithOutcome outcome)
         {
-            throw new NotImplementedException();
+            return outcome.Request is not null ?
+                "Well Done!" :
+                "Error";
         }
     }
 }

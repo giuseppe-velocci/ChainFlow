@@ -87,10 +87,15 @@ namespace ChainFlow.Documentables
 
             var stringBuilder = new StringBuilder();
 
-            foreach (var tag in _tags)
+            foreach (var tag in _tags.Where(x => x.StartsWith("_")))
             {
                 stringBuilder.AppendLine(tag.ToString());
             }
+            foreach (var tag in _tags.Where(x => !x.StartsWith("_")))
+            {
+                stringBuilder.AppendLine(tag.ToString());
+            }
+
 
             stringBuilder.AppendLine(string.Empty);
 

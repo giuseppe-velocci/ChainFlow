@@ -11,7 +11,7 @@ static IHostBuilder CreateHostBuilder(string[] args)
         {
             services
                 .AddWorkflow<ConsoleWorkflow, string>()
-
+                .AddChainFlow<ValidateInputFlow>()
                 ;
         });
     return host;

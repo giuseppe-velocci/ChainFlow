@@ -11,11 +11,11 @@ namespace ChainFlow.Workflows
         public AbstractWorkflowRunner(IChainFlowBuilder chainBuilder)
         {
             _chainBuilder = chainBuilder;
+            chain = _chainBuilder.Build();
         }
 
         public async Task<T> ProcessAsync(ProcessingRequest message, CancellationToken cancellationToken)
         {
-            chain ??= _chainBuilder.Build();
 
             var response = await chain.ProcessAsync(message, cancellationToken);
             return Outcome2T(response);
