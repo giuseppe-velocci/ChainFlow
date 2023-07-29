@@ -4,6 +4,7 @@ using ChainFlow.Helpers;
 using ChainFlow.Interfaces;
 using ChainFlow.Internals;
 using ChainFlow.Models;
+using System.Reflection;
 using System.Text;
 
 namespace ChainFlow.Documentables
@@ -15,7 +16,7 @@ namespace ChainFlow.Documentables
         private readonly IList<string> _connections;
 
         private ChainFlowRegistration _firstRegistration = null!;
-        private readonly IList<ChainFlowRegistration> _currentRegistration = new List<ChainFlowRegistration>();
+        private readonly IList<ChainFlowRegistrationWithBehavior> _currentRegistration = new List<ChainFlowRegistrationWithBehavior>();
         private readonly bool _isMainBuilder = true;
 
         public DocumentChainFlowBuilder(IEnumerable<ChainFlowRegistration> links)
@@ -40,16 +41,23 @@ namespace ChainFlow.Documentables
                 _tags.Add(GetOutcomeTagString(outcome));
             }
 
-            foreach (ChainFlowRegistration current in _currentRegistration)
+            foreach (var current in _currentRegistration)
             {
                 var flowId = current.GetDocumentFlowId();
-                if (IsOutcomeToBeAdded(outcome, flowId))
+                if (IsBehaviorNonStandard(current.Behavior) || IsOutcomeToBeAdded(outcome, flowId))
                 {
-                    _connections.Add($"{flowId} --> {outcome}");
+                    _connections.Add(IsBehaviorNonStandard(current.Behavior) ?
+                        $"{flowId} --True--> {outcome}" :
+                        $"{flowId} --> {outcome}");
                 }
             }
 
             return _firstRegistration?.ChainLinkFactory()!;
+        }
+
+        private static bool IsBehaviorNonStandard(DocumentFlowBehavior? behavior)
+        {
+            return behavior is not null && behavior is not DocumentFlowBehavior.Standard;
         }
 
         private bool IsOutcomeToBeAdded(FlowOutcome outcome, string flowId)
@@ -68,19 +76,35 @@ namespace ChainFlow.Documentables
                 ?? new ChainFlowRegistration(type: typeof(T), () => new TodoChainFlow(typeof(T)));
             _firstRegistration ??= registration;
 
-            string tag = $"{registration.GetDocumentFlowId()}({registration.ChainLinkFactory().Describe()})";
+            string boxStart = "(";
+            string boxEnd = ")";
+            var behavior = typeof(T).GetCustomAttribute<DocumentFlowBehaviorAttribute>();
+            if (behavior is not null && behavior.Behavior is not DocumentFlowBehavior.Standard)
+            {
+                boxStart = "{";
+                boxEnd = "}";
+
+                var failureOutcome = behavior!.Behavior is DocumentFlowBehavior.TerminateOnFailure ?
+                    FlowOutcome.Failure :
+                    FlowOutcome.TransientFailure;
+                _tags.Add(GetOutcomeTagString(failureOutcome));
+
+                _connections.Add($"{registration.GetDocumentFlowId()} --False--> {failureOutcome}");
+            }
+
+            string tag = $"{registration.GetDocumentFlowId()}{boxStart}{registration.ChainLinkFactory().Describe()}{boxEnd}";
             _tags.Add(tag);
 
             AddCurrentConnections(registration);
 
             _currentRegistration.Clear();
-            _currentRegistration.Add(registration);
+            _currentRegistration.Add(new ChainFlowRegistrationWithBehavior(registration, behavior));
             return this;
         }
 
         public override string ToString()
         {
-            if (!_currentRegistration.Any()) 
+            if (!_currentRegistration.Any())
             {
                 return string.Empty;
             }
@@ -115,6 +139,7 @@ namespace ChainFlow.Documentables
 
             string tag = $"{registration.GetDocumentFlowId()}{{{registration.ChainLinkFactory().Describe()}}}";
             _tags.Add(tag);
+
             DocumentChainFlowBuilder rightBuilder = GetEnrichedBuilder(rightFlowFactory);
             AddTagsDistinct(rightBuilder);
 
@@ -125,6 +150,7 @@ namespace ChainFlow.Documentables
 
             string rightConnection = $"{registration.GetDocumentFlowId()} --True--> {rightBuilder._firstRegistration.GetDocumentFlowId()}";
             _connections.Add(rightConnection);
+
             string leftConnection = $"{registration.GetDocumentFlowId()} --False--> {leftBuilder._firstRegistration.GetDocumentFlowId()}";
             _connections.Add(leftConnection);
 
@@ -166,7 +192,10 @@ namespace ChainFlow.Documentables
         {
             foreach (var current in _currentRegistration)
             {
-                string connection = $"{current.GetDocumentFlowId()} --> {registration.GetDocumentFlowId()}";
+                string arrow = IsBehaviorNonStandard(current.Behavior) ?
+                    "--True-->" :
+                    "-->";
+                string connection = $"{current.GetDocumentFlowId()} {arrow} {registration.GetDocumentFlowId()}";
                 _connections.Add(connection);
             }
         }
@@ -175,8 +204,8 @@ namespace ChainFlow.Documentables
     class TodoChainFlow : IChainFlow
     {
         private readonly string _description;
-        public TodoChainFlow(Type type) 
-        { 
+        public TodoChainFlow(Type type)
+        {
             _description = $"TODO {type.GetFullName()}";
         }
 
@@ -192,10 +221,20 @@ namespace ChainFlow.Documentables
     {
         private readonly string _description;
         public TodoBooleanRouterChainFlow(T routerLogic) : base(routerLogic)
-        { 
+        {
             _description = $"TODO RouterFlow {typeof(T).GetFullName()}";
         }
 
         public override string Describe() => _description;
+    }
+
+    record class ChainFlowRegistrationWithBehavior : ChainFlowRegistration
+    {
+        public ChainFlowRegistrationWithBehavior(ChainFlowRegistration original, DocumentFlowBehaviorAttribute? behavior) : base(original)
+        {
+            Behavior = behavior?.Behavior ?? DocumentFlowBehavior.Standard;
+        }
+
+        public DocumentFlowBehavior Behavior { get; }
     }
 }

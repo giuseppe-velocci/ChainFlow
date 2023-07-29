@@ -25,6 +25,7 @@ namespace ChainFlowUnitTest.Documentables
                 new ChainFlowRegistration(typeof(FakeChainLink4), () => new FakeChainLink4()),
                 new ChainFlowRegistration(typeof(BooleanRouterFlow<RouterLogic>), () => new BooleanRouterFlow<RouterLogic>(new RouterLogic())),
                 new ChainFlowRegistration(typeof(BooleanRouterFlow<RouterLogic1>), () => new BooleanRouterFlow<RouterLogic1>(new RouterLogic1())),
+                new ChainFlowRegistration(typeof(ExitOnFailFlow), () => new ExitOnFailFlow()),
             };
             _sut = new(_registrations);
         }
@@ -199,6 +200,51 @@ Failure(Workflow is completed with failure)
 
             _sut.ToString().Should().Be(expected);
         }
+
+        [Fact]
+        public void ToString_WhenFlowWithExitDocumentBehaviorIsResolved_ReturnsFlowString()
+        {
+            string expected =
+$@"{_registrations.ElementAt(0).GetDocumentFlowId()}({_registrations.ElementAt(0).ChainLinkFactory().Describe()})
+{_registrations.ElementAt(7).GetDocumentFlowId()}{{{_registrations.ElementAt(7).ChainLinkFactory().Describe()}}}
+Failure(Workflow is completed with failure)
+Success(Workflow is completed with success)
+
+{_registrations.ElementAt(7).GetDocumentFlowId()} --False--> Failure
+{_registrations.ElementAt(0).GetDocumentFlowId()} --> {_registrations.ElementAt(7).GetDocumentFlowId()}
+{_registrations.ElementAt(7).GetDocumentFlowId()} --True--> Success";
+
+            var _ = _sut
+                .With<FakeChainLink0>()
+                .With<ExitOnFailFlow>()
+                .Build();
+
+            _sut.ToString().Should().Be(expected);
+        }
+
+        [Fact]
+        public void ToString_WhenFlowWithExitDocumentBehaviorIsResolvedHavingNextFlows_ReturnsFlowString()
+        {
+            string expected =
+$@"{_registrations.ElementAt(0).GetDocumentFlowId()}({_registrations.ElementAt(0).ChainLinkFactory().Describe()})
+{_registrations.ElementAt(7).GetDocumentFlowId()}{{{_registrations.ElementAt(7).ChainLinkFactory().Describe()}}}
+{_registrations.ElementAt(1).GetDocumentFlowId()}({_registrations.ElementAt(1).ChainLinkFactory().Describe()})
+Failure(Workflow is completed with failure)
+Success(Workflow is completed with success)
+
+{_registrations.ElementAt(7).GetDocumentFlowId()} --False--> Failure
+{_registrations.ElementAt(0).GetDocumentFlowId()} --> {_registrations.ElementAt(7).GetDocumentFlowId()}
+{_registrations.ElementAt(7).GetDocumentFlowId()} --True--> {_registrations.ElementAt(1).GetDocumentFlowId()}
+{_registrations.ElementAt(1).GetDocumentFlowId()} --> Success";
+
+            var _ = _sut
+                .With<FakeChainLink0>()
+                .With<ExitOnFailFlow>()
+                .With<FakeChainLink1>()
+                .Build();
+
+            _sut.ToString().Should().Be(expected);
+        }
     }
 
     class RouterLogic : IRouterDispatcher<bool>
@@ -212,5 +258,17 @@ Failure(Workflow is completed with failure)
     class RouterLogic1 : RouterLogic
     {
         public override string Describe() => "Is secondary logic valid @6?";
+    }
+
+    [DocumentFlowBehavior(DocumentFlowBehavior.TerminateOnFailure)]
+    class ExitOnFailFlow : IChainFlow
+    {
+        public string Describe() => "Is data correct @7?";
+
+        public Task<ProcessingRequestWithOutcome> ProcessAsync(ProcessingRequest message, CancellationToken cancellationToken)
+            => Task.FromResult(new ProcessingRequestWithOutcome(new object(), FlowOutcome.Success, string.Empty));
+
+        public void SetNext(IChainFlow next)
+        { }
     }
 }
