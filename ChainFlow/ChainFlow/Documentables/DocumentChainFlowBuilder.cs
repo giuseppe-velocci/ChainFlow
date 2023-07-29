@@ -86,9 +86,6 @@ namespace ChainFlow.Documentables
 
             var stringBuilder = new StringBuilder();
 
-            stringBuilder.AppendLine("::: mermaid");
-            stringBuilder.AppendLine("graph TD;");
-            
             foreach (var tag in _tags)
             {
                 stringBuilder.AppendLine(tag.ToString());
@@ -100,10 +97,8 @@ namespace ChainFlow.Documentables
             {
                 stringBuilder.AppendLine(connection.ToString());
             }
-            
-            stringBuilder.Append(":::");
 
-            return stringBuilder.ToString();
+            return stringBuilder.ToString().Trim();
         }
 
         public IChainFlowBuilder WithBooleanRouter<TRouter>(Func<IChainFlowBuilder, IChainFlow> rightFlowFactory, Func<IChainFlowBuilder, IChainFlow> leftFlowFactory) where TRouter : IRouterLogic<bool>

@@ -7,12 +7,12 @@ using Moq;
 
 namespace ChainFlowUnitTest
 {
-    public class AbstractChainFlowProcessorTest
+    public class AbstractWorkflowTest
     {
-        private readonly Mock<AbstractChainFlowProcessor<bool>> _sut;
+        private readonly Mock<AbstractWorkflow<bool>> _sut;
         private readonly Mock<IChainFlowBuilder> _mockChainBuilder;
 
-        public AbstractChainFlowProcessorTest()
+        public AbstractWorkflowTest()
         {
             _mockChainBuilder = new ();
             _sut = new(_mockChainBuilder.Object);
@@ -28,7 +28,7 @@ namespace ChainFlowUnitTest
                 .Setup(x => x.Build(FlowOutcome.Success))
                 .Returns((IChainFlow)null!);
 
-            var act = () => _sut.Object.ProcessAsync(request, CancellationToken.None);
+            var act = () => _sut.Object.ExecuteAsync(request, CancellationToken.None);
             await act.Should().ThrowAsync<NullReferenceException>();
         }
 
@@ -51,8 +51,20 @@ namespace ChainFlowUnitTest
                 .Setup(x => x.Outcome2T(response))
                 .Returns(true);
 
-            var result = await _sut.Object.ProcessAsync(request, CancellationToken.None);
+            var result = await _sut.Object.ExecuteAsync(request, CancellationToken.None);
             result.Should().BeTrue();
+        }
+
+        [Fact]
+        public void GetFlow_WhenIChainBuilderIsNotNull_ReturnsIChainBuilderToString()
+        {
+            string expected = "a flow";
+            _mockChainBuilder.Setup(x => x.ToString())
+                .Returns(expected);
+
+            string result = _sut.Object.GetFlow();
+
+            result.Should().Be(expected);
         }
     }
 }

@@ -39,13 +39,10 @@ namespace ChainFlowUnitTest
         public void ToString_WhenUnregisteredFlowIsPassed_RetrunsFlowString()
         {
             var expected =
-$@"::: mermaid
-graph TD;
-_\W?\d+\(TODO IChainFlow\)
+$@"_\W?\d+\(TODO IChainFlow\)
 Success\(Workflow is completed with success\)
 
-_\W?\d+ --> Success
-:::";
+_\W?\d+ --> Success";
             var _ = _sut
                 .With<IChainFlow>()
                 .Build();
@@ -57,9 +54,7 @@ _\W?\d+ --> Success
         public void ToString_WhenUnregisteredBooleanRouterFlowIsPassed_RetrunsFlowString()
         {
             var expected =
-$@"::: mermaid
-graph TD;
-{_registrations.ElementAt(0).GetDocumentFlowId()}\({_registrations.ElementAt(0).ChainLinkFactory().Describe()}\)
+$@"{_registrations.ElementAt(0).GetDocumentFlowId()}\({_registrations.ElementAt(0).ChainLinkFactory().Describe()}\)
 _\W?\d+\{{TODO RouterFlow IRouterLogic\<Boolean\>\}}
 {_registrations.ElementAt(1).GetDocumentFlowId()}\({_registrations.ElementAt(1).ChainLinkFactory().Describe()}\)
 Success\(Workflow is completed with success\)
@@ -70,8 +65,7 @@ Failure\(Workflow is completed with failure\)
 _\W?\d+\ --True--> {_registrations.ElementAt(1).GetDocumentFlowId()}
 _\W?\d+\ --False--> _\W?\d+\
 _\W?\d+ --> Failure
-{_registrations.ElementAt(1).GetDocumentFlowId()} --> Success
-:::";
+{_registrations.ElementAt(1).GetDocumentFlowId()} --> Success";
             var _ = _sut
                 .With<FakeChainLink0>()
                 .WithBooleanRouter<IRouterLogic<bool>>(
@@ -87,13 +81,10 @@ _\W?\d+ --> Failure
         public void ToString_WhenSingleFlowIsResolved_ReturnsFlowString()
         {
             string expected =
-$@"::: mermaid
-graph TD;
-{_registrations.ElementAt(0).GetDocumentFlowId()}({_registrations.ElementAt(0).ChainLinkFactory().Describe()})
+$@"{_registrations.ElementAt(0).GetDocumentFlowId()}({_registrations.ElementAt(0).ChainLinkFactory().Describe()})
 Success(Workflow is completed with success)
 
-{_registrations.ElementAt(0).GetDocumentFlowId()} --> Success
-:::";
+{_registrations.ElementAt(0).GetDocumentFlowId()} --> Success";
             var _ = _sut
                 .With<FakeChainLink0>()
                 .Build();
@@ -105,9 +96,7 @@ Success(Workflow is completed with success)
         public void ToString_WhenMultipleFlowsAreResolved_ReturnsFlowString()
         {
             string expected =
-$@"::: mermaid
-graph TD;
-{_registrations.ElementAt(0).GetDocumentFlowId()}({_registrations.ElementAt(0).ChainLinkFactory().Describe()})
+$@"{_registrations.ElementAt(0).GetDocumentFlowId()}({_registrations.ElementAt(0).ChainLinkFactory().Describe()})
 {_registrations.ElementAt(1).GetDocumentFlowId()}({_registrations.ElementAt(1).ChainLinkFactory().Describe()})
 {_registrations.ElementAt(5).GetDocumentFlowId()}{{{_registrations.ElementAt(5).ChainLinkFactory().Describe()}}}
 {_registrations.ElementAt(2).GetDocumentFlowId()}({_registrations.ElementAt(2).ChainLinkFactory().Describe()})
@@ -121,8 +110,7 @@ Success(Workflow is completed with success)
 {_registrations.ElementAt(5).GetDocumentFlowId()} --False--> {_registrations.ElementAt(3).GetDocumentFlowId()}
 {_registrations.ElementAt(2).GetDocumentFlowId()} --> {_registrations.ElementAt(4).GetDocumentFlowId()}
 {_registrations.ElementAt(3).GetDocumentFlowId()} --> {_registrations.ElementAt(4).GetDocumentFlowId()}
-{_registrations.ElementAt(4).GetDocumentFlowId()} --> Success
-:::";
+{_registrations.ElementAt(4).GetDocumentFlowId()} --> Success";
             var _ = _sut
                 .With<FakeChainLink0>()
                 .With<FakeChainLink1>()
@@ -140,9 +128,7 @@ Success(Workflow is completed with success)
         public void ToString_WhenMultipleFlowsWithABooleanRouterAreResolved_ReturnsFlowString()
         {
             string expected =
-    $@"::: mermaid
-graph TD;
-{_registrations.ElementAt(0).GetDocumentFlowId()}({_registrations.ElementAt(0).ChainLinkFactory().Describe()})
+$@"{_registrations.ElementAt(0).GetDocumentFlowId()}({_registrations.ElementAt(0).ChainLinkFactory().Describe()})
 {_registrations.ElementAt(5).GetDocumentFlowId()}{{{_registrations.ElementAt(5).ChainLinkFactory().Describe()}}}
 {_registrations.ElementAt(1).GetDocumentFlowId()}({_registrations.ElementAt(1).ChainLinkFactory().Describe()})
 {_registrations.ElementAt(2).GetDocumentFlowId()}({_registrations.ElementAt(2).ChainLinkFactory().Describe()})
@@ -160,8 +146,7 @@ TransientFailure(Workflow is completed with transient failure)
 {_registrations.ElementAt(6).GetDocumentFlowId()} --False--> {_registrations.ElementAt(4).GetDocumentFlowId()}
 {_registrations.ElementAt(4).GetDocumentFlowId()} --> TransientFailure
 {_registrations.ElementAt(2).GetDocumentFlowId()} --> Success
-{_registrations.ElementAt(3).GetDocumentFlowId()} --> Success
-:::";
+{_registrations.ElementAt(3).GetDocumentFlowId()} --> Success";
             var _ = _sut
                 .With<FakeChainLink0>()
                 .WithBooleanRouter<RouterLogic>(
@@ -188,9 +173,7 @@ TransientFailure(Workflow is completed with transient failure)
         public void ToString_WhenFlowsWithBooleanRouterAreResolvedWithDifferentOutcomes_ReturnsFlowString()
         {
             string expected =
-$@"::: mermaid
-graph TD;
-{_registrations.ElementAt(0).GetDocumentFlowId()}({_registrations.ElementAt(0).ChainLinkFactory().Describe()})
+$@"{_registrations.ElementAt(0).GetDocumentFlowId()}({_registrations.ElementAt(0).ChainLinkFactory().Describe()})
 {_registrations.ElementAt(1).GetDocumentFlowId()}({_registrations.ElementAt(1).ChainLinkFactory().Describe()})
 {_registrations.ElementAt(5).GetDocumentFlowId()}{{{_registrations.ElementAt(5).ChainLinkFactory().Describe()}}}
 {_registrations.ElementAt(2).GetDocumentFlowId()}({_registrations.ElementAt(2).ChainLinkFactory().Describe()})
@@ -203,8 +186,7 @@ Failure(Workflow is completed with failure)
 {_registrations.ElementAt(5).GetDocumentFlowId()} --True--> {_registrations.ElementAt(2).GetDocumentFlowId()}
 {_registrations.ElementAt(5).GetDocumentFlowId()} --False--> {_registrations.ElementAt(3).GetDocumentFlowId()}
 {_registrations.ElementAt(3).GetDocumentFlowId()} --> Failure
-{_registrations.ElementAt(2).GetDocumentFlowId()} --> Success
-:::";
+{_registrations.ElementAt(2).GetDocumentFlowId()} --> Success";
             var _ = _sut
                 .With<FakeChainLink0>()
                 .With<FakeChainLink1>()
