@@ -13,7 +13,7 @@ namespace ChainFlow.Processors
             _chainBuilder = chainBuilder;
         }
 
-        public async Task<T> ExecuteAsync(ProcessingRequest message, CancellationToken cancellationToken)
+        public async Task<T> ProcessAsync(ProcessingRequest message, CancellationToken cancellationToken)
         {
             chain ??= _chainBuilder.Build();
 

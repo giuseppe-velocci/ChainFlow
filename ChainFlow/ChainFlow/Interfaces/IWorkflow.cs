@@ -4,6 +4,6 @@ namespace ChainFlow.Interfaces
 {
     public interface IWorkflow<T> : IDocumentableWorkflow where T : notnull
     {
-        Task<T> ExecuteAsync(ProcessingRequest message, CancellationToken cancellationToken);
+        Task<T> ProcessAsync(ProcessingRequest message, CancellationToken cancellationToken);
     }
 }

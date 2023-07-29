@@ -28,7 +28,7 @@ namespace ChainFlowUnitTest
                 .Setup(x => x.Build(FlowOutcome.Success))
                 .Returns((IChainFlow)null!);
 
-            var act = () => _sut.Object.ExecuteAsync(request, CancellationToken.None);
+            var act = () => _sut.Object.ProcessAsync(request, CancellationToken.None);
             await act.Should().ThrowAsync<NullReferenceException>();
         }
 
@@ -51,7 +51,7 @@ namespace ChainFlowUnitTest
                 .Setup(x => x.Outcome2T(response))
                 .Returns(true);
 
-            var result = await _sut.Object.ExecuteAsync(request, CancellationToken.None);
+            var result = await _sut.Object.ProcessAsync(request, CancellationToken.None);
             result.Should().BeTrue();
         }
 
