@@ -1,7 +1,6 @@
 ﻿using ChainFlow.Helpers;
 using ChainFlow.Interfaces;
 using ChainFlowUnitTest.TestHelpers;
-using System.Runtime.Serialization;
 
 namespace ChainFlowUnitTest.Helpers
 {

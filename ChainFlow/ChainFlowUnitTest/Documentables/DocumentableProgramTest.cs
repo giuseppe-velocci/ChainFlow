@@ -1,5 +1,4 @@
-﻿using Castle.Core.Logging;
-using ChainFlow.Documentables;
+﻿using ChainFlow.Documentables;
 using ChainFlow.Interfaces;
 using ChainFlow.Internals;
 using FluentAssertions;
@@ -18,10 +17,10 @@ namespace ChainFlowUnitTest.Documentables
 
         public DocumentableProgramTest()
         {
-            _mockWorkflow0 = new ();
-            _mockWorkflow1 = new ();
-            _mockFilesystem = new ();
-            _mockLogger = new ();
+            _mockWorkflow0 = new();
+            _mockWorkflow1 = new();
+            _mockFilesystem = new();
+            _mockLogger = new();
             _sut = new(
                 new IDocumentableWorkflow[] { _mockWorkflow0.Object, _mockWorkflow1.Object },
                 _mockFilesystem.Object,
@@ -74,7 +73,7 @@ flow 0
 :::";
             SetupDocumentableWorkflow(_mockWorkflow0, "0");
 
-            DocumentableProgram sut = new (
+            DocumentableProgram sut = new(
                 new IDocumentableWorkflow[] { _mockWorkflow0.Object },
                 _mockFilesystem.Object,
                 _mockLogger.Object);
@@ -87,7 +86,7 @@ flow 0
         [Fact]
         public async Task RunAsync_WhenNullFilesystem_ThrowsException()
         {
-            DocumentableProgram sut = new(new IDocumentableWorkflow[]{ _mockWorkflow0.Object }, null!, _mockLogger.Object);
+            DocumentableProgram sut = new(new IDocumentableWorkflow[] { _mockWorkflow0.Object }, null!, _mockLogger.Object);
 
             var act = () => sut.RunAsync();
             await act.Should().ThrowAsync<NullReferenceException>();

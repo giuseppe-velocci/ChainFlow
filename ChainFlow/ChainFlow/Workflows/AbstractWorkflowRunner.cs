@@ -6,7 +6,7 @@ namespace ChainFlow.Workflows
     public abstract class AbstractWorkflowRunner<T> : IWorkflow<T> where T : notnull
     {
         private readonly IChainFlowBuilder _chainBuilder = null!;
-        private IChainFlow chain = null!;
+        private readonly IChainFlow chain = null!;
 
         public AbstractWorkflowRunner(IChainFlowBuilder chainBuilder)
         {
@@ -16,7 +16,6 @@ namespace ChainFlow.Workflows
 
         public async Task<T> ProcessAsync(ProcessingRequest message, CancellationToken cancellationToken)
         {
-
             var response = await chain.ProcessAsync(message, cancellationToken);
             return Outcome2T(response);
         }

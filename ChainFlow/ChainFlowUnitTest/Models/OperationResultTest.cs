@@ -1,13 +1,6 @@
 ﻿using ChainFlow.Enums;
 using ChainFlow.Models;
 using FluentAssertions;
-using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities;
-using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ChainFlowUnitTest.Models
 {
@@ -16,7 +9,7 @@ namespace ChainFlowUnitTest.Models
         [Fact]
         public void CreateWithSuccess_WhenInvoked_ReturnsFlowOutcomeSuccess()
         {
-            object value = new object();
+            object value = new();
             OperationResult<object> sut = OperationResult<object>.CreateWithSuccess(value);
 
             sut.Value.Should().Be(value);
@@ -27,7 +20,7 @@ namespace ChainFlowUnitTest.Models
         [Fact]
         public void CreateWithSuccess_WhenInvokedWithMessage_ReturnsFlowOutcomeSuccess()
         {
-            object value = new object();
+            object value = new();
             string message = "Ok";
             OperationResult<object> sut = OperationResult<object>.CreateWithSuccess(value, message);
 
@@ -39,7 +32,7 @@ namespace ChainFlowUnitTest.Models
         [Fact]
         public void CreateWithFailure_WhenInvoked_ReturnsFlowOutcomeFailure()
         {
-            object value = new object();
+            object value = new();
             string message = "Ko";
             OperationResult<object> sut = OperationResult<object>.CreateWithFailure(value, message);
 
@@ -51,7 +44,7 @@ namespace ChainFlowUnitTest.Models
         [Fact]
         public void CreateWithTransientFailure_WhenInvoked_ReturnsFlowOutcomeTransientFailure()
         {
-            object value = new object();
+            object value = new();
             string message = "KO";
             OperationResult<object> sut = OperationResult<object>.CreateWithTransientFailure(value, message);
 
@@ -73,7 +66,7 @@ namespace ChainFlowUnitTest.Models
 
         public static IEnumerable<object[]> CreateOperationResult()
         {
-            object value = new object() { };
+            object value = new() { };
             yield return new object[]
             {
                 OperationResult<object>.CreateWithSuccess(value, "Ok"),

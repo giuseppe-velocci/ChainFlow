@@ -16,13 +16,13 @@ namespace ChainFlow.Models
         public FlowOutcome Outcome { get; }
 
         public static OperationResult<T> CreateWithSuccess(T value, string message = "") => 
-            new OperationResult<T>(value, FlowOutcome.Success, message);
+            new (value, FlowOutcome.Success, message);
         
         public static OperationResult<T> CreateWithFailure(T value, string message) => 
-            new OperationResult<T>(value, FlowOutcome.Failure, message); 
+            new (value, FlowOutcome.Failure, message); 
 
         public static OperationResult<T> CreateWithTransientFailure(T value, string message) => 
-            new OperationResult<T>(value, FlowOutcome.TransientFailure, message);  
+            new (value, FlowOutcome.TransientFailure, message);  
 
         public ProcessingRequestWithOutcome ToProcessingRequestWithOutcome()
         {
