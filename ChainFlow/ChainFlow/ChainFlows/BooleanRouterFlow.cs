@@ -3,24 +3,24 @@ using ChainFlow.Models;
 
 namespace ChainFlow.ChainFlows
 {
-    internal class BooleanRouterFlow<TRouterLogix> : AbstractChainFlow where TRouterLogix : IRouterDispatcher<bool> 
+    internal class BooleanRouterFlow<TRouterLogic> : AbstractChainFlow where TRouterLogic : IRouterDispatcher<bool> 
     {
         private IChainFlow _rightFlow = null!;
         private IChainFlow _leftFlow = null!;
         private readonly IRouterDispatcher<bool> _routerLogic;
 
-        public BooleanRouterFlow(TRouterLogix routerLogic)
+        public BooleanRouterFlow(TRouterLogic routerLogic)
         {
             _routerLogic = routerLogic;
         }
 
-        public BooleanRouterFlow<TRouterLogix> WithRightFlow(IChainFlow flow)
+        public BooleanRouterFlow<TRouterLogic> WithRightFlow(IChainFlow flow)
         {
             _rightFlow = flow;
             return this;
         }
 
-        public BooleanRouterFlow<TRouterLogix> WithLeftFlow(IChainFlow flow)
+        public BooleanRouterFlow<TRouterLogic> WithLeftFlow(IChainFlow flow)
         {
             _leftFlow = flow;
             return this;

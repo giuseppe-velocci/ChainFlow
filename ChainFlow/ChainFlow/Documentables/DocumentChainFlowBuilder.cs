@@ -55,21 +55,6 @@ namespace ChainFlow.Documentables
             return _firstRegistration?.ChainLinkFactory()!;
         }
 
-        private static bool IsBehaviorNonStandard(DocumentFlowBehavior? behavior)
-        {
-            return behavior is not null && behavior is not DocumentFlowBehavior.Standard;
-        }
-
-        private bool IsOutcomeToBeAdded(FlowOutcome outcome, string flowId)
-        {
-            return !_connections.Any(x => x.StartsWith(flowId)) && (_isMainBuilder || outcome != FlowOutcome.Success);
-        }
-
-        private static string GetOutcomeTagString(FlowOutcome outcome)
-        {
-            return $"{outcome}(Workflow is completed with {(outcome == FlowOutcome.TransientFailure ? "transient failure" : outcome.ToString().ToLower())})";
-        }
-
         public IChainFlowBuilder With<T>() where T : IChainFlow
         {
             var registration = _links.FirstOrDefault(x => x.LinkType == typeof(T).GetFullName())
@@ -79,7 +64,7 @@ namespace ChainFlow.Documentables
             string boxStart = "(";
             string boxEnd = ")";
             var behavior = typeof(T).GetCustomAttribute<DocumentFlowBehaviorAttribute>();
-            if (behavior is not null && behavior.Behavior is not DocumentFlowBehavior.Standard)
+            if (IsBehaviorNonStandard(behavior?.Behavior))
             {
                 boxStart = "{";
                 boxEnd = "}";
@@ -100,35 +85,6 @@ namespace ChainFlow.Documentables
             _currentRegistration.Clear();
             _currentRegistration.Add(new ChainFlowRegistrationWithBehavior(registration, behavior));
             return this;
-        }
-
-        public override string ToString()
-        {
-            if (!_currentRegistration.Any())
-            {
-                return string.Empty;
-            }
-
-            var stringBuilder = new StringBuilder();
-
-            foreach (var tag in _tags.Where(x => x.StartsWith("_")))
-            {
-                stringBuilder.AppendLine(tag.ToString());
-            }
-            foreach (var tag in _tags.Where(x => !x.StartsWith("_")))
-            {
-                stringBuilder.AppendLine(tag.ToString());
-            }
-
-
-            stringBuilder.AppendLine(string.Empty);
-
-            foreach (var connection in _connections)
-            {
-                stringBuilder.AppendLine(connection.ToString());
-            }
-
-            return stringBuilder.ToString().Trim();
         }
 
         public IChainFlowBuilder WithBooleanRouter<TRouter>(Func<IChainFlowBuilder, IChainFlow> rightFlowFactory, Func<IChainFlowBuilder, IChainFlow> leftFlowFactory) where TRouter : IRouterDispatcher<bool>
@@ -165,6 +121,49 @@ namespace ChainFlow.Documentables
             return this;
         }
 
+        public override string ToString()
+        {
+            if (!_currentRegistration.Any())
+            {
+                return string.Empty;
+            }
+
+            var stringBuilder = new StringBuilder();
+
+            foreach (var tag in _tags.Where(x => x.StartsWith("_")))
+            {
+                stringBuilder.AppendLine(tag.ToString());
+            }
+            foreach (var tag in _tags.Where(x => !x.StartsWith("_")))
+            {
+                stringBuilder.AppendLine(tag.ToString());
+            }
+
+            stringBuilder.AppendLine(string.Empty);
+
+            foreach (var connection in _connections)
+            {
+                stringBuilder.AppendLine(connection.ToString());
+            }
+
+            return stringBuilder.ToString().Trim();
+        }
+
+        private static bool IsBehaviorNonStandard(DocumentFlowBehavior? behavior)
+        {
+            return behavior is not null && behavior is not DocumentFlowBehavior.Standard;
+        }
+
+        private bool IsOutcomeToBeAdded(FlowOutcome outcome, string flowId)
+        {
+            return !_connections.Any(x => x.StartsWith(flowId)) && (_isMainBuilder || outcome != FlowOutcome.Success);
+        }
+
+        private static string GetOutcomeTagString(FlowOutcome outcome)
+        {
+            return $"{outcome}(Workflow is completed with {(outcome == FlowOutcome.TransientFailure ? "transient failure" : outcome.ToString().ToLower())})";
+        }
+
         private void AddConnectionsForBuilder(DocumentChainFlowBuilder builder)
         {
             foreach (var conn in builder._connections.Where(conn => !_connections.Contains(conn)))
@@ -173,19 +172,19 @@ namespace ChainFlow.Documentables
             }
         }
 
-        private void AddTagsDistinct(DocumentChainFlowBuilder rightBuilder)
+        private void AddTagsDistinct(DocumentChainFlowBuilder builder)
         {
-            foreach (var t in rightBuilder._tags.Where(t => !_tags.Contains(t)))
+            foreach (var t in builder._tags.Where(t => !_tags.Contains(t)))
             {
                 _tags.Add(t);
             }
         }
 
-        private DocumentChainFlowBuilder GetEnrichedBuilder(Func<IChainFlowBuilder, IChainFlow> rightFlowFactory)
+        private DocumentChainFlowBuilder GetEnrichedBuilder(Func<IChainFlowBuilder, IChainFlow> flowFactory)
         {
-            var rightBuilder = new DocumentChainFlowBuilder(_links, false);
-            rightFlowFactory(rightBuilder);
-            return rightBuilder;
+            var builder = new DocumentChainFlowBuilder(_links, false);
+            flowFactory(builder);
+            return builder;
         }
 
         private void AddCurrentConnections(ChainFlowRegistration registration)

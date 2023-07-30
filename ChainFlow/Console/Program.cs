@@ -1,5 +1,6 @@
 ﻿using ChainFlow.DependencyInjection;
 using Console;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
 static IHostBuilder CreateHostBuilder(string[] args) 
@@ -10,7 +11,7 @@ static IHostBuilder CreateHostBuilder(string[] args)
         .ConfigureServices((hostContext, services) =>
         {
             services
-                .AddWorkflow<ConsoleWorkflow, string>()
+                .AddSingleton<ConsoleWorkflow>()
                 .AddChainFlow<ValidateInputFlow>()
                 ;
         });
