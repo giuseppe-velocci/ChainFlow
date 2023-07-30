@@ -3,7 +3,6 @@ using ChainFlow.Enums;
 using ChainFlow.Helpers;
 using ChainFlow.Interfaces;
 using ChainFlow.Internals;
-using ChainFlow.Models;
 using System.Reflection;
 using System.Text;
 
@@ -198,42 +197,5 @@ namespace ChainFlow.Documentables
                 _connections.Add(connection);
             }
         }
-    }
-
-    class TodoChainFlow : IChainFlow
-    {
-        private readonly string _description;
-        public TodoChainFlow(Type type)
-        {
-            _description = $"TODO {type.GetFullName()}";
-        }
-
-        public string Describe() => _description;
-
-        public Task<ProcessingRequestWithOutcome> ProcessAsync(ProcessingRequest message, CancellationToken cancellationToken)
-            => Task.FromResult((ProcessingRequestWithOutcome)null!);
-
-        public void SetNext(IChainFlow next) { }
-    }
-
-    class TodoBooleanRouterChainFlow<T> : BooleanRouterFlow<T>, IChainFlow where T : IRouterDispatcher<bool>
-    {
-        private readonly string _description;
-        public TodoBooleanRouterChainFlow(T routerLogic) : base(routerLogic)
-        {
-            _description = $"TODO RouterFlow {typeof(T).GetFullName()}";
-        }
-
-        public override string Describe() => _description;
-    }
-
-    record class ChainFlowRegistrationWithBehavior : ChainFlowRegistration
-    {
-        public ChainFlowRegistrationWithBehavior(ChainFlowRegistration original, DocumentFlowBehaviorAttribute? behavior) : base(original)
-        {
-            Behavior = behavior?.Behavior ?? DocumentFlowBehavior.Standard;
-        }
-
-        public DocumentFlowBehavior Behavior { get; }
     }
 }

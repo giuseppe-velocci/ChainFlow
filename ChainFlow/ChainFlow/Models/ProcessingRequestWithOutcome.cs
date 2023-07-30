@@ -2,11 +2,11 @@
 
 namespace ChainFlow.Models
 {
-    public sealed record class ProcessingRequestWithOutcome : ProcessingRequest
+    public record class ProcessingRequestWithOutcome : ProcessingRequest
     {
-        public static ProcessingRequestWithOutcome CreateWithSuccess(object request)
+        public static ProcessingRequestWithOutcome CreateWithSuccess(object request, string message = "")
         {
-            return new ProcessingRequestWithOutcome(request, FlowOutcome.Success, string.Empty);
+            return new ProcessingRequestWithOutcome(request, FlowOutcome.Success, message);
         }
 
         public static ProcessingRequestWithOutcome CreateWithFailure(object request, string message)
@@ -19,13 +19,13 @@ namespace ChainFlow.Models
             return new ProcessingRequestWithOutcome(request, FlowOutcome.TransientFailure, message);
         }
 
-        public ProcessingRequestWithOutcome(object request, FlowOutcome outcome, string message) : base(request)
+        internal ProcessingRequestWithOutcome(object request, FlowOutcome outcome, string message) : base(request)
         {
             Outcome = outcome;
-            OutcomeMessage = message;
+            Message = message;
         }
 
         public FlowOutcome Outcome { get; }
-        public string OutcomeMessage { get; }
+        public string Message { get; }
     }
 }
