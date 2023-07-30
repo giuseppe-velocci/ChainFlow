@@ -17,6 +17,9 @@
     <Reference Include="Microsoft.Extensions.Hosting.Abstractions">
       <HintPath>..\..\..\..\..\..\nuget\microsoft.extensions.hosting.abstractions\7.0.0\lib\net6.0\Microsoft.Extensions.Hosting.Abstractions.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Extensions.Logging.Abstractions">
+      <HintPath>..\..\..\..\..\..\nuget\microsoft.extensions.logging.abstractions\7.0.0\lib\net6.0\Microsoft.Extensions.Logging.Abstractions.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

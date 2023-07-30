@@ -1,6 +1,7 @@
 ﻿using ChainFlow.Helpers;
 using ChainFlow.Interfaces;
 using ChainFlow.Internals;
+using Microsoft.Extensions.Logging;
 using System.Text;
 
 namespace ChainFlow.Documentables
@@ -9,19 +10,26 @@ namespace ChainFlow.Documentables
     {
         private readonly IEnumerable<IDocumentableWorkflow> _workflows;
         private readonly ISystemIoWriter _fileSystem;
+        private readonly ILogger<DocumentableProgram> _logger;
 
-        public DocumentableProgram(IEnumerable<IDocumentableWorkflow> workflows, ISystemIoWriter fileSystem)
+        public DocumentableProgram(
+            IEnumerable<IDocumentableWorkflow> workflows,
+            ISystemIoWriter fileSystem,
+            ILogger<DocumentableProgram> logger)
         {
             _workflows = workflows;
             _fileSystem = fileSystem;
+            _logger = logger;
         }
 
-        public Task RunAsync()
+        public async Task RunAsync()
         {
-            StringBuilder stringBuilder = new ();
+            _logger.LogInformation("Starting document generation...");
 
             foreach (var workflow in _workflows)
             {
+                StringBuilder stringBuilder = new ();
+
                 // worflow name and description
                 stringBuilder.AppendLine("##" + workflow.GetWorkflowName());
                 stringBuilder.AppendLine(workflow.Describe());
@@ -34,10 +42,14 @@ namespace ChainFlow.Documentables
                 stringBuilder.AppendLine(workflow.GetFlow());
                 stringBuilder.AppendLine(":::");
                 stringBuilder.AppendLine(string.Empty);
-            }
 
-            string filename = $"{FilenameSanitizer.Sanitize(_workflows?.FirstOrDefault()?.GetWorkflowName() ?? string.Empty)}.md";
-            return _fileSystem.WriteFile(filename, stringBuilder.ToString().Trim());
+                // store one file for each workflow
+                string filename = $"{FilenameSanitizer.Sanitize(workflow.GetWorkflowName() ?? "graph")}.md";
+                _logger.LogInformation("Writing document {doc}...", filename);
+                await _fileSystem.WriteFile(filename, stringBuilder.ToString().Trim());
+                _logger.LogInformation("Created document {doc}", filename);
+            }
+            _logger.LogInformation("Document generation complete");
         }
     }
 }

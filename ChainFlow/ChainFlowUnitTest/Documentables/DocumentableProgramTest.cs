@@ -1,7 +1,9 @@
-﻿using ChainFlow.Documentables;
+﻿using Castle.Core.Logging;
+using ChainFlow.Documentables;
 using ChainFlow.Interfaces;
 using ChainFlow.Internals;
 using FluentAssertions;
+using Microsoft.Extensions.Logging;
 using Moq;
 
 namespace ChainFlowUnitTest.Documentables
@@ -12,21 +14,24 @@ namespace ChainFlowUnitTest.Documentables
         private readonly Mock<IDocumentableWorkflow> _mockWorkflow0;
         private readonly Mock<IDocumentableWorkflow> _mockWorkflow1;
         private readonly Mock<ISystemIoWriter> _mockFilesystem;
+        private readonly Mock<ILogger<DocumentableProgram>> _mockLogger;
 
         public DocumentableProgramTest()
         {
-            _mockWorkflow0 = new();
-            _mockWorkflow1 = new();
-            _mockFilesystem = new();
+            _mockWorkflow0 = new ();
+            _mockWorkflow1 = new ();
+            _mockFilesystem = new ();
+            _mockLogger = new ();
             _sut = new(
                 new IDocumentableWorkflow[] { _mockWorkflow0.Object, _mockWorkflow1.Object },
-                _mockFilesystem.Object);
+                _mockFilesystem.Object,
+                _mockLogger.Object);
         }
 
         [Fact]
-        public async Task RunAsync_WhenMultipleWorkflowsAreRegistred_CreatesDocument()
+        public async Task RunAsync_WhenMultipleWorkflowsAreRegistred_CreatesDocuments()
         {
-            string expected =
+            string expected0 =
 @"##name 0
 describe 0
 
@@ -34,9 +39,10 @@ describe 0
 graph TD;
 _start(work 0) -->
 flow 0
-:::
+:::";
 
-##name 1
+            string expected1 =
+@"##name 1
 describe 1
 
 ::: mermaid
@@ -50,7 +56,8 @@ flow 1
 
             await _sut.RunAsync();
 
-            _mockFilesystem.Verify(x => x.WriteFile(It.IsAny<string>(), expected), Times.Once);
+            _mockFilesystem.Verify(x => x.WriteFile(It.IsAny<string>(), expected0), Times.Once);
+            _mockFilesystem.Verify(x => x.WriteFile(It.IsAny<string>(), expected1), Times.Once);
         }
 
         [Fact]
@@ -67,7 +74,10 @@ flow 0
 :::";
             SetupDocumentableWorkflow(_mockWorkflow0, "0");
 
-            DocumentableProgram sut = new(new IDocumentableWorkflow[] { _mockWorkflow0.Object }, _mockFilesystem.Object);
+            DocumentableProgram sut = new (
+                new IDocumentableWorkflow[] { _mockWorkflow0.Object },
+                _mockFilesystem.Object,
+                _mockLogger.Object);
 
             await sut.RunAsync();
 
@@ -77,7 +87,7 @@ flow 0
         [Fact]
         public async Task RunAsync_WhenNullFilesystem_ThrowsException()
         {
-            DocumentableProgram sut = new(Array.Empty<IDocumentableWorkflow>(), null!);
+            DocumentableProgram sut = new(new IDocumentableWorkflow[]{ _mockWorkflow0.Object }, null!, _mockLogger.Object);
 
             var act = () => sut.RunAsync();
             await act.Should().ThrowAsync<NullReferenceException>();
@@ -86,21 +96,21 @@ flow 0
         [Fact]
         public async Task RunAsync_WhenNullWorkflows_ThrowsException()
         {
-            DocumentableProgram sut = new(null!, _mockFilesystem.Object);
+            DocumentableProgram sut = new(null!, _mockFilesystem.Object, _mockLogger.Object);
 
             var act = () => sut.RunAsync();
             await act.Should().ThrowAsync<NullReferenceException>();
         }
 
         [Fact]
-        public async Task RunAsync_WhenEmptyWorkflows_returnsEmptyString()
+        public async Task RunAsync_WhenEmptyWorkflows_NoFileIsCreated()
         {
-            DocumentableProgram sut = new(Array.Empty<IDocumentableWorkflow>(), _mockFilesystem.Object);
+            DocumentableProgram sut = new(Array.Empty<IDocumentableWorkflow>(), _mockFilesystem.Object, _mockLogger.Object);
             string expected = string.Empty;
 
             await sut.RunAsync();
 
-            _mockFilesystem.Verify(x => x.WriteFile(It.IsAny<string>(), expected), Times.Once);
+            _mockFilesystem.Verify(x => x.WriteFile(It.IsAny<string>(), expected), Times.Never);
         }
 
         private static void SetupDocumentableWorkflow(Mock<IDocumentableWorkflow> mock, string id)

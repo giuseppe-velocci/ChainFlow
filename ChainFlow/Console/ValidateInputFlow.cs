@@ -1,11 +1,13 @@
 ﻿using ChainFlow.ChainFlows;
+using ChainFlow.Documentables;
 using ChainFlow.Models;
 
 namespace Console
 {
+    [DocumentFlowBehavior(ChainFlow.Enums.DocumentFlowBehavior.TerminateOnFailure)]
     internal class ValidateInputFlow : AbstractChainFlow
     {
-        public override string Describe() => "Validate user input";
+        public override string Describe() => "Is user input valid?";
 
         public override Task<ProcessingRequestWithOutcome> ProcessRequestAsync(ProcessingRequest message, CancellationToken cancellationToken)
         {
