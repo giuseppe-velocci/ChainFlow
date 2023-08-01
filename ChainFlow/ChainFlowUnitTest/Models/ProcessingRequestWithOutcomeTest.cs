@@ -4,15 +4,15 @@ using FluentAssertions;
 
 namespace ChainFlowUnitTest.Models
 {
-    public class ProcessingRequestWithOutcomeTest
+    public class ProcessingResultWithOutcomeTest
     {
         [Fact]
         public void CreateWithSuccess_WhenInvoked_RetunsFlowOutcomeSuccess()
         {
             object request = new();
-            var sut = ProcessingRequestWithOutcome.CreateWithSuccess(request);
+            var sut = ProcessingResultWithOutcome.CreateWithSuccess(request);
 
-            sut.Request.Should().Be(request);
+            sut.Result.Should().Be(request);
             sut.Message.Should().Be(string.Empty);
             sut.Outcome.Should().Be(FlowOutcome.Success);
         }
@@ -21,9 +21,9 @@ namespace ChainFlowUnitTest.Models
         {
             object request = new();
             string message = "Ok";
-            var sut = ProcessingRequestWithOutcome.CreateWithSuccess(request, message);
+            var sut = ProcessingResultWithOutcome.CreateWithSuccess(request, message);
 
-            sut.Request.Should().Be(request);
+            sut.Result.Should().Be(request);
             sut.Message.Should().Be(message);
             sut.Outcome.Should().Be(FlowOutcome.Success);
         }
@@ -33,9 +33,9 @@ namespace ChainFlowUnitTest.Models
         {
             object request = new();
             string message = "KO";
-            var sut = ProcessingRequestWithOutcome.CreateWithFailure(request, message);
+            var sut = ProcessingResultWithOutcome.CreateWithFailure(request, message);
 
-            sut.Request.Should().Be(request);
+            sut.Result.Should().Be(request);
             sut.Message.Should().Be(message);
             sut.Outcome.Should().Be(FlowOutcome.Failure);
         }
@@ -45,9 +45,9 @@ namespace ChainFlowUnitTest.Models
         {
             object request = new();
             string message = "KO";
-            var sut = ProcessingRequestWithOutcome.CreateWithTransientFailure(request, message);
+            var sut = ProcessingResultWithOutcome.CreateWithTransientFailure(request, message);
 
-            sut.Request.Should().Be(request);
+            sut.Result.Should().Be(request);
             sut.Message.Should().Be(message);
             sut.Outcome.Should().Be(FlowOutcome.TransientFailure);
         }

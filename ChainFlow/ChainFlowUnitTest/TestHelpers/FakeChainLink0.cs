@@ -10,7 +10,7 @@ namespace ChainFlowUnitTest.TestHelpers
             return "Do something @0";
         }
 
-        public Task<ProcessingRequestWithOutcome> ProcessAsync(ProcessingRequest message, CancellationToken cancellationToken)
+        public Task<ProcessingResultWithOutcome> ProcessAsync(ProcessingRequest message, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }

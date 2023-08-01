@@ -3,26 +3,30 @@ using ChainFlow.Models;
 
 namespace ChainFlow.Workflows
 {
-    public abstract class AbstractWorkflowRunner<T> : IWorkflow<T> where T : notnull
+    public abstract class AbstractWorkflowRunner : IWorkflow
     {
-        private readonly IChainFlowBuilder _chainBuilder = null!;
-        private readonly IChainFlow chain = null!;
+        private readonly IChainFlowBuilder _workflowBuilder = null!;
+        protected abstract IChainFlow Workflow { get; set; }
 
         public AbstractWorkflowRunner(IChainFlowBuilder chainBuilder)
         {
-            _chainBuilder = chainBuilder;
-            chain = _chainBuilder.Build();
+            _workflowBuilder = chainBuilder;
         }
 
-        public async Task<T> ProcessAsync(ProcessingRequest message, CancellationToken cancellationToken)
+        public Task<ProcessingResultWithOutcome> ProcessAsync(ProcessingRequest message, CancellationToken cancellationToken)
         {
-            var response = await chain.ProcessAsync(message, cancellationToken);
-            return Outcome2T(response);
+            return Workflow!.ProcessAsync(message, cancellationToken);
         }
 
-        public abstract T Outcome2T(ProcessingRequestWithOutcome outcome);
+        public string GetFlow()
+        {
+            if (Workflow is null)
+            {
+                _workflowBuilder.Build();
+            }
 
-        public string GetFlow() => _chainBuilder.ToString()!;
+            return _workflowBuilder.ToString()!;
+        }
 
         public abstract string GetWorkflowName();
         public abstract string Describe();

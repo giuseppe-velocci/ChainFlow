@@ -8,11 +8,11 @@ namespace ChainFlow.ChainFlows
     {
         private IChainFlow _next = null!;
 
-        public abstract Task<ProcessingRequestWithOutcome> ProcessRequestAsync(ProcessingRequest message, CancellationToken cancellationToken);
+        public abstract Task<ProcessingResultWithOutcome> ProcessRequestAsync(ProcessingRequest message, CancellationToken cancellationToken);
 
         public abstract string Describe();
 
-        public async Task<ProcessingRequestWithOutcome> ProcessAsync(ProcessingRequest message, CancellationToken cancellationToken)
+        public async Task<ProcessingResultWithOutcome> ProcessAsync(ProcessingRequest message, CancellationToken cancellationToken)
         {
             var result = await ProcessRequestAsync(message, cancellationToken);
             if (result.Outcome is FlowOutcome.Success)

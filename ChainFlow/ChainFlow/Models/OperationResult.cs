@@ -4,6 +4,13 @@ namespace ChainFlow.Models
 {
     public record class OperationResult<T>
     {
+
+        internal OperationResult()
+        {
+            Value = default!;
+            Message = default!;
+        }
+
         private OperationResult(T value, FlowOutcome outcome, string message)
         {
             Value = value;
@@ -24,9 +31,9 @@ namespace ChainFlow.Models
         public static OperationResult<T> CreateWithTransientFailure(T value, string message) => 
             new (value, FlowOutcome.TransientFailure, message);  
 
-        public ProcessingRequestWithOutcome ToProcessingRequestWithOutcome()
+        public ProcessingResultWithOutcome ToProcessingRequestWithOutcome()
         {
-            return new ProcessingRequestWithOutcome(Value!, Outcome, Message);
+            return new ProcessingResultWithOutcome(Value!, Outcome, Message);
         }
     }
 }

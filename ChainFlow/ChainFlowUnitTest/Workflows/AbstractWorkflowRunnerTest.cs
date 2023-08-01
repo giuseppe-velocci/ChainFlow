@@ -9,7 +9,7 @@ namespace ChainFlowUnitTest.Workflows
 {
     public class AbstractWorkflowRunnerTest
     {
-        private readonly Mock<AbstractWorkflowRunner<bool>> _sut;
+        private readonly Mock<AbstractWorkflowRunner> _sut;
         private readonly Mock<IChainFlowBuilder> _mockChainBuilder;
 
         public AbstractWorkflowRunnerTest()
@@ -33,11 +33,11 @@ namespace ChainFlowUnitTest.Workflows
         }
 
         [Fact]
-        public async Task ProcessAsync_WhenChainBuilderResolvesFlow_RetrunsT()
+        public async Task ProcessAsync_WhenChainBuilderResolvesFlow_RetrunsProcessingRequestWithOutcome()
         {
             object message = new();
             var request = new ProcessingRequest(message);
-            var response = ProcessingRequestWithOutcome.CreateWithSuccess(request);
+            var response = ProcessingResultWithOutcome.CreateWithSuccess(request);
 
             var mockFlow = new Mock<IChainFlow>();
             mockFlow.Setup(x => x.ProcessAsync(It.IsAny<ProcessingRequest>(), It.IsAny<CancellationToken>()))
@@ -47,12 +47,8 @@ namespace ChainFlowUnitTest.Workflows
                 .Setup(x => x.Build(FlowOutcome.Success))
                 .Returns(mockFlow.Object);
 
-            _sut
-                .Setup(x => x.Outcome2T(response))
-                .Returns(true);
-
             var result = await _sut.Object.ProcessAsync(request, CancellationToken.None);
-            result.Should().BeTrue();
+            result.Should().Be(response);
         }
 
         [Fact]

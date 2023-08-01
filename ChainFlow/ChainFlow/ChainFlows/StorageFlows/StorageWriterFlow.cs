@@ -3,7 +3,7 @@ using ChainFlow.Models;
 
 namespace ChainFlow.ChainFlows.StorageFlows
 {
-    internal class StorageWriterFlow<TIn> : AbstractChainFlow where TIn : class
+    public class StorageWriterFlow<TIn> : AbstractChainFlow where TIn : class
     {
         protected readonly IStorageWriter<TIn> _writer;
 
@@ -14,12 +14,12 @@ namespace ChainFlow.ChainFlows.StorageFlows
 
         public override string Describe() => $"Delete {typeof(TIn)} from storage";
 
-        public async override Task<ProcessingRequestWithOutcome> ProcessRequestAsync(ProcessingRequest message, CancellationToken cancellationToken)
+        public async override Task<ProcessingResultWithOutcome> ProcessRequestAsync(ProcessingRequest message, CancellationToken cancellationToken)
         {
             OperationResult<bool> deletionResult = await _writer.WriteAsync((TIn)message.Request, cancellationToken);
             return deletionResult.Value ?
-                ProcessingRequestWithOutcome.CreateWithSuccess(message.Request) :
-                ProcessingRequestWithOutcome.CreateWithFailure(message.Request, deletionResult.Message);
+                ProcessingResultWithOutcome.CreateWithSuccess(message.Request) :
+                ProcessingResultWithOutcome.CreateWithFailure(message.Request, deletionResult.Message);
         }
     }
 }

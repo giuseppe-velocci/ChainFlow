@@ -36,9 +36,24 @@ namespace ChainFlow.DependencyInjection
                 services.AddSingleton<T>();
             }
 
-            services.AddSingleton(sp => new ChainFlowRegistration(typeof(T), () => sp.GetRequiredService<T>()));
+            services.AddSingleton(sp => new ChainFlowRegistration(ResolveChainFlowType<T>(), () => sp.GetRequiredService<T>()));
 
             return services;
+        }
+
+        private static Type ResolveChainFlowType<T>() where T : class, IChainFlow
+        {
+            Type flowType = typeof(T);
+
+            if (typeof(IBooleanRouterFlow<>).IsAssignableFrom(flowType))
+            {
+                var genericArguments = flowType.GetGenericArguments();
+                return typeof(IBooleanRouterFlow<>).MakeGenericType(genericArguments);
+            }
+            else
+            {
+                return flowType;
+            }
         }
     }
 }

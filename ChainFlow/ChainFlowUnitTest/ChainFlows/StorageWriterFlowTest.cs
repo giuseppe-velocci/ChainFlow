@@ -27,9 +27,9 @@ namespace ChainFlowUnitTest.ChainFlows
             _mockWriter
                 .Setup(x => x.WriteAsync(input, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(operationResult);
-            ProcessingRequestWithOutcome expected = ProcessingRequestWithOutcome.CreateWithSuccess(input);
+            ProcessingResultWithOutcome expected = ProcessingResultWithOutcome.CreateWithSuccess(input);
 
-            ProcessingRequestWithOutcome result = await _sut.ProcessRequestAsync(request, CancellationToken.None);
+            ProcessingResultWithOutcome result = await _sut.ProcessRequestAsync(request, CancellationToken.None);
 
             result.Should().BeEquivalentTo(expected);
         }
@@ -43,9 +43,9 @@ namespace ChainFlowUnitTest.ChainFlows
             _mockWriter
                 .Setup(x => x.WriteAsync(input, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(operationResult);
-            ProcessingRequestWithOutcome expected = ProcessingRequestWithOutcome.CreateWithFailure(input, operationResult.Message);
+            ProcessingResultWithOutcome expected = ProcessingResultWithOutcome.CreateWithFailure(input, operationResult.Message);
 
-            ProcessingRequestWithOutcome result = await _sut.ProcessRequestAsync(request, CancellationToken.None);
+            ProcessingResultWithOutcome result = await _sut.ProcessRequestAsync(request, CancellationToken.None);
 
             result.Should().BeEquivalentTo(expected);
         }

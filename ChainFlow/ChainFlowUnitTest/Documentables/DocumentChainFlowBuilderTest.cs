@@ -264,8 +264,8 @@ Success(Workflow is completed with success)
     {
         public string Describe() => "Is data correct @7?";
 
-        public Task<ProcessingRequestWithOutcome> ProcessAsync(ProcessingRequest message, CancellationToken cancellationToken)
-            => Task.FromResult(new ProcessingRequestWithOutcome(new object(), FlowOutcome.Success, string.Empty));
+        public Task<ProcessingResultWithOutcome> ProcessAsync(ProcessingRequest message, CancellationToken cancellationToken)
+            => Task.FromResult(new ProcessingResultWithOutcome(new object(), FlowOutcome.Success, string.Empty));
 
         public void SetNext(IChainFlow next)
         { }

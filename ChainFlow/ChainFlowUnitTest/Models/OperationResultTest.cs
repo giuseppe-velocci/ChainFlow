@@ -57,10 +57,10 @@ namespace ChainFlowUnitTest.Models
         [MemberData(nameof(CreateOperationResult))]
         public void ToProcessingRequestWithOutcome_WhenInvoked_RetrunsMatching(
             OperationResult<object> operationResult,
-            ProcessingRequestWithOutcome expected)
+            ProcessingResultWithOutcome expected)
         {
             operationResult.Message.Should().Be(expected.Message);
-            operationResult.Value.Should().Be(expected.Request);
+            operationResult.Value.Should().Be(expected.Result);
             operationResult.Outcome.Should().Be(expected.Outcome);
         }
 
@@ -70,17 +70,17 @@ namespace ChainFlowUnitTest.Models
             yield return new object[]
             {
                 OperationResult<object>.CreateWithSuccess(value, "Ok"),
-                ProcessingRequestWithOutcome.CreateWithSuccess(value, "Ok")
+                ProcessingResultWithOutcome.CreateWithSuccess(value, "Ok")
             };
             yield return new object[]
             {
                 OperationResult<object>.CreateWithFailure(value, "Ko"),
-                ProcessingRequestWithOutcome.CreateWithFailure(value, "Ko")
+                ProcessingResultWithOutcome.CreateWithFailure(value, "Ko")
             };
             yield return new object[]
             {
                 OperationResult<object>.CreateWithTransientFailure(value, "KO"),
-                ProcessingRequestWithOutcome.CreateWithTransientFailure(value, "KO")
+                ProcessingResultWithOutcome.CreateWithTransientFailure(value, "KO")
             };
         }
     }

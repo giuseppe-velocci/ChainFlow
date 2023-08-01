@@ -28,9 +28,9 @@ namespace ChainFlowUnitTest.ChainFlows
             _mockRemover
                 .Setup(x => x.ReadAsync(input, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(operationResult);
-            ProcessingRequestWithOutcome expected = ProcessingRequestWithOutcome.CreateWithSuccess(output);
+            ProcessingResultWithOutcome expected = ProcessingResultWithOutcome.CreateWithSuccess(output);
 
-            ProcessingRequestWithOutcome result = await _sut.ProcessRequestAsync(request, CancellationToken.None);
+            ProcessingResultWithOutcome result = await _sut.ProcessRequestAsync(request, CancellationToken.None);
 
             result.Should().BeEquivalentTo(expected);
         }
@@ -45,9 +45,9 @@ namespace ChainFlowUnitTest.ChainFlows
             _mockRemover
                 .Setup(x => x.ReadAsync(input, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(operationResult);
-            ProcessingRequestWithOutcome expected = ProcessingRequestWithOutcome.CreateWithFailure(output, operationResult.Message);
+            ProcessingResultWithOutcome expected = ProcessingResultWithOutcome.CreateWithFailure(output, operationResult.Message);
 
-            ProcessingRequestWithOutcome result = await _sut.ProcessRequestAsync(request, CancellationToken.None);
+            ProcessingResultWithOutcome result = await _sut.ProcessRequestAsync(request, CancellationToken.None);
 
             result.Should().BeEquivalentTo(expected);
         }

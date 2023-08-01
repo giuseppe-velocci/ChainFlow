@@ -9,7 +9,7 @@ namespace ChainFlowUnitTest.ChainFlows
 {
     public class StorageRemoverFlowTest
     {
-        private readonly StorgeRemoverFlow<Input> _sut;
+        private readonly StorageRemoverFlow<Input> _sut;
         private readonly Mock<IStorageRemover<Input>> _mockRemover;
 
         public StorageRemoverFlowTest()
@@ -27,9 +27,9 @@ namespace ChainFlowUnitTest.ChainFlows
             _mockRemover
                 .Setup(x => x.RemoveAsync(input, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(operationResult);
-            ProcessingRequestWithOutcome expected = ProcessingRequestWithOutcome.CreateWithSuccess(input);
+            ProcessingResultWithOutcome expected = ProcessingResultWithOutcome.CreateWithSuccess(input);
 
-            ProcessingRequestWithOutcome result = await _sut.ProcessRequestAsync(request, CancellationToken.None);
+            ProcessingResultWithOutcome result = await _sut.ProcessRequestAsync(request, CancellationToken.None);
 
             result.Should().BeEquivalentTo(expected);
         }
@@ -43,9 +43,9 @@ namespace ChainFlowUnitTest.ChainFlows
             _mockRemover
                 .Setup(x => x.RemoveAsync(input, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(operationResult);
-            ProcessingRequestWithOutcome expected = ProcessingRequestWithOutcome.CreateWithFailure(input, operationResult.Message);
+            ProcessingResultWithOutcome expected = ProcessingResultWithOutcome.CreateWithFailure(input, operationResult.Message);
 
-            ProcessingRequestWithOutcome result = await _sut.ProcessRequestAsync(request, CancellationToken.None);
+            ProcessingResultWithOutcome result = await _sut.ProcessRequestAsync(request, CancellationToken.None);
 
             result.Should().BeEquivalentTo(expected);
         }
@@ -68,7 +68,7 @@ namespace ChainFlowUnitTest.ChainFlows
         [Fact]
         public async Task Ctor_WhenStorageIsNull_ThrowsException()
         {
-            StorgeRemoverFlow<Input> sut = (null!);
+            StorageRemoverFlow<Input> sut = (null!);
             Input input = new("in");
             ProcessingRequest request = new(input);
             var act = () => sut.ProcessRequestAsync(request, CancellationToken.None);

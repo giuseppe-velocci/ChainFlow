@@ -6,6 +6,7 @@ using ChainFlow.Internals;
 using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("ChainFlowUnitTest")]
+[assembly: InternalsVisibleTo("ChainFlow.TestKit")]
 namespace ChainFlow.ChainBuilder
 {
     internal sealed class ChainFlowBuilder : IChainFlowBuilder
@@ -35,14 +36,14 @@ namespace ChainFlow.ChainBuilder
             return _firstLink;
         }
 
-        public IChainFlowBuilder WithBooleanRouter<TRouter>(
+        public IChainFlowBuilder WithBooleanRouter<TRouterDispatcher>(
             Func<IChainFlowBuilder, IChainFlow> rightFlowFactory, 
-            Func<IChainFlowBuilder, IChainFlow> leftFlowFactory) where TRouter : IRouterDispatcher<bool>
+            Func<IChainFlowBuilder, IChainFlow> leftFlowFactory) where TRouterDispatcher : IRouterDispatcher<bool>
         {
             var rightFlow = rightFlowFactory(new ChainFlowBuilder(_links));
             var leftFlow = leftFlowFactory(new ChainFlowBuilder(_links));
-            var resolvedLink = ((BooleanRouterFlow<TRouter>)_links
-                .First(x => x.LinkType == typeof(BooleanRouterFlow<TRouter>).GetFullName())
+            var resolvedLink = ((IBooleanRouterFlow<TRouterDispatcher>)_links
+                .First(x => x.LinkType == typeof(IBooleanRouterFlow<TRouterDispatcher>).GetFullName())
                 .ChainLinkFactory())
                 .WithRightFlow(rightFlow)
                 .WithLeftFlow(leftFlow);
