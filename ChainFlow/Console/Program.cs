@@ -18,9 +18,17 @@ static IHostBuilder CreateHostBuilder(string[] args)
 
                 .AddHostedService<ConsoleWorkflow>()
                 ;
-        });
+        })
+        .UseConsoleLifetime(); // Use IConsoleLifetime to manage application lifetime;
     return host;
 }
 
 var host = CreateHostBuilder(args).Build();
-await host.RunAsync();
+try
+{
+    await host.RunAsync();
+}
+catch (OperationCanceledException _)
+{
+    await host.StopAsync(); 
+}

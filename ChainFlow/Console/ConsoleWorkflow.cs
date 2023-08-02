@@ -1,5 +1,4 @@
-﻿using System;
-using ChainFlow.ChainFlows.DataFlows;
+﻿using ChainFlow.ChainFlows.DataFlows;
 using ChainFlow.Interfaces;
 using ChainFlow.Workflows;
 using Microsoft.Extensions.Hosting;
@@ -25,13 +24,17 @@ namespace Console
 
         public async Task StartAsync(CancellationToken cancellationToken)
         {
-            while (true)
+            bool shouldRun = true;
+            do
             {
                 System.Console.WriteLine("Input some text...");
                 var input = System.Console.ReadLine();
                 var res = await Workflow.ProcessAsync(new ChainFlow.Models.ProcessingRequest(input!), cancellationToken);
                 System.Console.WriteLine($"{res.Message}");
+                shouldRun = res.Outcome is ChainFlow.Enums.FlowOutcome.Success;
             }
+            while (shouldRun);
+            throw new OperationCanceledException();
         }
 
         public Task StopAsync(CancellationToken cancellationToken)
