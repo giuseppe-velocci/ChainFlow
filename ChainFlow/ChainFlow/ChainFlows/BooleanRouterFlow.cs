@@ -4,7 +4,7 @@ using ChainFlow.Models;
 
 namespace ChainFlow.ChainFlows
 {
-    internal class BooleanRouterFlow<TRouterDispatcher> : AbstractChainFlow, IBooleanRouterFlow<TRouterDispatcher> 
+    internal class BooleanRouterFlow<TRouterDispatcher> : AbstractChainFlow, IBooleanRouterFlow<TRouterDispatcher>
         where TRouterDispatcher : IRouterDispatcher<bool>
     {
         private IChainFlow _rightFlow = null!;

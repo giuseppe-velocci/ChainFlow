@@ -3,7 +3,6 @@ using ChainFlow.ChainFlows.StorageFlows;
 using ChainFlow.Enums;
 using ChainFlow.Helpers;
 using ChainFlow.Interfaces;
-using ChainFlow.Internals;
 using ChainFlow.Models;
 using ChainFlow.TestKit;
 using ChainFlow.Workflows;
@@ -24,10 +23,10 @@ namespace ChainFlow.TestKitUnitTests
         public async Task ProcessAsync_WhenHappyPath_ReturnsSuccess()
         {
             IChainFlowBuilder builder = _sut.GetChainFlowBuilder<bool>((x) => new FakeWorkflow(x));
-            FakeWorkflow workflow = new (builder);
+            FakeWorkflow workflow = new(builder);
 
             var result = await workflow.ProcessAsync(new ProcessingRequest(new Input { Id = 1, Value = "abc" }), CancellationToken.None);
-            
+
             result.Outcome.Should().Be(FlowOutcome.Success);
             _sut.GetChainFlowsCallStack().Should().HaveCount(6);
             _sut.GetChainFlowsCallStack().Should().BeEquivalentTo(new[]

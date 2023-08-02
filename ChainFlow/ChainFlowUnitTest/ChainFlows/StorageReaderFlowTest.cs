@@ -23,7 +23,7 @@ namespace ChainFlowUnitTest.ChainFlows
         {
             Input input = new("in");
             ProcessingRequest request = new(input);
-            Output output = new ("out");
+            Output output = new("out");
             var operationResult = OperationResult<Output>.CreateWithSuccess(output);
             _mockRemover
                 .Setup(x => x.ReadAsync(input, It.IsAny<CancellationToken>()))
@@ -40,7 +40,7 @@ namespace ChainFlowUnitTest.ChainFlows
         {
             Input input = new("in");
             ProcessingRequest request = new(input);
-            Output output = new ("out");
+            Output output = new("out");
             var operationResult = OperationResult<Output>.CreateWithFailure(output, "Ko");
             _mockRemover
                 .Setup(x => x.ReadAsync(input, It.IsAny<CancellationToken>()))
@@ -57,7 +57,7 @@ namespace ChainFlowUnitTest.ChainFlows
         {
             Input input = new("in");
             ProcessingRequest request = new(input);
-            Output output = new ("out");
+            Output output = new("out");
             var operationResult = OperationResult<Output>.CreateWithSuccess(output);
             _mockRemover
                 .Setup(x => x.ReadAsync(input, It.IsAny<CancellationToken>()))

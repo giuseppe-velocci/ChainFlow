@@ -1,5 +1,4 @@
-﻿using ChainFlow.ChainFlows;
-using ChainFlow.Enums;
+﻿using ChainFlow.Enums;
 using ChainFlow.Helpers;
 using ChainFlow.Interfaces;
 using ChainFlow.Internals;
@@ -37,7 +36,7 @@ namespace ChainFlow.ChainBuilder
         }
 
         public IChainFlowBuilder WithBooleanRouter<TRouterDispatcher>(
-            Func<IChainFlowBuilder, IChainFlow> rightFlowFactory, 
+            Func<IChainFlowBuilder, IChainFlow> rightFlowFactory,
             Func<IChainFlowBuilder, IChainFlow> leftFlowFactory) where TRouterDispatcher : IRouterDispatcher<bool>
         {
             var rightFlow = rightFlowFactory(new ChainFlowBuilder(_links));

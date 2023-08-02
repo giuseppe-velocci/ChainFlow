@@ -23,7 +23,7 @@ namespace ChainFlow.Helpers
         private static readonly string altString = altChar.ToString();
         private static readonly Regex replaceRegex = new("_{2,}");
 
-        public static string Sanitize(string filename) 
+        public static string Sanitize(string filename)
         {
             var sanitizedString = string.Join("", filename.Select(x => _whitelist.Contains(x) ? x : altChar));
             return sanitizedString?.Any() is true ?
@@ -37,7 +37,7 @@ namespace ChainFlow.Helpers
             if (output?.Any() is true)
             {
                 return output.Length > _maxLen ?
-                    output[.._maxLen] : 
+                    output[.._maxLen] :
                     output;
             }
             else

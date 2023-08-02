@@ -22,14 +22,14 @@ namespace ChainFlow.Models
         public string Message { get; }
         public FlowOutcome Outcome { get; }
 
-        public static OperationResult<T> CreateWithSuccess(T value, string message = "") => 
-            new (value, FlowOutcome.Success, message);
-        
-        public static OperationResult<T> CreateWithFailure(T value, string message) => 
-            new (value, FlowOutcome.Failure, message); 
+        public static OperationResult<T> CreateWithSuccess(T value, string message = "") =>
+            new(value, FlowOutcome.Success, message);
 
-        public static OperationResult<T> CreateWithTransientFailure(T value, string message) => 
-            new (value, FlowOutcome.TransientFailure, message);  
+        public static OperationResult<T> CreateWithFailure(T value, string message) =>
+            new(value, FlowOutcome.Failure, message);
+
+        public static OperationResult<T> CreateWithTransientFailure(T value, string message) =>
+            new(value, FlowOutcome.TransientFailure, message);
 
         public ProcessingResultWithOutcome ToProcessingRequestWithOutcome()
         {

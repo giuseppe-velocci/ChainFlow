@@ -31,7 +31,7 @@ namespace ChainFlow.TestKit.Internals
 
         private object GetDefaultBool(Type type, Mock mock) => true;
 
-        private object FromFixture(Type typeArgument) 
+        private object FromFixture(Type typeArgument)
         {
             Type fullType = _fixtureWrapperGenericInfo.MakeGenericType(typeArgument);
             var fixture = Activator.CreateInstance(fullType);

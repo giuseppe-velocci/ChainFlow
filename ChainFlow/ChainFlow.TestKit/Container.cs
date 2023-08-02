@@ -1,5 +1,4 @@
 ﻿using ChainFlow.ChainBuilder;
-using ChainFlow.ChainFlows;
 using ChainFlow.Enums;
 using ChainFlow.Interfaces;
 using ChainFlow.Internals;
@@ -55,7 +54,7 @@ namespace ChainFlow.TestKit
         }
 
         public Mock<IMockedDependency> GetMock<IMockedDependency>() where IMockedDependency : class
-            => _testInstanceFactory.GetMock<IMockedDependency>(); 
+            => _testInstanceFactory.GetMock<IMockedDependency>();
 
         public IEnumerable<string> GetChainFlowsCallStack() => _stack.ToArray();
     }

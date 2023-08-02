@@ -1,7 +1,4 @@
-﻿using ChainFlow.Interfaces;
-using ChainFlow.Internals;
-
-namespace ChainFlow.Helpers
+﻿namespace ChainFlow.Helpers
 {
     public static class TypeExtension
     {

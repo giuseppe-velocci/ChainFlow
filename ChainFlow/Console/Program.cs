@@ -8,7 +8,7 @@ using Console.Validators;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-static IHostBuilder CreateHostBuilder(string[] args) 
+static IHostBuilder CreateHostBuilder(string[] args)
 {
     var host = Host
         .CreateDefaultBuilder(args)
@@ -36,5 +36,5 @@ try
 }
 catch (OperationCanceledException _)
 {
-    await host.StopAsync(); 
+    await host.StopAsync();
 }

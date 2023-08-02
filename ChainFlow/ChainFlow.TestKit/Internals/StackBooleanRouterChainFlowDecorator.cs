@@ -6,7 +6,7 @@ using ChainFlow.Models;
 
 namespace ChainFlow.TestKit
 {
-    class StackBooleanRouterChainFlowDecorator<TRouterDispatcher> : IBooleanRouterFlow<TRouterDispatcher> 
+    class StackBooleanRouterChainFlowDecorator<TRouterDispatcher> : IBooleanRouterFlow<TRouterDispatcher>
         where TRouterDispatcher : IRouterDispatcher<bool>
     {
         private readonly BooleanRouterFlow<TRouterDispatcher> _flow;

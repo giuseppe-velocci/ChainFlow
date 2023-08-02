@@ -28,7 +28,7 @@ namespace ChainFlow.Documentables
 
             foreach (var workflow in _workflows)
             {
-                StringBuilder stringBuilder = new ();
+                StringBuilder stringBuilder = new();
 
                 // worflow name and description
                 stringBuilder.AppendLine($"## {workflow.GetWorkflowName()}");
