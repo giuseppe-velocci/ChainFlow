@@ -23,14 +23,14 @@ namespace ChainFlowUnitTest.ChainFlows
         {
             Input input = new("in");
             ProcessingRequest request = new(input);
-            Output output = new ("out");
+            Output output = new("out");
             var operationResult = OperationResult<Output>.CreateWithSuccess(output);
             _mockRemover
                 .Setup(x => x.ReadAsync(input, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(operationResult);
-            ProcessingRequestWithOutcome expected = ProcessingRequestWithOutcome.CreateWithSuccess(output);
+            ProcessingResultWithOutcome expected = ProcessingResultWithOutcome.CreateWithSuccess(output);
 
-            ProcessingRequestWithOutcome result = await _sut.ProcessRequestAsync(request, CancellationToken.None);
+            ProcessingResultWithOutcome result = await _sut.ProcessRequestAsync(request, CancellationToken.None);
 
             result.Should().BeEquivalentTo(expected);
         }
@@ -40,14 +40,14 @@ namespace ChainFlowUnitTest.ChainFlows
         {
             Input input = new("in");
             ProcessingRequest request = new(input);
-            Output output = new ("out");
+            Output output = new("out");
             var operationResult = OperationResult<Output>.CreateWithFailure(output, "Ko");
             _mockRemover
                 .Setup(x => x.ReadAsync(input, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(operationResult);
-            ProcessingRequestWithOutcome expected = ProcessingRequestWithOutcome.CreateWithFailure(output, operationResult.Message);
+            ProcessingResultWithOutcome expected = ProcessingResultWithOutcome.CreateWithFailure(output, operationResult.Message);
 
-            ProcessingRequestWithOutcome result = await _sut.ProcessRequestAsync(request, CancellationToken.None);
+            ProcessingResultWithOutcome result = await _sut.ProcessRequestAsync(request, CancellationToken.None);
 
             result.Should().BeEquivalentTo(expected);
         }
@@ -57,7 +57,7 @@ namespace ChainFlowUnitTest.ChainFlows
         {
             Input input = new("in");
             ProcessingRequest request = new(input);
-            Output output = new ("out");
+            Output output = new("out");
             var operationResult = OperationResult<Output>.CreateWithSuccess(output);
             _mockRemover
                 .Setup(x => x.ReadAsync(input, It.IsAny<CancellationToken>()))

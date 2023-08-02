@@ -1,9 +1,14 @@
-﻿using ChainFlow.DependencyInjection;
+﻿using ChainFlow.ChainFlows.DataFlows;
+using ChainFlow.DependencyInjection;
+using ChainFlow.Interfaces.DataFlowsDependencies;
 using Console;
+using Console.Dispatchers;
+using Console.Flows;
+using Console.Validators;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-static IHostBuilder CreateHostBuilder(string[] args) 
+static IHostBuilder CreateHostBuilder(string[] args)
 {
     var host = Host
         .CreateDefaultBuilder(args)
@@ -11,12 +16,25 @@ static IHostBuilder CreateHostBuilder(string[] args)
         .ConfigureServices((hostContext, services) =>
         {
             services
-                .AddSingleton<ConsoleWorkflow>()
-                .AddChainFlow<ValidateInputFlow>()
+                .AddSingleton<IDataValidator<string>, StringValidator>()
+                .AddChainFlow<TerminateConsoleFlow>()
+                .AddBooleanRouterChainFlow<TerminateConsoleDispatcher>()
+                .AddChainFlow<DataValidatorFlow<string>>()
+                .AddChainFlow<GreeterFlow>()
+
+                .AddHostedService<ConsoleWorkflow>()
                 ;
-        });
+        })
+        .UseConsoleLifetime(); // Use IConsoleLifetime to manage application lifetime;
     return host;
 }
 
 var host = CreateHostBuilder(args).Build();
-await host.RunAsync();
+try
+{
+    await host.RunAsync();
+}
+catch (OperationCanceledException _)
+{
+    await host.StopAsync();
+}

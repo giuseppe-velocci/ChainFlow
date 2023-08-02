@@ -86,10 +86,10 @@ namespace ChainFlow.Documentables
             return this;
         }
 
-        public IChainFlowBuilder WithBooleanRouter<TRouter>(Func<IChainFlowBuilder, IChainFlow> rightFlowFactory, Func<IChainFlowBuilder, IChainFlow> leftFlowFactory) where TRouter : IRouterDispatcher<bool>
+        public IChainFlowBuilder WithBooleanRouter<TRouterDispatcher>(Func<IChainFlowBuilder, IChainFlow> rightFlowFactory, Func<IChainFlowBuilder, IChainFlow> leftFlowFactory) where TRouterDispatcher : IRouterDispatcher<bool>
         {
-            var registration = _links.FirstOrDefault(x => x.LinkType == typeof(BooleanRouterFlow<TRouter>).GetFullName())
-                ?? new ChainFlowRegistration(typeof(TRouter), () => new TodoBooleanRouterChainFlow<TRouter>(default!));
+            var registration = _links.FirstOrDefault(x => x.LinkType == ChainFlowNameResolver.GetBooleanRouterChainFlowName<TRouterDispatcher>())
+                ?? new ChainFlowRegistration(typeof(TRouterDispatcher), () => new TodoBooleanRouterChainFlow<TRouterDispatcher>(default!));
             _firstRegistration ??= registration;
 
             string tag = $"{registration.GetDocumentFlowId()}{{{registration.ChainLinkFactory().Describe()}}}";

@@ -22,8 +22,8 @@ namespace ChainFlowUnitTest.Documentables
                 new ChainFlowRegistration(typeof(FakeChainLink2), () => new FakeChainLink2()),
                 new ChainFlowRegistration(typeof(FakeChainLink3), () => new FakeChainLink3()),
                 new ChainFlowRegistration(typeof(FakeChainLink4), () => new FakeChainLink4()),
-                new ChainFlowRegistration(typeof(BooleanRouterFlow<RouterLogic>), () => new BooleanRouterFlow<RouterLogic>(new RouterLogic())),
-                new ChainFlowRegistration(typeof(BooleanRouterFlow<RouterLogic1>), () => new BooleanRouterFlow<RouterLogic1>(new RouterLogic1())),
+                new ChainFlowRegistration(typeof(IBooleanRouterFlow<RouterLogic>), () => new BooleanRouterFlow<RouterLogic>(new RouterLogic())),
+                new ChainFlowRegistration(typeof(IBooleanRouterFlow<RouterLogic1>), () => new BooleanRouterFlow<RouterLogic1>(new RouterLogic1())),
                 new ChainFlowRegistration(typeof(ExitOnFailFlow), () => new ExitOnFailFlow()),
             };
             _sut = new(_registrations);
@@ -264,8 +264,8 @@ Success(Workflow is completed with success)
     {
         public string Describe() => "Is data correct @7?";
 
-        public Task<ProcessingRequestWithOutcome> ProcessAsync(ProcessingRequest message, CancellationToken cancellationToken)
-            => Task.FromResult(new ProcessingRequestWithOutcome(new object(), FlowOutcome.Success, string.Empty));
+        public Task<ProcessingResultWithOutcome> ProcessAsync(ProcessingRequest message, CancellationToken cancellationToken)
+            => Task.FromResult(new ProcessingResultWithOutcome(new object(), FlowOutcome.Success, string.Empty));
 
         public void SetNext(IChainFlow next)
         { }

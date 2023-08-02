@@ -1,6 +1,6 @@
 ﻿namespace ChainFlow.Helpers
 {
-    internal static class TypeExtension
+    public static class TypeExtension
     {
         public static string GetFullName(this Type type) =>
             type.IsGenericType ?

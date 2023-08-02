@@ -29,11 +29,11 @@ namespace ChainFlowUnitTest.ChainFlows
                 .Setup(x => x.MapAsync(input, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(expected);
 
-            ProcessingRequestWithOutcome result = await _sut.ProcessRequestAsync(request, CancellationToken.None);
+            ProcessingResultWithOutcome result = await _sut.ProcessRequestAsync(request, CancellationToken.None);
 
             result.Outcome.Should().Be(expected.Outcome);
             result.Message.Should().Be(expected.Message);
-            result.Request.Should().Be(expected.Value);
+            result.Result.Should().Be(expected.Value);
         }
 
         [Fact]
@@ -47,11 +47,11 @@ namespace ChainFlowUnitTest.ChainFlows
                 .Setup(x => x.MapAsync(input, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(expected);
 
-            ProcessingRequestWithOutcome result = await _sut.ProcessRequestAsync(request, CancellationToken.None);
+            ProcessingResultWithOutcome result = await _sut.ProcessRequestAsync(request, CancellationToken.None);
 
             result.Outcome.Should().Be(expected.Outcome);
             result.Message.Should().Be(expected.Message);
-            result.Request.Should().Be(expected.Value);
+            result.Result.Should().Be(expected.Value);
         }
 
         [Fact]

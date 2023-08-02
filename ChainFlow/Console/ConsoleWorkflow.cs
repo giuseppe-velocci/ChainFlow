@@ -1,29 +1,52 @@
-﻿using ChainFlow.Interfaces;
+﻿using ChainFlow.ChainFlows.DataFlows;
+using ChainFlow.Interfaces;
 using ChainFlow.Models;
 using ChainFlow.Workflows;
+using Console.Dispatchers;
+using Console.Flows;
+using Microsoft.Extensions.Hosting;
 
 namespace Console
 {
-    internal class ConsoleWorkflow : AbstractWorkflowRunner<string>
+    internal class ConsoleWorkflow : AbstractWorkflowRunner, IHostedService
     {
         public ConsoleWorkflow(IChainFlowBuilder chainBuilder) : base(chainBuilder)
         {
-            chainBuilder
-                .With<ValidateInputFlow>()
+            Workflow = chainBuilder
+                .WithBooleanRouter<TerminateConsoleDispatcher>(
+                    (x) => x
+                        .With<TerminateConsoleFlow>()
+                        .Build(),
+                    (x) => x
+                        .With<DataValidatorFlow<string>>()
+                        .With<GreeterFlow>()
+                        .Build()
+                )
                 .Build();
         }
 
-        public override string Describe() => "A sample console app with ChainFlow";
+        protected override IChainFlow Workflow { get; set; }
+
+        public override string Describe() => "A greeter console app with ChainFlow";
 
         public override string DescribeWorkflowEntryPoint() => "When user input is received";
 
         public override string GetWorkflowName() => nameof(ConsoleWorkflow);
 
-        public override string Outcome2T(ProcessingRequestWithOutcome outcome)
+        public async Task StartAsync(CancellationToken cancellationToken)
         {
-            return outcome.Request is not null ?
-                "Well Done!" :
-                "Error";
+            while (true)
+            {
+                System.Console.WriteLine("Input your name or EXIT to quit.");
+                var input = System.Console.ReadLine();
+                var res = await Workflow.ProcessAsync(new ChainFlow.Models.ProcessingRequest(input!), cancellationToken);
+                System.Console.WriteLine($"{res.Message}{System.Environment.NewLine}");
+            }
+        }
+
+        public Task StopAsync(CancellationToken cancellationToken)
+        {
+            return Task.CompletedTask;
         }
     }
 }

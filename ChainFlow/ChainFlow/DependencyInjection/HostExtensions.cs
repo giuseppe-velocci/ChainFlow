@@ -13,10 +13,10 @@ namespace ChainFlow.DependencyInjection
     {
         public static IHostBuilder InitializeWorkflowHostBuilder(this IHostBuilder hostBuilder, string[] args)
         {
-            RunMode runMode = args.Contains("--doc") ? 
-                RunMode.Documentation : 
+            RunMode runMode = args.Contains("--doc") ?
+                RunMode.Documentation :
                 RunMode.Standard;
-            
+
             if (runMode is RunMode.Documentation)
             {
                 hostBuilder

@@ -10,7 +10,7 @@ namespace ChainFlow.Interfaces
         /// <param name="message">Incoming request</param>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <returns>ProcessingRequest with meta information abut the outcome of processing</returns>
-        Task<ProcessingRequestWithOutcome> ProcessAsync(ProcessingRequest message, CancellationToken cancellationToken);
+        Task<ProcessingResultWithOutcome> ProcessAsync(ProcessingRequest message, CancellationToken cancellationToken);
 
         /// <summary>
         /// Define the flow that will get to process input data

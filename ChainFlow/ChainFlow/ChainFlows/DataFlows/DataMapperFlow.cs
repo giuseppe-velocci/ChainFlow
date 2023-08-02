@@ -15,7 +15,7 @@ namespace ChainFlow.ChainFlows.DataFlows
 
         public override string Describe() => $"Map {typeof(TIn).GetFullName()} to {typeof(TOut).GetFullName()}";
 
-        public async override Task<ProcessingRequestWithOutcome> ProcessRequestAsync(ProcessingRequest message, CancellationToken cancellationToken)
+        public async override Task<ProcessingResultWithOutcome> ProcessRequestAsync(ProcessingRequest message, CancellationToken cancellationToken)
         {
             OperationResult<TOut> result = await _mapper.MapAsync((TIn)message.Request, cancellationToken);
             return result.ToProcessingRequestWithOutcome();
