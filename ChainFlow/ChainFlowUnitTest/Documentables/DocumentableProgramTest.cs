@@ -31,7 +31,7 @@ namespace ChainFlowUnitTest.Documentables
         public async Task RunAsync_WhenMultipleWorkflowsAreRegistred_CreatesDocuments()
         {
             string expected0 =
-@"##name 0
+@"## name 0
 describe 0
 
 ::: mermaid
@@ -41,7 +41,7 @@ flow 0
 :::";
 
             string expected1 =
-@"##name 1
+@"## name 1
 describe 1
 
 ::: mermaid
@@ -63,7 +63,7 @@ flow 1
         public async Task RunAsync_WhenSingleWorkflowIsRegistered_CreatesDocument()
         {
             string expected =
-@"##name 0
+@"## name 0
 describe 0
 
 ::: mermaid

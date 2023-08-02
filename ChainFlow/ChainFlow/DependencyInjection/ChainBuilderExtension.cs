@@ -37,9 +37,9 @@ namespace ChainFlow.DependencyInjection
             ServiceLifetime serviceLifetime = ServiceLifetime.Transient) where TRouterDispatcher : class, IRouterDispatcher<bool>
         {
             RegisterWithLifetime<TRouterDispatcher>(services, serviceLifetime);
-
-            services.AddTransient<IBooleanRouterFlow<TRouterDispatcher>>(sp => 
-                new BooleanRouterFlow<TRouterDispatcher>(sp.GetRequiredService<TRouterDispatcher>()));
+            services.AddSingleton(sp => new ChainFlowRegistration(
+                typeof(IBooleanRouterFlow<TRouterDispatcher>), 
+                () => new BooleanRouterFlow<TRouterDispatcher>(sp.GetRequiredService<TRouterDispatcher>())));
 
             return services;
         }

@@ -1,6 +1,8 @@
 ﻿using ChainFlow.ChainFlows.DataFlows;
 using ChainFlow.Interfaces;
 using ChainFlow.Workflows;
+using Console.Dispatchers;
+using Console.Flows;
 using Microsoft.Extensions.Hosting;
 
 namespace Console
@@ -10,13 +12,21 @@ namespace Console
         public ConsoleWorkflow(IChainFlowBuilder chainBuilder) : base(chainBuilder)
         {
             Workflow = chainBuilder
-                .With<DataValidatorFlow<string>>()
+                .WithBooleanRouter<TerminateConsoleDispatcher>(
+                    (x) => x
+                        .With<TerminateConsoleFlow>()
+                        .Build(),
+                    (x) => x
+                        .With<DataValidatorFlow<string>>()
+                        .With<GreeterFlow>()
+                        .Build()
+                )
                 .Build();
         }
 
         protected override IChainFlow Workflow { get; set; }
 
-        public override string Describe() => "A sample console app with ChainFlow";
+        public override string Describe() => "A greeter console app with ChainFlow";
 
         public override string DescribeWorkflowEntryPoint() => "When user input is received";
 
@@ -24,17 +34,13 @@ namespace Console
 
         public async Task StartAsync(CancellationToken cancellationToken)
         {
-            bool shouldRun = true;
-            do
+            while (true)
             {
-                System.Console.WriteLine("Input some text...");
+                System.Console.WriteLine("Input your name or EXIT to quit.");
                 var input = System.Console.ReadLine();
                 var res = await Workflow.ProcessAsync(new ChainFlow.Models.ProcessingRequest(input!), cancellationToken);
-                System.Console.WriteLine($"{res.Message}");
-                shouldRun = res.Outcome is ChainFlow.Enums.FlowOutcome.Success;
+                System.Console.WriteLine($"{res.Message}{System.Environment.NewLine}");
             }
-            while (shouldRun);
-            throw new OperationCanceledException();
         }
 
         public Task StopAsync(CancellationToken cancellationToken)

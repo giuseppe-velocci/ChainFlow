@@ -22,8 +22,8 @@ namespace ChainFlowUnitTest.Documentables
                 new ChainFlowRegistration(typeof(FakeChainLink2), () => new FakeChainLink2()),
                 new ChainFlowRegistration(typeof(FakeChainLink3), () => new FakeChainLink3()),
                 new ChainFlowRegistration(typeof(FakeChainLink4), () => new FakeChainLink4()),
-                new ChainFlowRegistration(typeof(BooleanRouterFlow<RouterLogic>), () => new BooleanRouterFlow<RouterLogic>(new RouterLogic())),
-                new ChainFlowRegistration(typeof(BooleanRouterFlow<RouterLogic1>), () => new BooleanRouterFlow<RouterLogic1>(new RouterLogic1())),
+                new ChainFlowRegistration(typeof(IBooleanRouterFlow<RouterLogic>), () => new BooleanRouterFlow<RouterLogic>(new RouterLogic())),
+                new ChainFlowRegistration(typeof(IBooleanRouterFlow<RouterLogic1>), () => new BooleanRouterFlow<RouterLogic1>(new RouterLogic1())),
                 new ChainFlowRegistration(typeof(ExitOnFailFlow), () => new ExitOnFailFlow()),
             };
             _sut = new(_registrations);

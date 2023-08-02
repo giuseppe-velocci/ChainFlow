@@ -2,6 +2,9 @@
 using ChainFlow.DependencyInjection;
 using ChainFlow.Interfaces.DataFlowsDependencies;
 using Console;
+using Console.Dispatchers;
+using Console.Flows;
+using Console.Validators;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -14,7 +17,10 @@ static IHostBuilder CreateHostBuilder(string[] args)
         {
             services
                 .AddSingleton<IDataValidator<string>, StringValidator>()
+                .AddChainFlow<TerminateConsoleFlow>()
+                .AddBooleanRouterChainFlow<TerminateConsoleDispatcher>()
                 .AddChainFlow<DataValidatorFlow<string>>()
+                .AddChainFlow<GreeterFlow>()
 
                 .AddHostedService<ConsoleWorkflow>()
                 ;

@@ -1,7 +1,7 @@
 ﻿using ChainFlow.Interfaces.DataFlowsDependencies;
 using ChainFlow.Models;
 
-namespace Console
+namespace Console.Validators
 {
     internal class StringValidator : IDataValidator<string>
     {

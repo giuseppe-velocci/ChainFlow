@@ -31,7 +31,7 @@ namespace ChainFlow.Documentables
                 StringBuilder stringBuilder = new ();
 
                 // worflow name and description
-                stringBuilder.AppendLine("##" + workflow.GetWorkflowName());
+                stringBuilder.AppendLine($"## {workflow.GetWorkflowName()}");
                 stringBuilder.AppendLine(workflow.Describe());
                 stringBuilder.AppendLine(string.Empty);
 
