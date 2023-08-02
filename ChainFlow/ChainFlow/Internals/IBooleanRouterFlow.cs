@@ -1,5 +1,4 @@
-﻿using ChainFlow.ChainFlows;
-using ChainFlow.Interfaces;
+﻿using ChainFlow.Interfaces;
 
 namespace ChainFlow.Internals
 {

@@ -4,6 +4,7 @@ using ChainFlow.Models;
 using ChainFlow.Workflows;
 using FluentAssertions;
 using Moq;
+using Moq.Protected;
 
 namespace ChainFlowUnitTest.Workflows
 {
@@ -45,6 +46,9 @@ namespace ChainFlowUnitTest.Workflows
 
             _mockChainBuilder
                 .Setup(x => x.Build(FlowOutcome.Success))
+                .Returns(mockFlow.Object);
+
+            _sut.Protected().SetupGet<IChainFlow>("Workflow")
                 .Returns(mockFlow.Object);
 
             var result = await _sut.Object.ProcessAsync(request, CancellationToken.None);

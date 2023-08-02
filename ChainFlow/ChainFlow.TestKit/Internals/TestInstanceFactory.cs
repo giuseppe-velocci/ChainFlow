@@ -50,5 +50,9 @@ namespace ChainFlow.TestKit.Internals
             fullType.GetProperty("DefaultValueProvider")!.SetValue(instance, _defaultValueProvider);
             return instance;
         }
+
+        public Mock<IMockedDependency> GetMock<IMockedDependency>() where IMockedDependency : class
+            => (Mock<IMockedDependency>)_container[typeof(IMockedDependency).GetHashCode()];
+
     }
 }

@@ -4,16 +4,17 @@ using ChainFlow.Enums;
 using ChainFlow.Interfaces;
 using ChainFlow.Internals;
 using ChainFlow.TestKit.Internals;
+using Moq;
 
 namespace ChainFlow.TestKit
 {
-    public class ChainFlowTestKitContainer : IChainFlowBuilder
+    public class Container : IChainFlowBuilder
     {
         private readonly TestInstanceFactory _testInstanceFactory;
         private readonly IList<ChainFlowRegistration> _links;
         private readonly IList<string> _stack;
 
-        public ChainFlowTestKitContainer()
+        public Container()
         {
             _testInstanceFactory = new TestInstanceFactory(new MoqChainFlowDefaultValueProvider());
             _links = new List<ChainFlowRegistration>();
@@ -47,11 +48,14 @@ namespace ChainFlow.TestKit
             return this;
         }
 
-        public IChainFlowBuilder GetChainFlowBuilder<T>(Action<ChainFlowTestKitContainer> initializer)
+        public IChainFlowBuilder GetChainFlowBuilder<T>(Action<Container> initializer)
         {
             initializer(this);
             return new ChainFlowBuilder(_links);
         }
+
+        public Mock<IMockedDependency> GetMock<IMockedDependency>() where IMockedDependency : class
+            => _testInstanceFactory.GetMock<IMockedDependency>(); 
 
         public IEnumerable<string> GetChainFlowsCallStack() => _stack.ToArray();
     }

@@ -24,7 +24,7 @@ namespace ChainFlow.TestKit.Internals
             var operationResultCreateWithSuccessMethod = fullType.GetMethod("CreateWithSuccess");
             var instance = Activator.CreateInstance(fullType, true);
 
-            var genericArgumentInstance = FromFixture(genericTypeDefinition);
+            var genericArgumentInstance = FromFixture(genericArgument);
             return operationResultCreateWithSuccessMethod!
                 .Invoke(instance, new object[] { genericArgumentInstance, string.Empty })!;
         }

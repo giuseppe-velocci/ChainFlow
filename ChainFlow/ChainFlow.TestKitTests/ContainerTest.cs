@@ -1,7 +1,9 @@
 using ChainFlow.ChainFlows.DataFlows;
 using ChainFlow.ChainFlows.StorageFlows;
 using ChainFlow.Enums;
+using ChainFlow.Helpers;
 using ChainFlow.Interfaces;
+using ChainFlow.Internals;
 using ChainFlow.Models;
 using ChainFlow.TestKit;
 using ChainFlow.Workflows;
@@ -9,24 +11,34 @@ using FluentAssertions;
 
 namespace ChainFlow.TestKitUnitTests
 {
-    public class ChainFlowBuilderMockContainerTest
+    public class ContainerTest
     {
-        private ChainFlowTestKitContainer _sut;
+        private readonly Container _sut;
 
-        public ChainFlowBuilderMockContainerTest()
+        public ContainerTest()
         {
             _sut = new();
         }
 
         [Fact]
-        public async Task Test1()
+        public async Task ProcessAsync_WhenHappyPath_ReturnsSuccess()
         {
-            var builder = _sut.GetChainFlowBuilder<bool>((x) => new FakeWorkflow(x));
+            IChainFlowBuilder builder = _sut.GetChainFlowBuilder<bool>((x) => new FakeWorkflow(x));
             FakeWorkflow workflow = new (builder);
 
             var result = await workflow.ProcessAsync(new ProcessingRequest(new Input { Id = 1, Value = "abc" }), CancellationToken.None);
             
             result.Outcome.Should().Be(FlowOutcome.Success);
+            _sut.GetChainFlowsCallStack().Should().HaveCount(6);
+            _sut.GetChainFlowsCallStack().Should().BeEquivalentTo(new[]
+            {
+                typeof(DataValidatorFlow<Input>).GetFullName(),
+                typeof(DataMapperFlow<Input, InputEnriched>).GetFullName(),
+                typeof(StorageReaderFlow<InputEnriched, InputEnriched>).GetFullName(),
+                ChainFlowNameResolver.GetBooleanRouterChainFlowName<InputFlowDispatcher>(),
+                typeof(DataMapperFlow<InputEnriched, Output>).GetFullName(),
+                typeof(StorageWriterFlow<Output>).GetFullName(),
+            });
         }
     }
 
@@ -43,7 +55,7 @@ namespace ChainFlow.TestKitUnitTests
                 .WithBooleanRouter<InputFlowDispatcher>(
                     (x) => x
                         .With<DataMapperFlow<InputEnriched, Output>>()
-                        .With<StorageWriterFlow<InputFlowDispatcher>>()
+                        .With<StorageWriterFlow<Output>>()
                         .Build(),
                     (x) => x
                         .With<StorageRemoverFlow<InputEnriched>>()
@@ -59,7 +71,7 @@ namespace ChainFlow.TestKitUnitTests
 
     public class InputFlowDispatcher : IRouterDispatcher<bool>
     {
-        private IFakeDependency _fakeDependency;
+        private readonly IFakeDependency _fakeDependency;
 
         public InputFlowDispatcher(IFakeDependency fakeDependency)
         {

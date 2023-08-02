@@ -1,12 +1,7 @@
-﻿using ChainFlow.ChainBuilder;
-using ChainFlow.Documentables;
-using ChainFlow.Helpers;
+﻿using ChainFlow.ChainFlows;
 using ChainFlow.Interfaces;
 using ChainFlow.Internals;
-using ChainFlow.Models;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
-using System.Collections.Generic;
 
 namespace ChainFlow.DependencyInjection
 {
@@ -23,6 +18,34 @@ namespace ChainFlow.DependencyInjection
             this IServiceCollection services,
             ServiceLifetime serviceLifetime = ServiceLifetime.Transient) where T : class, IChainFlow
         {
+            RegisterWithLifetime<T>(services, serviceLifetime);
+
+            services.AddSingleton(sp => new ChainFlowRegistration(typeof(T), () => sp.GetRequiredService<T>()));
+
+            return services;
+        }
+
+        /// <summary>
+        /// Add an IBooleanRouterChainFlow registration
+        /// </summary>
+        /// <typeparam name="TRouterDispatcher">Concrete type of class implementing IRouterDispatcher<bool> with router logic</typeparam>
+        /// <param name="services">Current IServiceCollection</param>
+        /// <param name="serviceLifetime">Lifetime for the registered IChainFlow</param>
+        /// <returns></returns>
+        public static IServiceCollection AddBooleanRouterChainFlow<TRouterDispatcher>(
+            this IServiceCollection services,
+            ServiceLifetime serviceLifetime = ServiceLifetime.Transient) where TRouterDispatcher : class, IRouterDispatcher<bool>
+        {
+            RegisterWithLifetime<TRouterDispatcher>(services, serviceLifetime);
+
+            services.AddTransient<IBooleanRouterFlow<TRouterDispatcher>>(sp => 
+                new BooleanRouterFlow<TRouterDispatcher>(sp.GetRequiredService<TRouterDispatcher>()));
+
+            return services;
+        }
+
+        private static void RegisterWithLifetime<T>(IServiceCollection services, ServiceLifetime serviceLifetime) where T : class
+        {
             if (serviceLifetime == ServiceLifetime.Transient)
             {
                 services.AddTransient<T>();
@@ -34,25 +57,6 @@ namespace ChainFlow.DependencyInjection
             else
             {
                 services.AddSingleton<T>();
-            }
-
-            services.AddSingleton(sp => new ChainFlowRegistration(ResolveChainFlowType<T>(), () => sp.GetRequiredService<T>()));
-
-            return services;
-        }
-
-        private static Type ResolveChainFlowType<T>() where T : class, IChainFlow
-        {
-            Type flowType = typeof(T);
-
-            if (typeof(IBooleanRouterFlow<>).IsAssignableFrom(flowType))
-            {
-                var genericArguments = flowType.GetGenericArguments();
-                return typeof(IBooleanRouterFlow<>).MakeGenericType(genericArguments);
-            }
-            else
-            {
-                return flowType;
             }
         }
     }

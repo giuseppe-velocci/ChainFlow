@@ -25,7 +25,7 @@ namespace ChainFlowUnitTest.ChainFlows
                 .Setup(x => x.ProcessRequestAsync(It.IsAny<ProcessingRequest>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(response);
 
-            var result = await _sut.Object.ProcessAsync(request, CancellationToken.None);
+            var result = await _sut.Object.ProcessAsync(new ProcessingRequest(request.Result), CancellationToken.None);
             result.Should().Be(response);
         }
 

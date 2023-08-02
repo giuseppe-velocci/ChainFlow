@@ -19,7 +19,7 @@ namespace ChainFlow.ChainFlows
             {
                 return _next is null ?
                     result :
-                    await _next.ProcessAsync(result, cancellationToken);
+                    await _next.ProcessAsync(new ProcessingRequest(result.Result), cancellationToken);
             }
             else
             {
