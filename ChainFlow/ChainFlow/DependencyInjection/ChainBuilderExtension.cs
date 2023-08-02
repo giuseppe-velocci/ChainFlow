@@ -1,10 +1,7 @@
 ﻿using ChainFlow.ChainFlows;
 using ChainFlow.Interfaces;
 using ChainFlow.Internals;
-using ChainFlow.Models;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
-using System.Collections.Generic;
 
 namespace ChainFlow.DependencyInjection
 {
@@ -61,10 +58,6 @@ namespace ChainFlow.DependencyInjection
             {
                 services.AddSingleton<T>();
             }
-
-            services.AddSingleton(sp => new ChainFlowRegistration(typeof(T), () => sp.GetRequiredService<T>()));
-
-            return services;
         }
     }
 }
