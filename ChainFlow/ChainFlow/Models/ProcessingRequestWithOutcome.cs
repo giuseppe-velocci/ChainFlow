@@ -13,7 +13,7 @@ namespace ChainFlow.Models
         {
             return new ProcessingRequestWithOutcome(request, FlowOutcome.Failure, message);
         }
-        
+
         public static ProcessingRequestWithOutcome CreateWithTransientFailure(object request, string message)
         {
             return new ProcessingRequestWithOutcome(request, FlowOutcome.TransientFailure, message);
