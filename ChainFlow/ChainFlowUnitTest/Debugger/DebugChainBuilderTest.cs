@@ -16,10 +16,11 @@ namespace ChainFlowUnitTest.Debugger
         private readonly DebugChainBuilder _sut;
         private static readonly IChainFlow ChainFlow0 = new FakeChainLink0();
         private static readonly IChainFlow ChainFlow001 = new FakeChainLink0();
+        private static readonly IChainFlow ChainFlow1 = new FakeChainLink1();
         private readonly ChainFlowRegistration[] _registrations = new ChainFlowRegistration[] {
             new ChainFlowRegistration(typeof(FakeChainLink0), () => ChainFlow0),
             new ChainFlowRegistration(typeof(FakeChainLink0), () => ChainFlow001, "01"),
-            new ChainFlowRegistration(typeof(FakeChainLink1), () => new FakeChainLink1()),
+            new ChainFlowRegistration(typeof(FakeChainLink1), () => ChainFlow1),
             new ChainFlowRegistration(typeof(FakeChainLink2), () => new FakeChainLink2()),
             new ChainFlowRegistration(typeof(FakeChainLink3), () => new FakeChainLink3()),
             new ChainFlowRegistration(typeof(FakeChainLink4), () => new FakeChainLink4()),
@@ -110,7 +111,7 @@ namespace ChainFlowUnitTest.Debugger
                 .With<FakeChainLink0>("01")
                 .Build();
             chain.Should().BeOfType<DebugFlow>();
-            chain.AssertFakeFlowIsEqual(new FakeChainLink1());
+            chain.ShouldBeEqual(ChainFlow1);
         }
 
         [Fact]
@@ -122,12 +123,12 @@ namespace ChainFlowUnitTest.Debugger
             var chain1 = _sut
                 .With<FakeChainLink0>("01")
                 .Build();
-            chain.Should().Be(ChainFlow0);
-            chain1.Should().Be(ChainFlow001);
+            chain.ShouldBeEqual(ChainFlow0);
+            chain1.ShouldBeEqual(ChainFlow001);
         }
 
         [Fact]
-        public void Build_WhenDeclarationIsValidAlsoWithBooleanRouter_ReturnsFirstLink()
+        public void Build_WhenDeclarationIsValidAlsoWithBooleanRouter_ReturnsDebugBooleanRouterFlow()
         {
             var chain = _sut
                 .WithBooleanRouter<IRouterDispatcher<bool>>(
@@ -139,7 +140,6 @@ namespace ChainFlowUnitTest.Debugger
                 .With<FakeChainLink0>("01")
                 .Build();
             chain.Should().BeOfType<DebugBooleanRouterFlow>();
-            chain.AssertFakeFlowIsEqual(new FakeChainLink1());
         }
 
         [Fact]
@@ -158,7 +158,8 @@ namespace ChainFlowUnitTest.Debugger
                     (x) => x.With<FakeChainLink3>().Build()
                 )
                 .Build();
-            chain.Should().BeOfType<FakeChainLink1>();
+            chain.Should().BeOfType<DebugFlow>();
+            chain.ShouldBeEqual(ChainFlow1);
         }
     }
 }

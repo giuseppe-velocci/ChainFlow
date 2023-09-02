@@ -35,5 +35,10 @@ namespace ChainFlow.Debugger
         {
             _chainFlow.SetNext(next);
         }
+
+        public override int GetHashCode()
+        {
+            return _chainFlow.GetHashCode();
+        }
     }
 }

@@ -18,12 +18,10 @@ namespace ChainFlow.Debugger
             _logger = logger;
             var debugLinks = links.Select(x =>
             {
-                if (x.ChainLinkFactory().GetType().Name is nameof(BooleanRouterFlow))
+                if (x.ChainLinkFactory().GetType().GetInterfaces().Any(x => x.Name is nameof(IBooleanRouterFlow)))
                 {
                     IBooleanRouterFlow router = (IBooleanRouterFlow) x.ChainLinkFactory();
-                    return new ChainFlowRegistration(
-                        x.ChainFlowName,
-                        () => new DebugBooleanRouterFlow(router, _logger));
+                    return new ChainFlowRegistration(x.ChainFlowName, () => new DebugBooleanRouterFlow(router, x.ChainFlowName, _logger));
                 }
                 else
                 {

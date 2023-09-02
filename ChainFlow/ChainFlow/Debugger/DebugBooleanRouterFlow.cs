@@ -8,15 +8,15 @@ namespace ChainFlow.Debugger
 {
     internal class DebugBooleanRouterFlow : IBooleanRouterFlow
     {
-        private readonly IBooleanRouterFlow _chainFlow;
+        private IBooleanRouterFlow _chainFlow;
         private readonly ILogger<DebugFlow> _logger;
-        private readonly string _chainFlowType;
+        private readonly string _chainFlowName;
 
-        public DebugBooleanRouterFlow(IBooleanRouterFlow chainFlow, ILogger<DebugFlow> logger)
+        public DebugBooleanRouterFlow(IBooleanRouterFlow chainFlow, string dispatcherName, ILogger<DebugFlow> logger)
         {
             _chainFlow = chainFlow;
             _logger = logger;
-            _chainFlowType = _chainFlow.GetType().GetFullName();
+            _chainFlowName = $"{_chainFlow.GetType().GetFullName()} {dispatcherName}";
         }
 
         public string Describe()
@@ -26,9 +26,9 @@ namespace ChainFlow.Debugger
 
         public async Task<ProcessingResult> ProcessAsync(RequestToProcess message, CancellationToken cancellationToken)
         {
-            _logger.LogInformation("Entering {flow} {id}", _chainFlowType, _chainFlow.GetHashCode());
+            _logger.LogInformation("Entering {flow} {id}", _chainFlowName, _chainFlow.GetHashCode());
             var result = await _chainFlow.ProcessAsync(message, cancellationToken);
-            _logger.LogInformation("Leaving {flow} {id}", _chainFlowType, _chainFlow.GetHashCode());
+            _logger.LogInformation("Leaving {flow} {id}", _chainFlowName, _chainFlow.GetHashCode());
             return result;
         }
 
@@ -39,12 +39,19 @@ namespace ChainFlow.Debugger
 
         public IBooleanRouterFlow WithLeftFlow(IChainFlow flow)
         {
-            return _chainFlow.WithLeftFlow(flow);
+            _chainFlow = _chainFlow.WithLeftFlow(flow);
+            return this;
         }
 
         public IBooleanRouterFlow WithRightFlow(IChainFlow flow)
         {
-            return _chainFlow.WithRightFlow(flow);
+            _chainFlow = _chainFlow.WithRightFlow(flow);
+            return this;
+        }
+
+        public override int GetHashCode()
+        {
+            return _chainFlow.GetHashCode();
         }
     }
 }

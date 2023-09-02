@@ -41,11 +41,10 @@ namespace ChainFlow.ChainBuilder
             Func<IChainFlowBuilder, IChainFlow> rightFlowFactory,
             Func<IChainFlowBuilder, IChainFlow> leftFlowFactory) where TRouterDispatcher : IRouterDispatcher<bool>
         {
+            string dispatcherName = typeof(TRouterDispatcher).GetFullName();
             var rightFlow = rightFlowFactory(new ChainFlowBuilder(_links));
             var leftFlow = leftFlowFactory(new ChainFlowBuilder(_links));
-            var resolvedLink = ((IBooleanRouterFlow)_links
-                .First(x => x.ChainFlowName == typeof(TRouterDispatcher).GetFullName())
-                .ChainLinkFactory())
+            var resolvedLink = ((IBooleanRouterFlow)_links.First(x => x.ChainFlowName == dispatcherName).ChainLinkFactory())
                 .WithRightFlow(rightFlow)
                 .WithLeftFlow(leftFlow);
             return ReturnUpdatedBuilder(resolvedLink);

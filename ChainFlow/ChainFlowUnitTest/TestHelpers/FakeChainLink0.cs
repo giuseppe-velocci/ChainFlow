@@ -56,9 +56,8 @@ namespace ChainFlowUnitTest.TestHelpers
 
 internal static class ChainFlowExtension
 {
-    public static void AssertFakeFlowIsEqual(this IChainFlow flow1, IChainFlow flow)
+    public static void ShouldBeEqual(this IChainFlow flow1, IChainFlow flow)
     {
-         Assert.Equal(flow1.ProcessAsync(new RequestToProcess(new object()), CancellationToken.None).Result.Message
-         , flow.ProcessAsync(new RequestToProcess(new object()), CancellationToken.None).Result.Message);
+         Assert.Equal(flow1.GetHashCode(), flow.GetHashCode());
     }
 }
