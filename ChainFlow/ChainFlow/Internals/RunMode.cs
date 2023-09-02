@@ -3,6 +3,7 @@
     internal enum RunMode
     {
         Standard,
-        Documentation
+        Documentation,
+        Debug
     }
 }

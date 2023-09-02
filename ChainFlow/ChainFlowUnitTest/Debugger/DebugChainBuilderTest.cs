@@ -1,31 +1,35 @@
-using ChainFlow.ChainBuilder;
+﻿using ChainFlow.ChainBuilder;
 using ChainFlow.ChainFlows;
+using ChainFlow.Debugger;
 using ChainFlow.Interfaces;
 using ChainFlow.Internals;
 using ChainFlowUnitTest.TestHelpers;
 using FluentAssertions;
+using Microsoft.Extensions.Logging;
 using Moq;
 
-namespace ChainFlowUnitTest.ChainBuilder
+namespace ChainFlowUnitTest.Debugger
 {
-    public class ChainFlowBuilderTest
+    public class DebugChainBuilderTest
     {
-        private readonly ChainFlowBuilder _sut;
+        private readonly DebugChainBuilder _sut;
         private static readonly IChainFlow ChainFlow0 = new FakeChainLink0();
         private static readonly IChainFlow ChainFlow001 = new FakeChainLink0();
+        private static readonly IChainFlow ChainFlow1 = new FakeChainLink1();
         private readonly ChainFlowRegistration[] _registrations = new ChainFlowRegistration[] {
             new ChainFlowRegistration(typeof(FakeChainLink0), () => ChainFlow0),
             new ChainFlowRegistration(typeof(FakeChainLink0), () => ChainFlow001, "01"),
-            new ChainFlowRegistration(typeof(FakeChainLink1), () => new FakeChainLink1()),
+            new ChainFlowRegistration(typeof(FakeChainLink1), () => ChainFlow1),
             new ChainFlowRegistration(typeof(FakeChainLink2), () => new FakeChainLink2()),
             new ChainFlowRegistration(typeof(FakeChainLink3), () => new FakeChainLink3()),
             new ChainFlowRegistration(typeof(FakeChainLink4), () => new FakeChainLink4()),
             new ChainFlowRegistration(typeof(IRouterDispatcher<bool>), () => new BooleanRouterFlow(new Mock<IRouterDispatcher<bool>>().Object)),
         };
 
-        public ChainFlowBuilderTest()
+        public DebugChainBuilderTest()
         {
-            _sut = new ChainFlowBuilder(_registrations);
+            Mock<ILogger<DebugFlowDecorator>> mockLogger = new();
+            _sut = new DebugChainBuilder(_registrations, mockLogger.Object);
         }
 
         [Fact]
@@ -98,14 +102,15 @@ namespace ChainFlowUnitTest.ChainBuilder
         }
 
         [Fact]
-        public void Build_WhenDeclarationIsValid_ReturnsFirstLink()
+        public void Build_WhenDeclarationIsValid_ReturnsFirstLinkWrappedInDebugFlow()
         {
             var chain = _sut
                 .With<FakeChainLink1>()
                 .With<FakeChainLink0>()
                 .With<FakeChainLink0>("01")
                 .Build();
-            chain.Should().BeOfType<FakeChainLink1>();
+            chain.Should().BeOfType<DebugFlowDecorator>();
+            chain.ShouldBeEqual(ChainFlow1);
         }
 
         [Fact]
@@ -117,23 +122,23 @@ namespace ChainFlowUnitTest.ChainBuilder
             var chain1 = _sut
                 .With<FakeChainLink0>("01")
                 .Build();
-            chain.Should().Be(ChainFlow0);
-            chain1.Should().Be(ChainFlow001);
+            chain.ShouldBeEqual(ChainFlow0);
+            chain1.ShouldBeEqual(ChainFlow001);
         }
 
         [Fact]
-        public void Build_WhenDeclarationIsValidAlsoWithBooleanRouter_ReturnsFirstLink()
+        public void Build_WhenDeclarationIsValidAlsoWithBooleanRouter_ReturnsDebugBooleanRouterFlow()
         {
             var chain = _sut
-                .With<FakeChainLink1>()
-                .With<FakeChainLink0>()
                 .WithBooleanRouter<IRouterDispatcher<bool>>(
                     (x) => x.With<FakeChainLink2>().Build(),
                     (x) => x.With<FakeChainLink3>().Build()
                 )
+                .With<FakeChainLink1>()
+                .With<FakeChainLink0>()
                 .With<FakeChainLink0>("01")
                 .Build();
-            chain.Should().BeOfType<FakeChainLink1>();
+            chain.Should().BeOfType<DebugBooleanRouterFlowDecorator>();
         }
 
         [Fact]
@@ -152,7 +157,8 @@ namespace ChainFlowUnitTest.ChainBuilder
                     (x) => x.With<FakeChainLink3>().Build()
                 )
                 .Build();
-            chain.Should().BeOfType<FakeChainLink1>();
+            chain.Should().BeOfType<DebugFlowDecorator>();
+            chain.ShouldBeEqual(ChainFlow1);
         }
     }
 }

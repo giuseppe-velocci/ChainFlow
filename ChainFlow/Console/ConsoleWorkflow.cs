@@ -3,8 +3,11 @@ using ChainFlow.Interfaces;
 using ChainFlow.Workflows;
 using Console.Dispatchers;
 using Console.Flows;
+using Console.Validators;
 using Microsoft.Extensions.Hosting;
+using System.Runtime.CompilerServices;
 
+[assembly: InternalsVisibleTo("ConsoleTests")]
 namespace Console
 {
     internal class ConsoleWorkflow : AbstractWorkflowRunner, IHostedService
@@ -12,12 +15,13 @@ namespace Console
         public ConsoleWorkflow(IChainFlowBuilder chainBuilder) : base(chainBuilder)
         {
             Workflow = chainBuilder
-                .WithBooleanRouter<TerminateConsoleDispatcher>(
+                .With<DataValidatorFlow<string>>(nameof(StringValidator))
+                .WithBooleanRouter<IsConsoleToTerminateDispatcher>(
                     (x) => x
                         .With<TerminateConsoleFlow>()
                         .Build(),
                     (x) => x
-                        .With<DataValidatorFlow<string>>()
+                        .With<DataValidatorFlow<string>>(nameof(NameValidator))
                         .With<GreeterFlow>()
                         .Build()
                 )
@@ -38,7 +42,7 @@ namespace Console
             {
                 System.Console.WriteLine("Input your name or EXIT to quit.");
                 var input = System.Console.ReadLine();
-                var res = await Workflow.ProcessAsync(new ChainFlow.Models.ProcessingRequest(input!), cancellationToken);
+                var res = await Workflow.ProcessAsync(new ChainFlow.Models.RequestToProcess(input!), cancellationToken);
                 System.Console.WriteLine($"{res.Message}{System.Environment.NewLine}");
             }
         }

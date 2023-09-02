@@ -22,14 +22,14 @@ namespace ChainFlowUnitTest.ChainFlows
         public async Task ProcessRequestAsync_WhennStorageSucceedsInput_RetunsInputData()
         {
             Input input = new("in");
-            ProcessingRequest request = new(input);
+            RequestToProcess request = new(input);
             var operationResult = OperationResult<bool>.CreateWithSuccess(true);
             _mockWriter
                 .Setup(x => x.WriteAsync(input, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(operationResult);
-            ProcessingResultWithOutcome expected = ProcessingResultWithOutcome.CreateWithSuccess(input);
+            ProcessingResult expected = ProcessingResult.CreateWithSuccess(input);
 
-            ProcessingResultWithOutcome result = await _sut.ProcessRequestAsync(request, CancellationToken.None);
+            ProcessingResult result = await _sut.ProcessRequestAsync(request, CancellationToken.None);
 
             result.Should().BeEquivalentTo(expected);
         }
@@ -38,14 +38,14 @@ namespace ChainFlowUnitTest.ChainFlows
         public async Task ProcessRequestAsync_WhenStorageFailsInput_RetunsFailure()
         {
             Input input = new("in");
-            ProcessingRequest request = new(input);
+            RequestToProcess request = new(input);
             var operationResult = OperationResult<bool>.CreateWithSuccess(false);
             _mockWriter
                 .Setup(x => x.WriteAsync(input, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(operationResult);
-            ProcessingResultWithOutcome expected = ProcessingResultWithOutcome.CreateWithFailure(input, operationResult.Message);
+            ProcessingResult expected = ProcessingResult.CreateWithFailure(input, operationResult.Message);
 
-            ProcessingResultWithOutcome result = await _sut.ProcessRequestAsync(request, CancellationToken.None);
+            ProcessingResult result = await _sut.ProcessRequestAsync(request, CancellationToken.None);
 
             result.Should().BeEquivalentTo(expected);
         }
@@ -54,7 +54,7 @@ namespace ChainFlowUnitTest.ChainFlows
         public async Task ProcessRequestAsync_WhenStorageThrowsException_ThrowsException()
         {
             Input input = new("in");
-            ProcessingRequest request = new(input);
+            RequestToProcess request = new(input);
             var operationResult = OperationResult<bool>.CreateWithSuccess(false);
             _mockWriter
                 .Setup(x => x.WriteAsync(input, It.IsAny<CancellationToken>()))
@@ -70,7 +70,7 @@ namespace ChainFlowUnitTest.ChainFlows
         {
             StorageWriterFlow<Input> sut = (null!);
             Input input = new("in");
-            ProcessingRequest request = new(input);
+            RequestToProcess request = new(input);
             var act = () => sut.ProcessRequestAsync(request, CancellationToken.None);
 
             await act.Should().ThrowAsync<NullReferenceException>();

@@ -55,7 +55,12 @@ namespace ChainFlow.Documentables
 
         public IChainFlowBuilder With<T>() where T : IChainFlow
         {
-            var registration = _links.FirstOrDefault(x => x.LinkType == typeof(T).GetFullName())
+            return With<T>(string.Empty);
+        }
+
+        public IChainFlowBuilder With<T>(string nameSuffix) where T : IChainFlow
+        {
+            var registration = _links.FirstOrDefault(x => x.ChainFlowName == $"{typeof(T).GetFullName()}{nameSuffix}")
                 ?? new ChainFlowRegistration(type: typeof(T), () => new TodoChainFlow(typeof(T)));
             _firstRegistration ??= registration;
 
@@ -87,8 +92,10 @@ namespace ChainFlow.Documentables
 
         public IChainFlowBuilder WithBooleanRouter<TRouterDispatcher>(Func<IChainFlowBuilder, IChainFlow> rightFlowFactory, Func<IChainFlowBuilder, IChainFlow> leftFlowFactory) where TRouterDispatcher : IRouterDispatcher<bool>
         {
-            var registration = _links.FirstOrDefault(x => x.LinkType == ChainFlowNameResolver.GetBooleanRouterChainFlowName<TRouterDispatcher>())
-                ?? new ChainFlowRegistration(typeof(TRouterDispatcher), () => new TodoBooleanRouterChainFlow<TRouterDispatcher>(default!));
+            Type dispatcherType = typeof(TRouterDispatcher);
+            string dispatcherName = dispatcherType.GetFullName();
+            var registration = _links.FirstOrDefault(x => x.ChainFlowName == dispatcherName)
+                ?? new ChainFlowRegistration(dispatcherType, () => new TodoBooleanRouterChainFlow(default!, dispatcherName));
             _firstRegistration ??= registration;
 
             string tag = $"{registration.GetDocumentFlowId()}{{{registration.ChainLinkFactory().Describe()}}}";

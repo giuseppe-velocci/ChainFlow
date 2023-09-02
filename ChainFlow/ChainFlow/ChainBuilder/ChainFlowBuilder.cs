@@ -32,30 +32,37 @@ namespace ChainFlow.ChainBuilder
                 throw new InvalidOperationException("Cannot resolve chain declaration");
             }
 
-            return _firstLink;
+            var initialLink = _firstLink;
+            _firstLink = null!;
+            return initialLink;
         }
 
         public IChainFlowBuilder WithBooleanRouter<TRouterDispatcher>(
             Func<IChainFlowBuilder, IChainFlow> rightFlowFactory,
             Func<IChainFlowBuilder, IChainFlow> leftFlowFactory) where TRouterDispatcher : IRouterDispatcher<bool>
         {
+            string dispatcherName = typeof(TRouterDispatcher).GetFullName();
             var rightFlow = rightFlowFactory(new ChainFlowBuilder(_links));
             var leftFlow = leftFlowFactory(new ChainFlowBuilder(_links));
-            var resolvedLink = ((IBooleanRouterFlow<TRouterDispatcher>)_links
-                .First(x => x.LinkType == typeof(IBooleanRouterFlow<TRouterDispatcher>).GetFullName())
-                .ChainLinkFactory())
+            var resolvedLink = ((IBooleanRouterFlow)_links.First(x => x.ChainFlowName == dispatcherName).ChainLinkFactory())
                 .WithRightFlow(rightFlow)
                 .WithLeftFlow(leftFlow);
-            return ReturnUdpatedBuilder(resolvedLink);
+            return ReturnUpdatedBuilder(resolvedLink);
         }
 
         public IChainFlowBuilder With<T>() where T : IChainFlow
         {
-            var resolvedLink = _links.First(x => x.LinkType == typeof(T).GetFullName()).ChainLinkFactory();
-            return ReturnUdpatedBuilder(resolvedLink);
+            var resolvedLink = _links.First(x => x.ChainFlowName == typeof(T).GetFullName()).ChainLinkFactory();
+            return ReturnUpdatedBuilder(resolvedLink);
         }
 
-        private IChainFlowBuilder ReturnUdpatedBuilder(IChainFlow resolvedLink)
+        public IChainFlowBuilder With<T>(string nameSuffix) where T : IChainFlow
+        {
+            var resolvedLink = _links.First(x => x.ChainFlowName == typeof(T).GetFullName(nameSuffix)).ChainLinkFactory();
+            return ReturnUpdatedBuilder(resolvedLink);
+        }
+
+        private IChainFlowBuilder ReturnUpdatedBuilder(IChainFlow resolvedLink)
         {
             if (_firstLink is null)
             {

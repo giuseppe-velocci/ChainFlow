@@ -22,15 +22,15 @@ namespace ChainFlowUnitTest.ChainFlows
         public async Task ProcessRequestAsync_WhenStorageSucceedsInput_RetunReadData()
         {
             Input input = new("in");
-            ProcessingRequest request = new(input);
+            RequestToProcess request = new(input);
             Output output = new("out");
             var operationResult = OperationResult<Output>.CreateWithSuccess(output);
             _mockRemover
                 .Setup(x => x.ReadAsync(input, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(operationResult);
-            ProcessingResultWithOutcome expected = ProcessingResultWithOutcome.CreateWithSuccess(output);
+            ProcessingResult expected = ProcessingResult.CreateWithSuccess(output);
 
-            ProcessingResultWithOutcome result = await _sut.ProcessRequestAsync(request, CancellationToken.None);
+            ProcessingResult result = await _sut.ProcessRequestAsync(request, CancellationToken.None);
 
             result.Should().BeEquivalentTo(expected);
         }
@@ -39,15 +39,15 @@ namespace ChainFlowUnitTest.ChainFlows
         public async Task ProcessRequestAsync_WhenStorageFailsInput_RetunsFailure()
         {
             Input input = new("in");
-            ProcessingRequest request = new(input);
+            RequestToProcess request = new(input);
             Output output = new("out");
             var operationResult = OperationResult<Output>.CreateWithFailure(output, "Ko");
             _mockRemover
                 .Setup(x => x.ReadAsync(input, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(operationResult);
-            ProcessingResultWithOutcome expected = ProcessingResultWithOutcome.CreateWithFailure(output, operationResult.Message);
+            ProcessingResult expected = ProcessingResult.CreateWithFailure(output, operationResult.Message);
 
-            ProcessingResultWithOutcome result = await _sut.ProcessRequestAsync(request, CancellationToken.None);
+            ProcessingResult result = await _sut.ProcessRequestAsync(request, CancellationToken.None);
 
             result.Should().BeEquivalentTo(expected);
         }
@@ -56,7 +56,7 @@ namespace ChainFlowUnitTest.ChainFlows
         public async Task ProcessRequestAsync_WhenStorageThrowsException_ThrowsException()
         {
             Input input = new("in");
-            ProcessingRequest request = new(input);
+            RequestToProcess request = new(input);
             Output output = new("out");
             var operationResult = OperationResult<Output>.CreateWithSuccess(output);
             _mockRemover
@@ -73,7 +73,7 @@ namespace ChainFlowUnitTest.ChainFlows
         {
             StorageReaderFlow<Input, Output> sut = (null!);
             Input input = new("in");
-            ProcessingRequest request = new(input);
+            RequestToProcess request = new(input);
             var act = () => sut.ProcessRequestAsync(request, CancellationToken.None);
 
             await act.Should().ThrowAsync<NullReferenceException>();

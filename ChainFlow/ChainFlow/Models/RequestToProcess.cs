@@ -1,10 +1,10 @@
 ﻿namespace ChainFlow.Models
 {
-    public record class ProcessingRequest
+    public record class RequestToProcess
     {
         public object Request { get; }
 
-        public ProcessingRequest(object request)
+        public RequestToProcess(object request)
         {
             Request = request;
         }

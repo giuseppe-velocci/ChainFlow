@@ -1,15 +1,14 @@
 ﻿using ChainFlow.ChainFlows;
-using ChainFlow.Helpers;
 using ChainFlow.Interfaces;
 
 namespace ChainFlow.Documentables
 {
-    class TodoBooleanRouterChainFlow<T> : BooleanRouterFlow<T>, IChainFlow where T : IRouterDispatcher<bool>
+    class TodoBooleanRouterChainFlow : BooleanRouterFlow, IChainFlow
     {
         private readonly string _description;
-        public TodoBooleanRouterChainFlow(T routerLogic) : base(routerLogic)
+        public TodoBooleanRouterChainFlow(IRouterDispatcher<bool> routerLogic, string dispatcherName) : base(routerLogic)
         {
-            _description = $"TODO RouterFlow {typeof(T).GetFullName()}";
+            _description = $"TODO RouterFlow {dispatcherName}";
         }
 
         public override string Describe() => _description;

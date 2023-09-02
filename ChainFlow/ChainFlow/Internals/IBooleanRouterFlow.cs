@@ -2,9 +2,9 @@
 
 namespace ChainFlow.Internals
 {
-    internal interface IBooleanRouterFlow<TRouterLogic> : IChainFlow where TRouterLogic : IRouterDispatcher<bool>
+    internal interface IBooleanRouterFlow : IChainFlow
     {
-        IBooleanRouterFlow<TRouterLogic> WithRightFlow(IChainFlow flow);
-        IBooleanRouterFlow<TRouterLogic> WithLeftFlow(IChainFlow flow);
+        IBooleanRouterFlow WithRightFlow(IChainFlow flow);
+        IBooleanRouterFlow WithLeftFlow(IChainFlow flow);
     }
 }

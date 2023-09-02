@@ -10,6 +10,6 @@ namespace ChainFlow.Interfaces
         /// <param name="message">Incoming request</param>
         /// <param name="cancellationToken">Cancellation token to be propagated to all underlying flows</param>
         /// <returns>ProcessingRequestWithOutcome</returns>
-        Task<ProcessingResultWithOutcome> ProcessAsync(ProcessingRequest message, CancellationToken cancellationToken);
+        Task<ProcessingResult> ProcessAsync(RequestToProcess message, CancellationToken cancellationToken);
     }
 }

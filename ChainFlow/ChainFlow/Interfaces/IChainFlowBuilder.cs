@@ -12,10 +12,18 @@ namespace ChainFlow.Interfaces
         IChainFlowBuilder With<T>() where T : IChainFlow;
 
         /// <summary>
+        /// Add an IChainFlow to the workflow
+        /// </summary>
+        /// <typeparam name="T">Concrete type of Flow. Must implement IChainFlow</typeparam>
+        /// <param name="nameSuffix">Suffix used to identify a single IChainFlow instance among many of the same type</param>
+        /// <returns>Current IChainFlowBuilder</returns>
+        IChainFlowBuilder With<T>(string nameSuffix) where T : IChainFlow;
+
+        /// <summary>
         /// Add a boolean router to the workflow that will dispatch incoming request to either one of its children flows
         /// </summary>
         /// <typeparam name="TRouterDispatcher">Type of dispatcher that will evaulate request returning a bool</typeparam>
-        /// <param name="rightFlowFactory">Netx flow for the request in case the dispatcher returns True</param>
+        /// <param name="rightFlowFactory">Next flow for the request in case the dispatcher returns True</param>
         /// <param name="leftFlowFactory">Next flow for the request in case the dispatcher returns False</param>
         /// <returns>Current IChainFlowBuilder</returns>
         IChainFlowBuilder WithBooleanRouter<TRouterDispatcher>(

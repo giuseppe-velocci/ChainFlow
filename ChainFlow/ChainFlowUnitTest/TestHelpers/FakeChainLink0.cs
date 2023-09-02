@@ -10,9 +10,9 @@ namespace ChainFlowUnitTest.TestHelpers
             return "Do something @0";
         }
 
-        public Task<ProcessingResultWithOutcome> ProcessAsync(ProcessingRequest message, CancellationToken cancellationToken)
+        public Task<ProcessingResult> ProcessAsync(RequestToProcess message, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(new ProcessingResult(message, ChainFlow.Enums.FlowOutcome.Success, Describe()));
         }
 
         public void SetNext(IChainFlow next)
@@ -51,5 +51,13 @@ namespace ChainFlowUnitTest.TestHelpers
         {
             return "Then again look for something else @4";
         }
+    }
+}
+
+internal static class ChainFlowExtension
+{
+    public static void ShouldBeEqual(this IChainFlow flow1, IChainFlow flow)
+    {
+        Assert.Equal(flow1.GetHashCode(), flow.GetHashCode());
     }
 }

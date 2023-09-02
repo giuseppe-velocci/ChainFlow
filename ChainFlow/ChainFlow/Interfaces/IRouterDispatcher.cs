@@ -10,7 +10,7 @@ namespace ChainFlow.Interfaces
         /// <param name="message">Input received by RouterFlow</param>
         /// <param name="cancellationToken">Cancellation token received by RouterFlow</param>
         /// <returns>T, result of the dispatching logic implemented by the concrete of this interface</returns>
-        Task<T> ProcessAsync(ProcessingRequest message, CancellationToken cancellationToken);
+        Task<T> ProcessAsync(RequestToProcess message, CancellationToken cancellationToken);
 
         /// <summary>
         /// Decsription of the routing logic for documentation. It should be defined as a question

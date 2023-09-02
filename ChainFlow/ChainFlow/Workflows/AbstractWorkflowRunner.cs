@@ -13,7 +13,7 @@ namespace ChainFlow.Workflows
             _workflowBuilder = chainBuilder;
         }
 
-        public Task<ProcessingResultWithOutcome> ProcessAsync(ProcessingRequest message, CancellationToken cancellationToken)
+        public Task<ProcessingResult> ProcessAsync(RequestToProcess message, CancellationToken cancellationToken)
         {
             return Workflow!.ProcessAsync(message, cancellationToken);
         }

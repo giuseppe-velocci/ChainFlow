@@ -14,7 +14,7 @@ namespace ChainFlow.ChainFlows.StorageFlows
 
         public override string Describe() => $"Read {typeof(TOut)} from storage";
 
-        public async override Task<ProcessingResultWithOutcome> ProcessRequestAsync(ProcessingRequest message, CancellationToken cancellationToken)
+        public async override Task<ProcessingResult> ProcessRequestAsync(RequestToProcess message, CancellationToken cancellationToken)
         {
             OperationResult<TOut> result = await _reader.ReadAsync((TIn)message.Request, cancellationToken);
             return result.ToProcessingRequestWithOutcome();
