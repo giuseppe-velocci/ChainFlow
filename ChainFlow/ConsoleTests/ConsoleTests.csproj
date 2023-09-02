@@ -24,6 +24,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ChainFlow.TestKit\ChainFlow.TestKit.csproj" />
+    <ProjectReference Include="..\Console\Console.csproj" />
   </ItemGroup>
 
 </Project>

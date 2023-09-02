@@ -8,18 +8,18 @@ namespace ChainFlow.ChainFlows
     {
         private IChainFlow _next = null!;
 
-        public abstract Task<ProcessingResultWithOutcome> ProcessRequestAsync(ProcessingRequest message, CancellationToken cancellationToken);
+        public abstract Task<ProcessingResult> ProcessRequestAsync(RequestToProcess message, CancellationToken cancellationToken);
 
         public abstract string Describe();
 
-        public async Task<ProcessingResultWithOutcome> ProcessAsync(ProcessingRequest message, CancellationToken cancellationToken)
+        public async Task<ProcessingResult> ProcessAsync(RequestToProcess message, CancellationToken cancellationToken)
         {
             var result = await ProcessRequestAsync(message, cancellationToken);
             if (result.Outcome is FlowOutcome.Success)
             {
                 return _next is null ?
                     result :
-                    await _next.ProcessAsync(new ProcessingRequest(result.Result), cancellationToken);
+                    await _next.ProcessAsync(new RequestToProcess(result.Result), cancellationToken);
             }
             else
             {

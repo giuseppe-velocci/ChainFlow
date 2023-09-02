@@ -7,11 +7,23 @@ namespace ChainFlow.Internals
     {
         public ChainFlowRegistration(Type type, Func<IChainFlow> chainLinkFactory)
         {
-            LinkType = type.GetFullName();
+            ChainFlowName = type.GetFullName();
             ChainLinkFactory = chainLinkFactory;
         }
 
-        public string LinkType { get; }
+        public ChainFlowRegistration(Type type, Func<IChainFlow> chainLinkFactory, string nameSuffix)
+        {
+            ChainFlowName = type.GetFullName(nameSuffix);
+            ChainLinkFactory = chainLinkFactory;
+        }
+
+        internal ChainFlowRegistration(string chainFlowName, Func<IChainFlow> chainLinkFactory)
+        {
+            ChainFlowName = chainFlowName;
+            ChainLinkFactory = chainLinkFactory;
+        }
+
+        public string ChainFlowName { get; }
         public Func<IChainFlow> ChainLinkFactory { get; }
     }
 }

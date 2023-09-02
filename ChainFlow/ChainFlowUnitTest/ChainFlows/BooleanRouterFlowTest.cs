@@ -20,7 +20,7 @@ namespace ChainFlowUnitTest.ChainFlows
         [Fact]
         public async Task ProcessRequestAsync_WhenDispatcherReturnsTrue_ReturnsRightFlow()
         {
-            ProcessingRequest request = new(new object());
+            RequestToProcess request = new(new object());
             Mock<IChainFlow> _mockRightFlow = new();
             _sut.WithRightFlow(_mockRightFlow.Object);
             _mockDispatcher
@@ -34,7 +34,7 @@ namespace ChainFlowUnitTest.ChainFlows
         [Fact]
         public async Task ProcessRequestAsync_WhenDispatcherReturnsFalse_ReturnsLeftFlow()
         {
-            ProcessingRequest request = new(new object());
+            RequestToProcess request = new(new object());
             Mock<IChainFlow> _mockLeftFlow = new();
             _sut.WithLeftFlow(_mockLeftFlow.Object);
             _mockDispatcher
@@ -48,7 +48,7 @@ namespace ChainFlowUnitTest.ChainFlows
         [Fact]
         public async Task ProcessRequestAsync_WhenDispatcherIsNull_ThrowsException()
         {
-            ProcessingRequest request = new(new object());
+            RequestToProcess request = new(new object());
             BooleanRouterFlow<IRouterDispatcher<bool>> sut = new(null!);
 
             var act = () => _sut.ProcessRequestAsync(request, CancellationToken.None);
@@ -60,7 +60,7 @@ namespace ChainFlowUnitTest.ChainFlows
         [InlineData(false)]
         public async Task ProcessRequestAsync_WhenNullFlowsAreDefind_ThrowsException(bool dispatchResult)
         {
-            ProcessingRequest request = new(new object());
+            RequestToProcess request = new(new object());
             _mockDispatcher
                 .Setup(x => x.ProcessAsync(request, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(dispatchResult);

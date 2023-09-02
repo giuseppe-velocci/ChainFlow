@@ -18,7 +18,7 @@ namespace ChainFlowUnitTest.Models
         public void LinkType_WhenDeclarationIsValid_ReturnsInstance()
         {
             ChainFlowRegistration sut = new(typeof(FakeChainLink2), () => new FakeChainLink2());
-            sut.LinkType.Should().Be(typeof(FakeChainLink2).GetFullName());
+            sut.ChainFlowName.Should().Be(typeof(FakeChainLink2).GetFullName());
         }
     }
 }

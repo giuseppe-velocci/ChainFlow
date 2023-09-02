@@ -1,6 +1,5 @@
 ﻿using ChainFlow.ChainFlows.DataFlows;
 using ChainFlow.DependencyInjection;
-using ChainFlow.Interfaces.DataFlowsDependencies;
 using Console;
 using Console.Dispatchers;
 using Console.Flows;
@@ -16,10 +15,12 @@ static IHostBuilder CreateHostBuilder(string[] args)
         .ConfigureServices((hostContext, services) =>
         {
             services
-                .AddSingleton<IDataValidator<string>, StringValidator>()
+                .AddSingleton<StringValidator>()
+                .AddSingleton<NameValidator>()
                 .AddChainFlow<TerminateConsoleFlow>()
-                .AddBooleanRouterChainFlow<TerminateConsoleDispatcher>()
-                .AddChainFlow<DataValidatorFlow<string>>()
+                .AddBooleanRouterChainFlow<IsConsoleToTerminateDispatcher>()
+                .AddChainFlow((sp) => new DataValidatorFlow<string>(sp.GetRequiredService<StringValidator>()), nameof(StringValidator))
+                .AddChainFlow((sp) => new DataValidatorFlow<string>(sp.GetRequiredService<NameValidator>()), nameof(NameValidator))
                 .AddChainFlow<GreeterFlow>()
 
                 .AddHostedService<ConsoleWorkflow>()

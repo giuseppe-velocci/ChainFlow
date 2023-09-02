@@ -8,18 +8,20 @@ namespace ChainFlow.TestKit
     {
         private readonly IChainFlow _flow;
         private readonly IList<string> _stack;
+        private readonly string _nameSuffix;
 
-        public StackChainFlowDecorator(IChainFlow flow, IList<string> stack)
+        public StackChainFlowDecorator(IChainFlow flow, IList<string> stack, string nameSuffix)
         {
             _flow = flow;
             _stack = stack;
+            _nameSuffix = nameSuffix;
         }
 
         public string Describe() => string.Empty;
 
-        public Task<ProcessingResultWithOutcome> ProcessAsync(ProcessingRequest message, CancellationToken cancellationToken)
+        public Task<ProcessingResult> ProcessAsync(RequestToProcess message, CancellationToken cancellationToken)
         {
-            _stack.Add(_flow.GetType().GetFullName());
+            _stack.Add(_flow.GetType().GetFullName(_nameSuffix));
             return _flow.ProcessAsync(message, cancellationToken);
         }
 

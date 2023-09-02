@@ -23,7 +23,7 @@ namespace ChainFlowUnitTest.Workflows
         public async Task ProcessAsync_WhenChainBuilderCannotResolveFlow_ThrowsException()
         {
             object message = new();
-            var request = new ProcessingRequest(message);
+            var request = new RequestToProcess(message);
 
             _mockChainBuilder
                 .Setup(x => x.Build(FlowOutcome.Success))
@@ -37,11 +37,11 @@ namespace ChainFlowUnitTest.Workflows
         public async Task ProcessAsync_WhenChainBuilderResolvesFlow_RetrunsProcessingRequestWithOutcome()
         {
             object message = new();
-            var request = new ProcessingRequest(message);
-            var response = ProcessingResultWithOutcome.CreateWithSuccess(request);
+            var request = new RequestToProcess(message);
+            var response = ProcessingResult.CreateWithSuccess(request);
 
             var mockFlow = new Mock<IChainFlow>();
-            mockFlow.Setup(x => x.ProcessAsync(It.IsAny<ProcessingRequest>(), It.IsAny<CancellationToken>()))
+            mockFlow.Setup(x => x.ProcessAsync(It.IsAny<RequestToProcess>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(response);
 
             _mockChainBuilder

@@ -10,7 +10,7 @@ namespace ChainFlowUnitTest.Models
         public void CreateWithSuccess_WhenInvoked_RetunsFlowOutcomeSuccess()
         {
             object request = new();
-            var sut = ProcessingResultWithOutcome.CreateWithSuccess(request);
+            var sut = ProcessingResult.CreateWithSuccess(request);
 
             sut.Result.Should().Be(request);
             sut.Message.Should().Be(string.Empty);
@@ -21,7 +21,7 @@ namespace ChainFlowUnitTest.Models
         {
             object request = new();
             string message = "Ok";
-            var sut = ProcessingResultWithOutcome.CreateWithSuccess(request, message);
+            var sut = ProcessingResult.CreateWithSuccess(request, message);
 
             sut.Result.Should().Be(request);
             sut.Message.Should().Be(message);
@@ -33,7 +33,7 @@ namespace ChainFlowUnitTest.Models
         {
             object request = new();
             string message = "KO";
-            var sut = ProcessingResultWithOutcome.CreateWithFailure(request, message);
+            var sut = ProcessingResult.CreateWithFailure(request, message);
 
             sut.Result.Should().Be(request);
             sut.Message.Should().Be(message);
@@ -45,7 +45,7 @@ namespace ChainFlowUnitTest.Models
         {
             object request = new();
             string message = "KO";
-            var sut = ProcessingResultWithOutcome.CreateWithTransientFailure(request, message);
+            var sut = ProcessingResult.CreateWithTransientFailure(request, message);
 
             sut.Result.Should().Be(request);
             sut.Message.Should().Be(message);

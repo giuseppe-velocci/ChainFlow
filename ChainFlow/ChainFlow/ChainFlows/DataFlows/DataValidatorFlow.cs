@@ -17,12 +17,12 @@ namespace ChainFlow.ChainFlows.DataFlows
 
         public override string Describe() => $"Is {typeof(TIn).GetFullName()} valid?";
 
-        public async override Task<ProcessingResultWithOutcome> ProcessRequestAsync(ProcessingRequest message, CancellationToken cancellationToken)
+        public async override Task<ProcessingResult> ProcessRequestAsync(RequestToProcess message, CancellationToken cancellationToken)
         {
             OperationResult<bool> validationResult = await _validator.ValidateAsync((TIn)message.Request, cancellationToken);
             return validationResult.Value ?
-                ProcessingResultWithOutcome.CreateWithSuccess(message.Request) :
-                ProcessingResultWithOutcome.CreateWithFailure(message.Request, validationResult.Message);
+                ProcessingResult.CreateWithSuccess(message.Request) :
+                ProcessingResult.CreateWithFailure(message.Request, validationResult.Message);
         }
     }
 }

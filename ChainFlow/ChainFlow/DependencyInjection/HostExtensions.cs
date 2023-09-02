@@ -1,4 +1,5 @@
 ﻿using ChainFlow.ChainBuilder;
+using ChainFlow.Debugger;
 using ChainFlow.Documentables;
 using ChainFlow.Helpers;
 using ChainFlow.Interfaces;
@@ -13,9 +14,7 @@ namespace ChainFlow.DependencyInjection
     {
         public static IHostBuilder InitializeWorkflowHostBuilder(this IHostBuilder hostBuilder, string[] args)
         {
-            RunMode runMode = args.Contains("--doc") ?
-                RunMode.Documentation :
-                RunMode.Standard;
+            RunMode runMode = GetRunMode(args);
 
             if (runMode is RunMode.Documentation)
             {
@@ -30,6 +29,14 @@ namespace ChainFlow.DependencyInjection
                         RegisterAllIDocumentableWorkflows(services);
                     });
             }
+            else if (runMode is RunMode.Debug)
+            {
+                hostBuilder
+                    .ConfigureServices((hostContext, services) =>
+                    {
+                        services.AddSingleton<IChainFlowBuilder, DebugChainBuilder>();
+                    });
+            }
             else
             {
                 hostBuilder
@@ -40,6 +47,23 @@ namespace ChainFlow.DependencyInjection
             }
 
             return new WorkflowHostBuilderDecorator(hostBuilder, runMode);
+        }
+
+        private static RunMode GetRunMode(string[] args)
+        {
+            if (args.Contains("--doc"))
+            {
+                return RunMode.Documentation;
+            }
+            else if (args.Contains("--debug"))
+            {
+                return RunMode.Debug;
+
+            }
+            else
+            {
+                return RunMode.Standard;
+            }
         }
 
         private static void RegisterAllIDocumentableWorkflows(IServiceCollection services)

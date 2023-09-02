@@ -9,13 +9,13 @@ namespace Console
     {
         public override string Describe() => "Is user input valid?";
 
-        public override Task<ProcessingResultWithOutcome> ProcessRequestAsync(ProcessingRequest message, CancellationToken cancellationToken)
+        public override Task<ProcessingResult> ProcessRequestAsync(RequestToProcess message, CancellationToken cancellationToken)
         {
             var input = (string)message.Request;
 
             var result = string.IsNullOrWhiteSpace(input) ?
-                ProcessingResultWithOutcome.CreateWithFailure(input, "Invalid input") :
-                ProcessingResultWithOutcome.CreateWithSuccess(input);
+                ProcessingResult.CreateWithFailure(input, "Invalid input") :
+                ProcessingResult.CreateWithSuccess(input);
 
             return Task.FromResult(result);
         }

@@ -20,9 +20,9 @@ namespace ChainFlow.TestKit
 
         public string Describe() => string.Empty;
 
-        public Task<ProcessingResultWithOutcome> ProcessAsync(ProcessingRequest message, CancellationToken cancellationToken)
+        public Task<ProcessingResult> ProcessAsync(RequestToProcess message, CancellationToken cancellationToken)
         {
-            _stack.Add(ChainFlowNameResolver.GetBooleanRouterChainFlowName<TRouterDispatcher>());
+            _stack.Add(typeof(TRouterDispatcher).GetFullName());
             return _flow.ProcessAsync(message, cancellationToken);
         }
 

@@ -1,7 +1,6 @@
 using ChainFlow.ChainFlows.DataFlows;
 using ChainFlow.ChainFlows.StorageFlows;
 using ChainFlow.Enums;
-using ChainFlow.Helpers;
 using ChainFlow.Interfaces;
 using ChainFlow.Models;
 using ChainFlow.TestKit;
@@ -25,18 +24,17 @@ namespace ChainFlow.TestKitUnitTests
             IChainFlowBuilder builder = _sut.GetChainFlowBuilder<bool>((x) => new FakeWorkflow(x));
             FakeWorkflow workflow = new(builder);
 
-            var result = await workflow.ProcessAsync(new ProcessingRequest(new Input { Id = 1, Value = "abc" }), CancellationToken.None);
+            var result = await workflow.ProcessAsync(new RequestToProcess(new Input { Id = 1, Value = "abc" }), CancellationToken.None);
 
             result.Outcome.Should().Be(FlowOutcome.Success);
-            _sut.GetChainFlowsCallStack().Should().HaveCount(6);
-            _sut.GetChainFlowsCallStack().Should().BeEquivalentTo(new[]
+            _sut.VerifyWorkflowCallStack(new ChainFlowStack[]
             {
-                typeof(DataValidatorFlow<Input>).GetFullName(),
-                typeof(DataMapperFlow<Input, InputEnriched>).GetFullName(),
-                typeof(StorageReaderFlow<InputEnriched, InputEnriched>).GetFullName(),
-                ChainFlowNameResolver.GetBooleanRouterChainFlowName<InputFlowDispatcher>(),
-                typeof(DataMapperFlow<InputEnriched, Output>).GetFullName(),
-                typeof(StorageWriterFlow<Output>).GetFullName(),
+                new (typeof(DataValidatorFlow<Input>)),
+                new (typeof(DataMapperFlow<Input, InputEnriched>)),
+                new (typeof(StorageReaderFlow<InputEnriched, InputEnriched>)),
+                new (typeof(InputFlowDispatcher)),
+                new (typeof(DataMapperFlow<InputEnriched, Output>)),
+                new (typeof(StorageWriterFlow<Output>)),
             });
         }
     }
@@ -79,7 +77,7 @@ namespace ChainFlow.TestKitUnitTests
 
         public string Describe() => string.Empty;
 
-        public async Task<bool> ProcessAsync(ProcessingRequest message, CancellationToken cancellationToken)
+        public async Task<bool> ProcessAsync(RequestToProcess message, CancellationToken cancellationToken)
         {
             var result = await _fakeDependency.ProcessAsync(message, cancellationToken);
             return result.Value;
@@ -88,7 +86,7 @@ namespace ChainFlow.TestKitUnitTests
 
     public interface IFakeDependency
     {
-        Task<OperationResult<bool>> ProcessAsync(ProcessingRequest message, CancellationToken cancellationToken);
+        Task<OperationResult<bool>> ProcessAsync(RequestToProcess message, CancellationToken cancellationToken);
     }
 
     public class Input

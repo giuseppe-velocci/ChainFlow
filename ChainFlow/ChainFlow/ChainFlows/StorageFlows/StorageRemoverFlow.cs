@@ -14,12 +14,12 @@ namespace ChainFlow.ChainFlows.StorageFlows
 
         public override string Describe() => $"Delete {typeof(TIn)} from storage";
 
-        public async override Task<ProcessingResultWithOutcome> ProcessRequestAsync(ProcessingRequest message, CancellationToken cancellationToken)
+        public async override Task<ProcessingResult> ProcessRequestAsync(RequestToProcess message, CancellationToken cancellationToken)
         {
             OperationResult<bool> deletionResult = await _remover.RemoveAsync((TIn)message.Request, cancellationToken);
             return deletionResult.Value ?
-                ProcessingResultWithOutcome.CreateWithSuccess(message.Request) :
-                ProcessingResultWithOutcome.CreateWithFailure(message.Request, deletionResult.Message);
+                ProcessingResult.CreateWithSuccess(message.Request) :
+                ProcessingResult.CreateWithFailure(message.Request, deletionResult.Message);
         }
     }
 }

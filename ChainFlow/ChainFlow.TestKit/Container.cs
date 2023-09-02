@@ -3,6 +3,7 @@ using ChainFlow.Enums;
 using ChainFlow.Interfaces;
 using ChainFlow.Internals;
 using ChainFlow.TestKit.Internals;
+using FluentAssertions;
 using Moq;
 
 namespace ChainFlow.TestKit
@@ -27,8 +28,13 @@ namespace ChainFlow.TestKit
 
         public IChainFlowBuilder With<T>() where T : IChainFlow
         {
+            return With<T>(string.Empty);
+        }
+
+        public IChainFlowBuilder With<T>(string nameSuffix) where T : IChainFlow
+        {
             object mockFlow = _testInstanceFactory.CreateInstance(typeof(T));
-            _links.Add(new ChainFlowRegistration(typeof(T), () => new StackChainFlowDecorator((T)mockFlow, _stack)));
+            _links.Add(new ChainFlowRegistration(typeof(T), () => new StackChainFlowDecorator((T)mockFlow, _stack, nameSuffix), nameSuffix));
             return this;
         }
 
@@ -41,7 +47,7 @@ namespace ChainFlow.TestKit
             var __ = leftFlowFactory(this);
             object mockDispatcher = _testInstanceFactory.CreateInstance(typeof(TRouterDispatcher));
             _links.Add(new ChainFlowRegistration(
-                typeof(IBooleanRouterFlow<TRouterDispatcher>),
+                typeof(TRouterDispatcher),
                 () => new StackBooleanRouterChainFlowDecorator<TRouterDispatcher>((TRouterDispatcher)mockDispatcher, _stack))
             );
             return this;
@@ -56,6 +62,9 @@ namespace ChainFlow.TestKit
         public Mock<IMockedDependency> GetMock<IMockedDependency>() where IMockedDependency : class
             => _testInstanceFactory.GetMock<IMockedDependency>();
 
-        public IEnumerable<string> GetChainFlowsCallStack() => _stack.ToArray();
+        public void VerifyWorkflowCallStack(IEnumerable<ChainFlowStack> expectedChainFlowStack)
+        {
+            _stack.Should().BeEquivalentTo(expectedChainFlowStack.Select(x => x.Name));
+        }
     }
 }

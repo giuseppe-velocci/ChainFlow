@@ -14,8 +14,8 @@ namespace ChainFlow.Documentables
 
         public string Describe() => _description;
 
-        public Task<ProcessingResultWithOutcome> ProcessAsync(ProcessingRequest message, CancellationToken cancellationToken)
-            => Task.FromResult((ProcessingResultWithOutcome)null!);
+        public Task<ProcessingResult> ProcessAsync(RequestToProcess message, CancellationToken cancellationToken)
+            => Task.FromResult((ProcessingResult)null!);
 
         public void SetNext(IChainFlow next) { }
     }

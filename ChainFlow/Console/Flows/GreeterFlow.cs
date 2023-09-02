@@ -7,9 +7,9 @@ namespace Console.Flows
     {
         public override string Describe() => "Greet user by name";
 
-        public override Task<ProcessingResultWithOutcome> ProcessRequestAsync(ProcessingRequest message, CancellationToken cancellationToken)
+        public override Task<ProcessingResult> ProcessRequestAsync(RequestToProcess message, CancellationToken cancellationToken)
         {
-            return Task.FromResult(ProcessingResultWithOutcome.CreateWithSuccess(message.Request, $"Hello {message.Request}"));
+            return Task.FromResult(ProcessingResult.CreateWithSuccess(message.Request, $"Hello {message.Request}"));
         }
     }
 }

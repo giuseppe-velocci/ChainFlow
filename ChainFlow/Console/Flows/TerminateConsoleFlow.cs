@@ -7,7 +7,7 @@ namespace Console.Flows
     {
         public override string Describe() => "Exit program";
 
-        public override Task<ProcessingResultWithOutcome> ProcessRequestAsync(ProcessingRequest message, CancellationToken cancellationToken)
+        public override Task<ProcessingResult> ProcessRequestAsync(RequestToProcess message, CancellationToken cancellationToken)
         {
             throw new OperationCanceledException();
         }

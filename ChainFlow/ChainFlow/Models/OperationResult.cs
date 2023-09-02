@@ -31,9 +31,9 @@ namespace ChainFlow.Models
         public static OperationResult<T> CreateWithTransientFailure(T value, string message) =>
             new(value, FlowOutcome.TransientFailure, message);
 
-        public ProcessingResultWithOutcome ToProcessingRequestWithOutcome()
+        public ProcessingResult ToProcessingRequestWithOutcome()
         {
-            return new ProcessingResultWithOutcome(Value!, Outcome, Message);
+            return new ProcessingResult(Value!, Outcome, Message);
         }
     }
 }

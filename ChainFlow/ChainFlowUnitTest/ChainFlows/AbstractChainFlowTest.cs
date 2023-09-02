@@ -19,13 +19,13 @@ namespace ChainFlowUnitTest.ChainFlows
         public async Task ProcessAsync_WhenNextChainLinkIsNotSet_ReturnsConcreteLinkResult()
         {
             object message = new();
-            var request = ProcessingResultWithOutcome.CreateWithSuccess(message);
-            var response = ProcessingResultWithOutcome.CreateWithSuccess(message);
+            var request = ProcessingResult.CreateWithSuccess(message);
+            var response = ProcessingResult.CreateWithSuccess(message);
             _sut
-                .Setup(x => x.ProcessRequestAsync(It.IsAny<ProcessingRequest>(), It.IsAny<CancellationToken>()))
+                .Setup(x => x.ProcessRequestAsync(It.IsAny<RequestToProcess>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(response);
 
-            var result = await _sut.Object.ProcessAsync(new ProcessingRequest(request.Result), CancellationToken.None);
+            var result = await _sut.Object.ProcessAsync(new RequestToProcess(request.Result), CancellationToken.None);
             result.Should().Be(response);
         }
 
@@ -33,14 +33,14 @@ namespace ChainFlowUnitTest.ChainFlows
         public async Task ProcessAsync_WhenNextChainLinkIsSetAndProcessingSucceeds_ReturnsNextLinkResult()
         {
             object message = new();
-            var request = new ProcessingRequest(message);
-            var response = ProcessingResultWithOutcome.CreateWithFailure(message, string.Empty);
+            var request = new RequestToProcess(message);
+            var response = ProcessingResult.CreateWithFailure(message, string.Empty);
             _sut
-                .Setup(x => x.ProcessRequestAsync(It.IsAny<ProcessingRequest>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(ProcessingResultWithOutcome.CreateWithSuccess(message));
+                .Setup(x => x.ProcessRequestAsync(It.IsAny<RequestToProcess>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(ProcessingResult.CreateWithSuccess(message));
 
             Mock<IChainFlow> next = new();
-            next.Setup(x => x.ProcessAsync(It.IsAny<ProcessingRequest>(), It.IsAny<CancellationToken>()))
+            next.Setup(x => x.ProcessAsync(It.IsAny<RequestToProcess>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(response);
 
             _sut.Object.SetNext(next.Object);
@@ -53,15 +53,15 @@ namespace ChainFlowUnitTest.ChainFlows
         public async Task ProcessAsync_WhenNextChainLinkIsSetAndProcessingFails_ReturnsNextLinkResult()
         {
             object message = new();
-            var request = new ProcessingRequest(message);
-            var response = ProcessingResultWithOutcome.CreateWithFailure(message, string.Empty);
+            var request = new RequestToProcess(message);
+            var response = ProcessingResult.CreateWithFailure(message, string.Empty);
             _sut
-                .Setup(x => x.ProcessRequestAsync(It.IsAny<ProcessingRequest>(), It.IsAny<CancellationToken>()))
+                .Setup(x => x.ProcessRequestAsync(It.IsAny<RequestToProcess>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(response);
 
             Mock<IChainFlow> next = new();
-            next.Setup(x => x.ProcessAsync(It.IsAny<ProcessingRequest>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(ProcessingResultWithOutcome.CreateWithSuccess(message));
+            next.Setup(x => x.ProcessAsync(It.IsAny<RequestToProcess>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(ProcessingResult.CreateWithSuccess(message));
 
             _sut.Object.SetNext(next.Object);
 
@@ -73,15 +73,15 @@ namespace ChainFlowUnitTest.ChainFlows
         public async Task ProcessAsync_WhenNextChainLinkIsSetAndProcessingExitsWithTransientFailure_ReturnsNextLinkResult()
         {
             object message = new();
-            var request = new ProcessingRequest(message);
-            var response = ProcessingResultWithOutcome.CreateWithTransientFailure(message, string.Empty);
+            var request = new RequestToProcess(message);
+            var response = ProcessingResult.CreateWithTransientFailure(message, string.Empty);
             _sut
-                .Setup(x => x.ProcessRequestAsync(It.IsAny<ProcessingRequest>(), It.IsAny<CancellationToken>()))
+                .Setup(x => x.ProcessRequestAsync(It.IsAny<RequestToProcess>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(response);
 
             Mock<IChainFlow> next = new();
-            next.Setup(x => x.ProcessAsync(It.IsAny<ProcessingRequest>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(ProcessingResultWithOutcome.CreateWithSuccess(message));
+            next.Setup(x => x.ProcessAsync(It.IsAny<RequestToProcess>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(ProcessingResult.CreateWithSuccess(message));
 
             _sut.Object.SetNext(next.Object);
 
@@ -93,10 +93,10 @@ namespace ChainFlowUnitTest.ChainFlows
         public async Task ProcessAsync_WhenProcessingThrowsException_ThrowsException()
         {
             object message = new();
-            var request = new ProcessingRequest(message);
+            var request = new RequestToProcess(message);
 
             _sut
-                .Setup(x => x.ProcessRequestAsync(It.IsAny<ProcessingRequest>(), It.IsAny<CancellationToken>()))
+                .Setup(x => x.ProcessRequestAsync(It.IsAny<RequestToProcess>(), It.IsAny<CancellationToken>()))
                 .ThrowsAsync(new IndexOutOfRangeException());
 
             var act = () => _sut.Object.ProcessAsync(request, CancellationToken.None);

@@ -18,7 +18,7 @@ namespace ChainFlowUnitTest.Helpers
         public void GetFullName_WhenTypeIsGeneric_ReturnsNameWithGenericTypes()
         {
             var type = typeof(IRouterDispatcher<string>);
-            var expected = "IRouterDispatcher<String>";
+            var expected = @"IRouterDispatcher<\String\>";
             Assert.Equal(expected, type.GetFullName());
         }
 
@@ -26,7 +26,7 @@ namespace ChainFlowUnitTest.Helpers
         public void GetFullName_WhenTypeHasManyGenericParamaters_ReturnsNameWithGenericTypes()
         {
             var type = typeof(ClassWithGenericParams<FakeChainLink1, bool>);
-            var expected = "ClassWithGenericParams<FakeChainLink1,Boolean>";
+            var expected = @"ClassWithGenericParams<\FakeChainLink1,Boolean\>";
             Assert.Equal(expected, type.GetFullName());
         }
 
@@ -34,7 +34,7 @@ namespace ChainFlowUnitTest.Helpers
         public void GetFullName_WhenTypeHasGenericParamaterThatIsGeneric_ReturnsNameWithGenericTypes()
         {
             var type = typeof(ClassWithGenericParams<IEnumerable<FakeChainLink0>, bool>);
-            var expected = "ClassWithGenericParams<IEnumerable<FakeChainLink0>,Boolean>";
+            var expected = @"ClassWithGenericParams<\IEnumerable<\FakeChainLink0\>,Boolean\>";
             Assert.Equal(expected, type.GetFullName());
         }
     }

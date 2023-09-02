@@ -6,7 +6,7 @@ namespace ChainFlow.Documentables
     {
         public static string GetDocumentFlowId(this ChainFlowRegistration registration)
         {
-            return $"_{registration.LinkType.GetHashCode()}";
+            return $"_{registration.ChainFlowName.GetHashCode()}";
         }
     }
 }

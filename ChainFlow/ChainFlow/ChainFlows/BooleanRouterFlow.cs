@@ -28,7 +28,7 @@ namespace ChainFlow.ChainFlows
             return this;
         }
 
-        public override async Task<ProcessingResultWithOutcome> ProcessRequestAsync(ProcessingRequest message, CancellationToken cancellationToken)
+        public override async Task<ProcessingResult> ProcessRequestAsync(RequestToProcess message, CancellationToken cancellationToken)
         {
             bool routerLogicOutcome = await _routerLogic.ProcessAsync(message, cancellationToken);
             return routerLogicOutcome ?

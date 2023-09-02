@@ -22,9 +22,10 @@ namespace ChainFlowUnitTest.Documentables
                 new ChainFlowRegistration(typeof(FakeChainLink2), () => new FakeChainLink2()),
                 new ChainFlowRegistration(typeof(FakeChainLink3), () => new FakeChainLink3()),
                 new ChainFlowRegistration(typeof(FakeChainLink4), () => new FakeChainLink4()),
-                new ChainFlowRegistration(typeof(IBooleanRouterFlow<RouterLogic>), () => new BooleanRouterFlow<RouterLogic>(new RouterLogic())),
-                new ChainFlowRegistration(typeof(IBooleanRouterFlow<RouterLogic1>), () => new BooleanRouterFlow<RouterLogic1>(new RouterLogic1())),
+                new ChainFlowRegistration(typeof(RouterLogic), () => new BooleanRouterFlow<RouterLogic>(new RouterLogic())),
+                new ChainFlowRegistration(typeof(RouterLogic1), () => new BooleanRouterFlow<RouterLogic1>(new RouterLogic1())),
                 new ChainFlowRegistration(typeof(ExitOnFailFlow), () => new ExitOnFailFlow()),
+                new ChainFlowRegistration(typeof(FakeChainLink0), () => new FakeChainLink0(), "01"),
             };
             _sut = new(_registrations);
         }
@@ -56,7 +57,7 @@ _\W?\d+ --> Success";
         {
             var expected =
 $@"{_registrations.ElementAt(0).GetDocumentFlowId()}\({_registrations.ElementAt(0).ChainLinkFactory().Describe()}\)
-_\W?\d+\{{TODO RouterFlow IRouterDispatcher\<Boolean\>\}}
+_\W?\d+\{{TODO RouterFlow IRouterDispatcher\<\\Boolean\\\>\}}
 {_registrations.ElementAt(1).GetDocumentFlowId()}\({_registrations.ElementAt(1).ChainLinkFactory().Describe()}\)
 _\W?\d+\(TODO IChainFlow\)
 Success\(Workflow is completed with success\)
@@ -88,6 +89,24 @@ Success(Workflow is completed with success)
 {_registrations.ElementAt(0).GetDocumentFlowId()} --> Success";
             var _ = _sut
                 .With<FakeChainLink0>()
+                .Build();
+
+            _sut.ToString().Should().Be(expected);
+        }
+        
+        [Fact]
+        public void ToString_WhenSingleFlowWithSuffixesIsResolved_ReturnsFlowString()
+        {
+            string expected =
+$@"{_registrations.ElementAt(0).GetDocumentFlowId()}({_registrations.ElementAt(0).ChainLinkFactory().Describe()})
+{_registrations.ElementAt(8).GetDocumentFlowId()}({_registrations.ElementAt(8).ChainLinkFactory().Describe()})
+Success(Workflow is completed with success)
+
+{_registrations.ElementAt(0).GetDocumentFlowId()} --> {_registrations.ElementAt(8).GetDocumentFlowId()}
+{_registrations.ElementAt(8).GetDocumentFlowId()} --> Success";
+            var _ = _sut
+                .With<FakeChainLink0>()
+                .With<FakeChainLink0>("01")
                 .Build();
 
             _sut.ToString().Should().Be(expected);
@@ -250,7 +269,7 @@ Success(Workflow is completed with success)
     {
         public virtual string Describe() => "Is main logic valid @5?";
 
-        public Task<bool> ProcessAsync(ProcessingRequest message, CancellationToken cancellationToken) =>
+        public Task<bool> ProcessAsync(RequestToProcess message, CancellationToken cancellationToken) =>
             Task.FromResult(true);
     }
 
@@ -264,8 +283,8 @@ Success(Workflow is completed with success)
     {
         public string Describe() => "Is data correct @7?";
 
-        public Task<ProcessingResultWithOutcome> ProcessAsync(ProcessingRequest message, CancellationToken cancellationToken)
-            => Task.FromResult(new ProcessingResultWithOutcome(new object(), FlowOutcome.Success, string.Empty));
+        public Task<ProcessingResult> ProcessAsync(RequestToProcess message, CancellationToken cancellationToken)
+            => Task.FromResult(new ProcessingResult(new object(), FlowOutcome.Success, string.Empty));
 
         public void SetNext(IChainFlow next)
         { }

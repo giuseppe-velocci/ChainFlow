@@ -1,16 +1,19 @@
+﻿using Castle.Core.Logging;
 using ChainFlow.ChainBuilder;
 using ChainFlow.ChainFlows;
+using ChainFlow.Debugger;
 using ChainFlow.Interfaces;
 using ChainFlow.Internals;
 using ChainFlowUnitTest.TestHelpers;
 using FluentAssertions;
+using Microsoft.Extensions.Logging;
 using Moq;
 
-namespace ChainFlowUnitTest.ChainBuilder
+namespace ChainFlowUnitTest.Debugger
 {
-    public class ChainFlowBuilderTest
+    public class DebugChainBuilderTest
     {
-        private readonly ChainFlowBuilder _sut;
+        private readonly DebugChainBuilder _sut;
         private static readonly IChainFlow ChainFlow0 = new FakeChainLink0();
         private static readonly IChainFlow ChainFlow001 = new FakeChainLink0();
         private readonly ChainFlowRegistration[] _registrations = new ChainFlowRegistration[] {
@@ -23,9 +26,10 @@ namespace ChainFlowUnitTest.ChainBuilder
             new ChainFlowRegistration(typeof(IRouterDispatcher<bool>), () => new BooleanRouterFlow<IRouterDispatcher<bool>>(new Mock<IRouterDispatcher<bool>>().Object)),
         };
 
-        public ChainFlowBuilderTest()
+        public DebugChainBuilderTest()
         {
-            _sut = new ChainFlowBuilder(_registrations);
+            Mock<ILogger<DebugFlow>> mockLogger = new();
+            _sut = new DebugChainBuilder(_registrations, mockLogger.Object);
         }
 
         [Fact]
@@ -98,20 +102,21 @@ namespace ChainFlowUnitTest.ChainBuilder
         }
 
         [Fact]
-        public void Build_WhenDeclarationIsValid_ReturnsFirstLink()
+        public void Build_WhenDeclarationIsValid_ReturnsFirstLinkWrappedInDebugFlow()
         {
             var chain = _sut
                 .With<FakeChainLink1>()
                 .With<FakeChainLink0>()
                 .With<FakeChainLink0>("01")
                 .Build();
-            chain.Should().BeOfType<FakeChainLink1>();
+            chain.Should().BeOfType<DebugFlow>();
+            chain.AssertFakeFlowIsEqual(new FakeChainLink1());
         }
 
         [Fact]
         public void Build_WhenFlowsWithSuffixAreGiven_ReturnsFirstLink()
         {
-            var chain =_sut
+            var chain = _sut
                 .With<FakeChainLink0>()
                 .Build();
             var chain1 = _sut
@@ -125,15 +130,16 @@ namespace ChainFlowUnitTest.ChainBuilder
         public void Build_WhenDeclarationIsValidAlsoWithBooleanRouter_ReturnsFirstLink()
         {
             var chain = _sut
-                .With<FakeChainLink1>()
-                .With<FakeChainLink0>()
                 .WithBooleanRouter<IRouterDispatcher<bool>>(
                     (x) => x.With<FakeChainLink2>().Build(),
                     (x) => x.With<FakeChainLink3>().Build()
                 )
+                .With<FakeChainLink1>()
+                .With<FakeChainLink0>()
                 .With<FakeChainLink0>("01")
                 .Build();
-            chain.Should().BeOfType<FakeChainLink1>();
+            chain.Should().BeOfType<DebugBooleanRouterFlow<IRouterDispatcher<bool>>>();
+            chain.AssertFakeFlowIsEqual(new FakeChainLink1());
         }
 
         [Fact]
