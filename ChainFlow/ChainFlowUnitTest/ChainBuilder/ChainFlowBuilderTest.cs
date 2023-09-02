@@ -111,7 +111,7 @@ namespace ChainFlowUnitTest.ChainBuilder
         [Fact]
         public void Build_WhenFlowsWithSuffixAreGiven_ReturnsFirstLink()
         {
-            var chain =_sut
+            var chain = _sut
                 .With<FakeChainLink0>()
                 .Build();
             var chain1 = _sut

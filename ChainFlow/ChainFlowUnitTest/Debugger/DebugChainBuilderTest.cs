@@ -1,5 +1,4 @@
-﻿using Castle.Core.Logging;
-using ChainFlow.ChainBuilder;
+﻿using ChainFlow.ChainBuilder;
 using ChainFlow.ChainFlows;
 using ChainFlow.Debugger;
 using ChainFlow.Interfaces;
@@ -29,7 +28,7 @@ namespace ChainFlowUnitTest.Debugger
 
         public DebugChainBuilderTest()
         {
-            Mock<ILogger<DebugFlow>> mockLogger = new();
+            Mock<ILogger<DebugFlowDecorator>> mockLogger = new();
             _sut = new DebugChainBuilder(_registrations, mockLogger.Object);
         }
 
@@ -110,7 +109,7 @@ namespace ChainFlowUnitTest.Debugger
                 .With<FakeChainLink0>()
                 .With<FakeChainLink0>("01")
                 .Build();
-            chain.Should().BeOfType<DebugFlow>();
+            chain.Should().BeOfType<DebugFlowDecorator>();
             chain.ShouldBeEqual(ChainFlow1);
         }
 
@@ -139,7 +138,7 @@ namespace ChainFlowUnitTest.Debugger
                 .With<FakeChainLink0>()
                 .With<FakeChainLink0>("01")
                 .Build();
-            chain.Should().BeOfType<DebugBooleanRouterFlow>();
+            chain.Should().BeOfType<DebugBooleanRouterFlowDecorator>();
         }
 
         [Fact]
@@ -158,7 +157,7 @@ namespace ChainFlowUnitTest.Debugger
                     (x) => x.With<FakeChainLink3>().Build()
                 )
                 .Build();
-            chain.Should().BeOfType<DebugFlow>();
+            chain.Should().BeOfType<DebugFlowDecorator>();
             chain.ShouldBeEqual(ChainFlow1);
         }
     }

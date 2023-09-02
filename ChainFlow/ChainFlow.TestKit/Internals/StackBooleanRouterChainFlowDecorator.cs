@@ -10,7 +10,7 @@ namespace ChainFlow.TestKit
     {
         private readonly BooleanRouterFlow _flow;
         private readonly IList<string> _stack;
-        private readonly string _stackName; 
+        private readonly string _stackName;
 
         public StackBooleanRouterChainFlowDecorator(IRouterDispatcher<bool> routerLogic, IList<string> stack)
         {

@@ -58,6 +58,6 @@ internal static class ChainFlowExtension
 {
     public static void ShouldBeEqual(this IChainFlow flow1, IChainFlow flow)
     {
-         Assert.Equal(flow1.GetHashCode(), flow.GetHashCode());
+        Assert.Equal(flow1.GetHashCode(), flow.GetHashCode());
     }
 }

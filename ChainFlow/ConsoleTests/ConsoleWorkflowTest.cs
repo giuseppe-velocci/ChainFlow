@@ -13,7 +13,7 @@ namespace ConsoleTests
 {
     public class ConsoleWorkflowTest
     {
-        private ConsoleWorkflow _sut { get;  }
+        private ConsoleWorkflow _sut { get; }
 
         [Fact]
         public async Task ProcessAsync_WhenValidMessageIspassed_Success()

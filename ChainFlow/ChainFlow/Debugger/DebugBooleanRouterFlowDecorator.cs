@@ -6,13 +6,13 @@ using Microsoft.Extensions.Logging;
 
 namespace ChainFlow.Debugger
 {
-    internal class DebugBooleanRouterFlow : IBooleanRouterFlow
+    internal class DebugBooleanRouterFlowDecorator : IBooleanRouterFlow
     {
         private IBooleanRouterFlow _chainFlow;
-        private readonly ILogger<DebugFlow> _logger;
+        private readonly ILogger<DebugFlowDecorator> _logger;
         private readonly string _chainFlowName;
 
-        public DebugBooleanRouterFlow(IBooleanRouterFlow chainFlow, string dispatcherName, ILogger<DebugFlow> logger)
+        public DebugBooleanRouterFlowDecorator(IBooleanRouterFlow chainFlow, string dispatcherName, ILogger<DebugFlowDecorator> logger)
         {
             _chainFlow = chainFlow;
             _logger = logger;
@@ -55,4 +55,3 @@ namespace ChainFlow.Debugger
         }
     }
 }
-    

@@ -1,7 +1,5 @@
 ﻿using ChainFlow.ChainBuilder;
-using ChainFlow.ChainFlows;
 using ChainFlow.Enums;
-using ChainFlow.Helpers;
 using ChainFlow.Interfaces;
 using ChainFlow.Internals;
 using Microsoft.Extensions.Logging;
@@ -11,21 +9,21 @@ namespace ChainFlow.Debugger
     internal class DebugChainBuilder : IChainFlowBuilder
     {
         private readonly IChainFlowBuilder _builder;
-        private readonly ILogger<DebugFlow> _logger;
+        private readonly ILogger<DebugFlowDecorator> _logger;
 
-        public DebugChainBuilder(IEnumerable<ChainFlowRegistration> links, ILogger<DebugFlow> logger)
+        public DebugChainBuilder(IEnumerable<ChainFlowRegistration> links, ILogger<DebugFlowDecorator> logger)
         {
             _logger = logger;
             var debugLinks = links.Select(x =>
             {
                 if (x.ChainLinkFactory().GetType().GetInterfaces().Any(x => x.Name is nameof(IBooleanRouterFlow)))
                 {
-                    IBooleanRouterFlow router = (IBooleanRouterFlow) x.ChainLinkFactory();
-                    return new ChainFlowRegistration(x.ChainFlowName, () => new DebugBooleanRouterFlow(router, x.ChainFlowName, _logger));
+                    IBooleanRouterFlow router = (IBooleanRouterFlow)x.ChainLinkFactory();
+                    return new ChainFlowRegistration(x.ChainFlowName, () => new DebugBooleanRouterFlowDecorator(router, x.ChainFlowName, _logger));
                 }
                 else
                 {
-                    return new ChainFlowRegistration(x.ChainFlowName, () => new DebugFlow(x.ChainLinkFactory(), _logger));
+                    return new ChainFlowRegistration(x.ChainFlowName, () => new DebugFlowDecorator(x.ChainLinkFactory(), _logger));
                 }
             });
 

@@ -6,11 +6,13 @@ namespace ChainFlow.TestKit
     {
         public string Name { get; }
 
-        public ChainFlowStack(Type flowType) {
+        public ChainFlowStack(Type flowType)
+        {
             Name = flowType.GetFullName();
         }
 
-        public ChainFlowStack(Type flowType, string nameSuffix) {
+        public ChainFlowStack(Type flowType, string nameSuffix)
+        {
             Name = flowType.GetFullName(nameSuffix);
         }
     }

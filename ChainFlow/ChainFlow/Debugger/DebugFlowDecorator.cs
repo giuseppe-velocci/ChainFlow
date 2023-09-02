@@ -5,13 +5,13 @@ using Microsoft.Extensions.Logging;
 
 namespace ChainFlow.Debugger
 {
-    internal class DebugFlow : IChainFlow
+    internal class DebugFlowDecorator : IChainFlow
     {
         private readonly IChainFlow _chainFlow;
-        private readonly ILogger<DebugFlow> _logger;
+        private readonly ILogger<DebugFlowDecorator> _logger;
         private readonly string _chainFlowType;
 
-        public DebugFlow(IChainFlow chainFlow, ILogger<DebugFlow> logger)
+        public DebugFlowDecorator(IChainFlow chainFlow, ILogger<DebugFlowDecorator> logger)
         {
             _chainFlow = chainFlow;
             _logger = logger;

@@ -93,7 +93,7 @@ Success(Workflow is completed with success)
 
             _sut.ToString().Should().Be(expected);
         }
-        
+
         [Fact]
         public void ToString_WhenSingleFlowWithSuffixesIsResolved_ReturnsFlowString()
         {
