@@ -43,7 +43,7 @@ namespace ChainFlow.ChainBuilder
         {
             var rightFlow = rightFlowFactory(new ChainFlowBuilder(_links));
             var leftFlow = leftFlowFactory(new ChainFlowBuilder(_links));
-            var resolvedLink = ((IBooleanRouterFlow<TRouterDispatcher>)_links
+            var resolvedLink = ((IBooleanRouterFlow)_links
                 .First(x => x.ChainFlowName == typeof(TRouterDispatcher).GetFullName())
                 .ChainLinkFactory())
                 .WithRightFlow(rightFlow)

@@ -48,7 +48,7 @@ namespace ChainFlow.TestKit
             object mockDispatcher = _testInstanceFactory.CreateInstance(typeof(TRouterDispatcher));
             _links.Add(new ChainFlowRegistration(
                 typeof(TRouterDispatcher),
-                () => new StackBooleanRouterChainFlowDecorator<TRouterDispatcher>((TRouterDispatcher)mockDispatcher, _stack))
+                () => new StackBooleanRouterChainFlowDecorator((TRouterDispatcher)mockDispatcher, _stack))
             );
             return this;
         }

@@ -6,23 +6,24 @@ using ChainFlow.Models;
 
 namespace ChainFlow.TestKit
 {
-    class StackBooleanRouterChainFlowDecorator<TRouterDispatcher> : IBooleanRouterFlow<TRouterDispatcher>
-        where TRouterDispatcher : IRouterDispatcher<bool>
+    class StackBooleanRouterChainFlowDecorator : IBooleanRouterFlow
     {
-        private readonly BooleanRouterFlow<TRouterDispatcher> _flow;
+        private readonly BooleanRouterFlow _flow;
         private readonly IList<string> _stack;
+        private readonly string _stackName; 
 
-        public StackBooleanRouterChainFlowDecorator(TRouterDispatcher routerLogic, IList<string> stack)
+        public StackBooleanRouterChainFlowDecorator(IRouterDispatcher<bool> routerLogic, IList<string> stack)
         {
-            _flow = new BooleanRouterFlow<TRouterDispatcher>(routerLogic);
+            _flow = new BooleanRouterFlow(routerLogic);
             _stack = stack;
+            _stackName = routerLogic.GetType().GetFullName();
         }
 
         public string Describe() => string.Empty;
 
         public Task<ProcessingResult> ProcessAsync(RequestToProcess message, CancellationToken cancellationToken)
         {
-            _stack.Add(typeof(TRouterDispatcher).GetFullName());
+            _stack.Add(_stackName);
             return _flow.ProcessAsync(message, cancellationToken);
         }
 
@@ -31,13 +32,13 @@ namespace ChainFlow.TestKit
             _flow.SetNext(next);
         }
 
-        IBooleanRouterFlow<TRouterDispatcher> IBooleanRouterFlow<TRouterDispatcher>.WithRightFlow(IChainFlow flow)
+        IBooleanRouterFlow IBooleanRouterFlow.WithRightFlow(IChainFlow flow)
         {
             _flow.WithRightFlow(flow);
             return this;
         }
 
-        IBooleanRouterFlow<TRouterDispatcher> IBooleanRouterFlow<TRouterDispatcher>.WithLeftFlow(IChainFlow flow)
+        IBooleanRouterFlow IBooleanRouterFlow.WithLeftFlow(IChainFlow flow)
         {
             _flow.WithLeftFlow(flow);
             return this;

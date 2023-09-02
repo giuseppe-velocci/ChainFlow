@@ -8,7 +8,7 @@ namespace ChainFlowUnitTest.ChainFlows
 {
     public class BooleanRouterFlowTest
     {
-        private readonly BooleanRouterFlow<IRouterDispatcher<bool>> _sut;
+        private readonly BooleanRouterFlow _sut;
         private readonly Mock<IRouterDispatcher<bool>> _mockDispatcher;
 
         public BooleanRouterFlowTest()
@@ -49,7 +49,7 @@ namespace ChainFlowUnitTest.ChainFlows
         public async Task ProcessRequestAsync_WhenDispatcherIsNull_ThrowsException()
         {
             RequestToProcess request = new(new object());
-            BooleanRouterFlow<IRouterDispatcher<bool>> sut = new(null!);
+            BooleanRouterFlow sut = new(null!);
 
             var act = () => _sut.ProcessRequestAsync(request, CancellationToken.None);
             await act.Should().ThrowAsync<NullReferenceException>();

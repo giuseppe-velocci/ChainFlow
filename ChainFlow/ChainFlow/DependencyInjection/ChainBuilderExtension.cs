@@ -54,7 +54,7 @@ namespace ChainFlow.DependencyInjection
             RegisterWithLifetime<TRouterDispatcher>(services, dispatcherLifetime);
             services.AddSingleton(sp => new ChainFlowRegistration(
                 typeof(TRouterDispatcher),
-                () => new BooleanRouterFlow<TRouterDispatcher>(sp.GetRequiredService<TRouterDispatcher>())));
+                () => new BooleanRouterFlow(sp.GetRequiredService<TRouterDispatcher>())));
 
             return services;
         }

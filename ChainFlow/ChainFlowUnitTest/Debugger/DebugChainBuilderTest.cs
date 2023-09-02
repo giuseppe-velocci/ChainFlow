@@ -23,7 +23,7 @@ namespace ChainFlowUnitTest.Debugger
             new ChainFlowRegistration(typeof(FakeChainLink2), () => new FakeChainLink2()),
             new ChainFlowRegistration(typeof(FakeChainLink3), () => new FakeChainLink3()),
             new ChainFlowRegistration(typeof(FakeChainLink4), () => new FakeChainLink4()),
-            new ChainFlowRegistration(typeof(IRouterDispatcher<bool>), () => new BooleanRouterFlow<IRouterDispatcher<bool>>(new Mock<IRouterDispatcher<bool>>().Object)),
+            new ChainFlowRegistration(typeof(IRouterDispatcher<bool>), () => new BooleanRouterFlow(new Mock<IRouterDispatcher<bool>>().Object)),
         };
 
         public DebugChainBuilderTest()
@@ -138,7 +138,7 @@ namespace ChainFlowUnitTest.Debugger
                 .With<FakeChainLink0>()
                 .With<FakeChainLink0>("01")
                 .Build();
-            chain.Should().BeOfType<DebugBooleanRouterFlow<IRouterDispatcher<bool>>>();
+            chain.Should().BeOfType<DebugBooleanRouterFlow>();
             chain.AssertFakeFlowIsEqual(new FakeChainLink1());
         }
 

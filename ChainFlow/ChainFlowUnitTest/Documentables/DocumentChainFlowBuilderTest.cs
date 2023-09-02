@@ -22,8 +22,8 @@ namespace ChainFlowUnitTest.Documentables
                 new ChainFlowRegistration(typeof(FakeChainLink2), () => new FakeChainLink2()),
                 new ChainFlowRegistration(typeof(FakeChainLink3), () => new FakeChainLink3()),
                 new ChainFlowRegistration(typeof(FakeChainLink4), () => new FakeChainLink4()),
-                new ChainFlowRegistration(typeof(RouterLogic), () => new BooleanRouterFlow<RouterLogic>(new RouterLogic())),
-                new ChainFlowRegistration(typeof(RouterLogic1), () => new BooleanRouterFlow<RouterLogic1>(new RouterLogic1())),
+                new ChainFlowRegistration(typeof(RouterLogic), () => new BooleanRouterFlow(new RouterLogic())),
+                new ChainFlowRegistration(typeof(RouterLogic1), () => new BooleanRouterFlow(new RouterLogic1())),
                 new ChainFlowRegistration(typeof(ExitOnFailFlow), () => new ExitOnFailFlow()),
                 new ChainFlowRegistration(typeof(FakeChainLink0), () => new FakeChainLink0(), "01"),
             };
