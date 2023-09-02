@@ -24,7 +24,21 @@ namespace ChainFlow.DependencyInjection
         }
 
         /// <summary>
-        /// Add a single IChainFlow registration from factory with transient lifetime
+        /// Add a single IChainFlow registration wiht Transient lifetime
+        /// </summary>
+        /// <typeparam name="T">Type T must implement IChainFlow</typeparam>
+        /// <param name="services">Current IServiceCollection</param>
+        /// <returns>Current IServiceCollection</returns>
+        public static IServiceCollection AddChainFlow<T>(
+            this IServiceCollection services) where T : class, IChainFlow
+        {
+            RegisterWithLifetime<T>(services, ServiceLifetime.Transient);
+            services.AddSingleton(sp => new ChainFlowRegistration(typeof(T), () => sp.GetRequiredService<T>()));
+            return services;
+        }
+
+        /// <summary>
+        /// Add a single IChainFlow registration from factory with Transient lifetime
         /// </summary>
         /// <typeparam name="T">Type T must implement IChainFlow</typeparam>
         /// <param name="services">Current IServiceCollection</param>
@@ -57,6 +71,18 @@ namespace ChainFlow.DependencyInjection
                 () => new BooleanRouterFlow(sp.GetRequiredService<TRouterDispatcher>())));
 
             return services;
+        }
+
+        /// <summary>
+        /// Add an IBooleanRouterChainFlow registration with Transient TRouterDispatcher
+        /// </summary>
+        /// <typeparam name="TRouterDispatcher">Concrete type of class implementing IRouterDispatcher<bool> with router logic</typeparam>
+        /// <param name="services">Current IServiceCollection</param>
+        /// <returns></returns>
+        public static IServiceCollection AddBooleanRouterChainFlow<TRouterDispatcher>(
+            this IServiceCollection services) where TRouterDispatcher : class, IRouterDispatcher<bool>
+        {
+            return AddBooleanRouterChainFlow<TRouterDispatcher>(services, ServiceLifetime.Transient);
         }
 
         private static void RegisterWithLifetime<T>(IServiceCollection services, ServiceLifetime serviceLifetime) where T : class
