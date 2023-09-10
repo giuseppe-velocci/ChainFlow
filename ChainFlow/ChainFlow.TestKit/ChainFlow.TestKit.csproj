@@ -1,15 +1,27 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <Version>1.0.0</Version>
+    <Authors>Giuseppe Velocci</Authors>
+    <Product>ChainFlow TestKit</Product>
+    <PackageTags>ChainFlow;ChainFlow Test;Chain of Responsibility Test;ChainFlow TestKit</PackageTags>
+    <Description>
+      TestKit library for ChainFlow Framework.
+      Allows easy setup of Workflows with an autowiring of Mocks.
+      It leverages Moq package (https://github.com/moq/moq) to return a container with all resolved dependencies of the tested Workflow.
+      Rule is simple: if it is a class, than a concrete class is returned; if it is an interface, a Mock is created, allowing for overrides.
+      To avoid tedious inizialization , all Mocks have default return values for bool type (true) and OperationResult (always successful).
+      Source code and samples at: https://github.com/giuseppe-velocci/ChainFlow
+    </Description>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="AutoFixture" Version="4.18.0" />
-    <PackageReference Include="FluentAssertions" Version="6.11.0" />
-    <PackageReference Include="Moq" Version="4.18.4" />
+    <PackageReference Include="FluentAssertions" Version="6.12.0" />
+    <PackageReference Include="Moq" Version="4.20.69" />
   </ItemGroup>
 
   <ItemGroup>

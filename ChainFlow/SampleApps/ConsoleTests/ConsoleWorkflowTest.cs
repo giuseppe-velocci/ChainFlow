@@ -13,13 +13,11 @@ namespace ConsoleTests
 {
     public class ConsoleWorkflowTest
     {
-        private ConsoleWorkflow _sut { get; }
-
         [Fact]
         public async Task ProcessAsync_WhenValidMessageIspassed_Success()
         {
-            Container container = new Container();
-            IChainFlowBuilder builder = container.GetChainFlowBuilder<bool>((x) => new ConsoleWorkflow(x));
+            Container container = new ();
+            IChainFlowBuilder builder = container.GetChainFlowBuilder<bool>((x) => { ConsoleWorkflow _ = new(x); });
             ConsoleWorkflow workflow = new(builder);
 
             var result = await workflow.ProcessAsync(new RequestToProcess("name"), CancellationToken.None);
