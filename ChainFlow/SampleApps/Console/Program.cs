@@ -28,8 +28,7 @@ static IHostBuilder CreateHostBuilder(string[] args)
                 .AddChainFlow((sp) => new DataValidatorFlow<string>(sp.GetRequiredService<NameValidator>()), nameof(NameValidator))
                 
                 // register console main hosted service
-                .AddHostedService<ConsoleWorkflow>()
-                ;
+                .AddHostedService<ConsoleWorkflow>();
         })
         .UseConsoleLifetime(); // Use IConsoleLifetime to manage application lifetime;
     return host;
