@@ -24,7 +24,7 @@ This blend allows a fluent declarative way to define even complex workflows, kee
 
 For example, given the following chart:
 
-![Diagramma senza titolo drawio](https://github.com/giuseppe-velocci/ChainFlow/assets/42746122/15d61f74-1072-4923-a1a6-ecdb8b5f88aa)
+![Diagramma senza titolo drawio](https://github.com/giuseppe-velocci/ChainFlow/assets/42746122/83f33ae8-ec3e-45c9-b306-6d2bea62d802)
 
 It can be traslated to a chain declaration inside the constructor of a Worflow class:
 ```
