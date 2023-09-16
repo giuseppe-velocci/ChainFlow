@@ -96,7 +96,7 @@ There are 2 main sources for these information to be retrieved:
   - A description of the workflow, that can be enriched using md syntax
 - `IChainFlow` instances where diagram boxes take their labels
 
-When starting the program with `--doc` flag, it will produce a markdown file ready to become part of documentation for the team.
+When starting the program with `--doc` flag, it will output a markdown file ready to become part of documentation for the team.
 
 This tool can also be used when DI is not yet fully implemented. The bare minimum for it to work is to initialize the framework and register an existing workflow:
 ```
@@ -110,10 +110,10 @@ var host = Host
         });
 ```
 
-This will output a graph with unregistered flows marked with a name starting with TODO. Running the program in autodumentation mode during development can become a powerful way to assess status of work and areas not yet completed, or at least not correctly registered in DI and to get an initial overview of data flow inside the system.
+This will output a graph with unregistered flows marked with a name starting with TODO. Running the program in autodocumentation mode during development can become a powerful way to assess the project's status and areas not yet completed, or at least not correctly registered in DI and to get an initial overview of the data flow inside the system.
 
-Adding the registrations of the flows with all their dependencies in DI will further refine the produced flowchart outcome.
-Here an exmaple of produced markdown file by above service definition followed by a preview image:
+Adding the registrations of the flows with all their dependencies in DI will further refine the flowchart outcome.
+Here an example of an output markdown file for the above service definition followed by a preview image:
 ```
 ## ConsoleWorkflow
 A greeter console app with ChainFlow
