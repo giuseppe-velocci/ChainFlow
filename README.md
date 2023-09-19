@@ -5,7 +5,7 @@ This blend allows a fluent declarative way to define even complex workflows, kee
 ## Features:
  - chain of responsibility declarative definition to ease creation of workflows
  - built-in self documenting program mode
- - built-in debugging mode to log which ChainFlow is currently handlying data
+ - built-in debugging mode to log which ChainFlow is currently handling data
  - conditional flow routers to express workflows in a clear way
  - extensible basic flows ready to use
  - simple dependency interfaces to be implemented
@@ -83,7 +83,7 @@ and setup DI to register ChainFlows:
 Now the program is enabled to use full features from **ChainFlow**.
 
 ## Run modes
-It can be executed in 3 diffrent modes, depending on argument passed to execution:
+Programs using the framework can run in 3 different modes, depending on argument passed to execution:
 - no argument: runs business logic as expected
 - `--debug`: runs business logic with additional logs detailing which IChainFlow is handling data
 - `--doc`: runs alternate Autodocumentation mode that creates a *markdown* file with a [Mermaid](https://mermaid.js.org/) graph describing the flow
@@ -92,8 +92,8 @@ It can be executed in 3 diffrent modes, depending on argument passed to executio
 **ChainFlow** brings documentation literally inside the codebase.
 There are 2 main sources for these information to be retrieved:
 - Workflows implementing `IDocumentableWorkflow` that declare:
-  - Name of the workflow
-  - A description of the workflow, that can be enriched using md syntax
+  - name of the workflow
+  - a description of the workflow, that can be enriched using md syntax
 - `IChainFlow` instances where diagram boxes take their labels
 
 When starting the program with `--doc` flag, it will output a markdown file ready to become part of documentation for the team.
