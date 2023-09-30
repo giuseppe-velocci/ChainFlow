@@ -13,7 +13,7 @@
       Allows easy setup of Workflows with an autowiring of Mocks.
       It leverages Moq (https://github.com/moq/moq) to return a container with all resolved dependencies of the tested Workflow.
       Rule is simple: if it is a class, than a concrete class is returned; if it is an interface, a Mock is created, allowing for overrides.
-      To avoid tedious inizialization , all Mocks have default return values for bool type (true) and OperationResult (always successful).
+      To avoid tedious inizialization, all Mocks have default return values for bool type (true) and OperationResult (always successful).
       Source code and samples at: https://github.com/giuseppe-velocci/ChainFlow
     </Description>
     <PackageReadmeFile>README.md</PackageReadmeFile>
@@ -24,6 +24,10 @@
 
   <ItemGroup>
     <None Include="..\..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include=".\README.md">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
