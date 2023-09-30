@@ -17,7 +17,7 @@ namespace ConsoleTests
         public async Task ProcessAsync_WhenValidMessageIspassed_Success()
         {
             Container container = new ();
-            IChainFlowBuilder builder = container.GetChainFlowBuilder<bool>((x) => { ConsoleWorkflow _ = new(x); });
+            IChainFlowBuilder builder = container.GetChainFlowBuilder((x) => { ConsoleWorkflow _ = new(x); });
             ConsoleWorkflow workflow = new(builder);
 
             var result = await workflow.ProcessAsync(new RequestToProcess("name"), CancellationToken.None);

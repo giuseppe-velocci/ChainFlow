@@ -6,6 +6,7 @@ using ChainFlow.Models;
 using ChainFlow.TestKit;
 using ChainFlow.Workflows;
 using FluentAssertions;
+using Moq;
 
 namespace ChainFlow.TestKitUnitTests
 {
@@ -19,13 +20,16 @@ namespace ChainFlow.TestKitUnitTests
         }
 
         [Fact]
-        public async Task ProcessAsync_WhenHappyPath_ReturnsSuccess()
+        public async Task ProcessAsync_WhenNoSetupIsPerformed_ReturnsSuccess()
         {
-            IChainFlowBuilder builder = _sut.GetChainFlowBuilder<bool>((x) => new FakeWorkflow(x));
+            //Arrange
+            IChainFlowBuilder builder = _sut.GetChainFlowBuilder((x) => new FakeWorkflow(x));
             FakeWorkflow workflow = new(builder);
 
+            //Act
             var result = await workflow.ProcessAsync(new RequestToProcess(new Input { Id = 1, Value = "abc" }), CancellationToken.None);
 
+            //assert
             result.Outcome.Should().Be(FlowOutcome.Success);
             _sut.VerifyWorkflowCallStack(new ChainFlowStack[]
             {
@@ -35,6 +39,32 @@ namespace ChainFlow.TestKitUnitTests
                 new (typeof(InputFlowDispatcher)),
                 new (typeof(DataMapperFlow<InputEnriched, Output>)),
                 new (typeof(StorageWriterFlow<Output>)),
+            });
+        }
+
+        [Fact]
+        public async Task ProcessAsync_WhenMockIsSetupForFailure_ReturnsFailure()
+        {
+            //Arrange
+            IChainFlowBuilder builder = _sut.GetChainFlowBuilder((x) => new FakeWorkflow(x));
+            FakeWorkflow workflow = new(builder);
+
+            _sut.GetMock<IFakeDependency>()
+                .Setup(x => x.ProcessAsync(It.IsAny<RequestToProcess>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(OperationResult<bool>.CreateWithFailure(false, string.Empty));
+
+            //Act
+            var result = await workflow.ProcessAsync(new RequestToProcess(new Input { Id = 1, Value = "abc" }), CancellationToken.None);
+
+            //Assert
+            result.Outcome.Should().Be(FlowOutcome.Success);
+            _sut.VerifyWorkflowCallStack(new ChainFlowStack[]
+            {
+                new (typeof(DataValidatorFlow<Input>)),
+                new (typeof(DataMapperFlow<Input, InputEnriched>)),
+                new (typeof(StorageReaderFlow<InputEnriched, InputEnriched>)),
+                new (typeof(InputFlowDispatcher)),
+                new (typeof(StorageRemoverFlow<InputEnriched>)),
             });
         }
     }
