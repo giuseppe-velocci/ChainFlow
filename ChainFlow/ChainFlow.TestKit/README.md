@@ -24,7 +24,7 @@ IChainFlowBuilder builder = container.GetChainFlowBuilder((x) => new FakeWorkflo
 FakeWorkflow workflow = new(builder);
 ```
 
-To ease developer experience, as long as a dependency returns an `OperationResult<T>`, the TestKit Container will return automatically a success result with a concrete instance of the declared type T, so even complex flows can be tested in minutes.
+To ease developer experience, as long as a dependency returns an `OperationResult<T>` or a `bool`, the TestKit Container will return automatically a success result with a concrete instance of the declared type, so even complex flows can be tested in minutes.
 
 After Worklow's `ProcessAsync()` method is executed in the test run, it can be checked which `IChainFlow`s were invoked by leveraging the following method:
 ```

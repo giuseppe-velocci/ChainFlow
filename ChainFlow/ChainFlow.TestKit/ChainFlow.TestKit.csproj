@@ -11,12 +11,23 @@
     <Description>
       TestKit library for ChainFlow Framework.
       Allows easy setup of Workflows with an autowiring of Mocks.
-      It leverages Moq package (https://github.com/moq/moq) to return a container with all resolved dependencies of the tested Workflow.
+      It leverages Moq (https://github.com/moq/moq) to return a container with all resolved dependencies of the tested Workflow.
       Rule is simple: if it is a class, than a concrete class is returned; if it is an interface, a Mock is created, allowing for overrides.
       To avoid tedious inizialization , all Mocks have default return values for bool type (true) and OperationResult (always successful).
       Source code and samples at: https://github.com/giuseppe-velocci/ChainFlow
     </Description>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryUrl>https://github.com/giuseppe-velocci/ChainFlow</RepositoryUrl>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="AutoFixture" Version="4.18.0" />
@@ -26,6 +37,13 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ChainFlow\ChainFlow.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>
