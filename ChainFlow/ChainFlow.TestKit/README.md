@@ -2,6 +2,11 @@
 A test kit for *ChainFlow* Workflows built on top of [Moq](https://github.com/devlooped/moq) (Sponsorlink-free version 4.20.69).
 This library will make testing of Workflows a breeze.
 
+## Installation
+[Nuget package](https://www.nuget.org/packages/ChainFlow.TestKit)
+
+
+## How to use
 The usage is quite simple. Given a class injects an `IChainFlowBuilder`,the testKit can create a conctrete instance of the builder with all required dependencies needed to build the specified Workflow.
 The entry point of the TestKit is the `Container` class:
 ```

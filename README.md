@@ -2,6 +2,9 @@
 A modern framework for Dotnet that blends Chain of Reponsibility with Builder pattern.
 This blend allows a fluent declarative way to define even complex workflows, keeping intact all advantages given by those patterns.
 
+## Installation
+[Nuget package](https://www.nuget.org/packages/ChainFlow)
+
 ## Features:
  - chain of responsibility declarative definition to ease creation of workflows
  - built-in self documenting program mode
